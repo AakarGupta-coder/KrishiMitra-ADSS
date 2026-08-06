@@ -134,10 +134,29 @@ Success! Open-Meteo Forecast Data (First 20 samples):
 18  2026-08-20                30.8                0.6
 19  2026-08-21                31.1                2.1
 
---- Loading SoilGrids Parameters Dataset (20.59, 78.96) ---
+--- Loading SoilGrids Parameters Dataset for 20 locations ---
 Success! SoilGrids Parameters Data:
-     lat    lon  nitrogen  phh2o
-0  20.59  78.96       134     72
+      lat    lon  nitrogen  phh2o
+0   20.59  78.96     134.0   72.0
+1   21.15  79.09     134.0   72.0
+2   22.57  88.36     134.0   72.0
+3   28.70  77.10     134.0   72.0
+4   19.08  72.88     134.0   72.0
+5   13.08  80.27     134.0   72.0
+6   12.97  77.59     134.0   72.0
+7   17.38  78.49     134.0   72.0
+8   23.02  72.57     134.0   72.0
+9   26.91  75.79     134.0   72.0
+10  26.85  80.95     134.0   72.0
+11  25.59  85.14     134.0   72.0
+12  21.17  72.83     134.0   72.0
+13  22.31  73.18     134.0   72.0
+14  18.52  73.86     134.0   72.0
+15  28.45  77.03     134.0   72.0
+16  27.18  78.01     134.0   72.0
+17  25.32  83.00     134.0   72.0
+18  30.73  76.78     134.0   72.0
+19  15.30  74.12     134.0   72.0
 
 --- Loading FAOSTAT Historical Yield Dataset ---
 Success! FAOSTAT Historical Yield Data (First 20 samples):

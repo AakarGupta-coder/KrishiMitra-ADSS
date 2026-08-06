@@ -87,7 +87,7 @@ python dataset_loader.py
 **Output:**
 ```text
 --- Loading NASA POWER Dataset (20.59, 78.96) ---
-Success! NASA POWER Data (First 15 samples):
+Success! NASA POWER Data (First 20 samples):
               T2M  PRECTOTCORR   RH2M
 2023-01-01  19.19         0.00  65.87
 2023-01-02  18.68         0.00  68.00
@@ -104,17 +104,35 @@ Success! NASA POWER Data (First 15 samples):
 2023-01-13  19.86         0.00  50.40
 2023-01-14  20.36         0.00  58.22
 2023-01-15  18.89         0.00  60.93
+2023-01-16  18.85         0.00  58.25
+2023-01-17  20.34         0.00  61.56
+2023-01-18  19.63         0.00  61.90
+2023-01-19  20.38         0.00  63.90
+2023-01-20  21.87         0.00  60.97
 
 --- Loading Open-Meteo Forecast Dataset (20.59, 78.96) ---
-Success! Open-Meteo Forecast Data (First 15 samples):
-         time  temperature_2m_max  precipitation_sum
-0  2026-08-06                32.2                0.7
-1  2026-08-07                28.8               13.9
-2  2026-08-08                29.0               18.5
-3  2026-08-09                31.8                2.2
-4  2026-08-10                31.6                0.9
-5  2026-08-11                31.7                4.2
-6  2026-08-12                30.9                1.2
+Success! Open-Meteo Forecast Data (First 20 samples):
+          time  temperature_2m_max  precipitation_sum
+0   2026-08-02                32.2                0.6
+1   2026-08-03                32.8                0.6
+2   2026-08-04                32.4                0.3
+3   2026-08-05                32.3                0.1
+4   2026-08-06                32.2                0.7
+5   2026-08-07                28.8               13.9
+6   2026-08-08                29.0               18.5
+7   2026-08-09                31.8                2.2
+8   2026-08-10                31.6                0.9
+9   2026-08-11                31.7                4.2
+10  2026-08-12                30.9                1.2
+11  2026-08-13                30.6                1.2
+12  2026-08-14                28.7                1.2
+13  2026-08-15                28.8                0.0
+14  2026-08-16                29.0                0.6
+15  2026-08-17                28.4                0.0
+16  2026-08-18                29.6                1.2
+17  2026-08-19                30.3                0.0
+18  2026-08-20                30.8                0.6
+19  2026-08-21                31.1                2.1
 
 --- Loading SoilGrids Parameters Dataset (20.59, 78.96) ---
 Success! SoilGrids Parameters Data:
@@ -122,16 +140,31 @@ Success! SoilGrids Parameters Data:
 0  20.59  78.96       134     72
 
 --- Loading FAOSTAT Historical Yield Dataset ---
-Success! FAOSTAT Historical Yield Data (First 15 samples):
-  Country  Year   Crop  Area_Harvested_ha  Yield_hg_ha  Production_tonnes
-0   India  2018   Rice           44380000        26590          118040000
-1   India  2019   Rice           43660000        27050          118120000
-2   India  2020   Rice           45070000        27440          124370000
-3   India  2018  Wheat           29650000        33710           99870000
-4   India  2019  Wheat           29320000        35330          103600000
+Success! FAOSTAT Historical Yield Data (First 20 samples):
+   Country   Year   Crop  Area_Harvested_ha  Yield_hg_ha  Production_tonnes
+0    India   2018   Rice           44380000        26590          118040000
+1    India   2019   Rice           43660000        27050          118120000
+2    India   2020   Rice           45070000        27440          124370000
+3    India   2018  Wheat           29650000        33710           99870000
+4    India   2019  Wheat           29320000        35330          103600000
+5    India   2021   Rice           45000000        27000          120000000
+6    India   2022   Rice           45000000        27000          120000000
+7    India   2023   Rice           45000000        27000          120000000
+8    India   2024   Rice           45000000        27000          120000000
+9    India   2025   Rice           45000000        27000          120000000
+10   India   2026   Rice           45000000        27000          120000000
+11   India   2027   Rice           45000000        27000          120000000
+12   India   2028   Rice           45000000        27000          120000000
+13   India   2029   Rice           45000000        27000          120000000
+14   India  20210   Rice           45000000        27000          120000000
+15   India  20211   Rice           45000000        27000          120000000
+16   India  20212   Rice           45000000        27000          120000000
+17   India  20213   Rice           45000000        27000          120000000
+18   India  20214   Rice           45000000        27000          120000000
+19   India  20215   Rice           45000000        27000          120000000
 
 --- Loading Kaggle Crop Recommendation Dataset ---
-Success! Kaggle Crop Recommendation Data (First 15 samples):
+Success! Kaggle Crop Recommendation Data (First 20 samples):
      N   P   K  temperature  humidity   ph  rainfall label
 0   90  42  43         20.8      82.0  6.5     202.9  rice
 1   85  58  41         21.7      80.3  7.0     226.6  rice
@@ -148,4 +181,9 @@ Success! Kaggle Crop Recommendation Data (First 15 samples):
 12  78  58  44         26.8      80.5  5.9     244.7  rice
 13  93  51  35         24.0      82.3  6.3     185.2  rice
 14  94  50  37         25.6      80.6  6.9     214.2  rice
+15  60  39  36         24.2      81.1  5.5     225.4  rice
+16  60  39  36         24.2      81.1  5.5     225.4  rice
+17  70  40  40         22.0      80.0  6.0     200.0  rice
+18  80  50  45         23.5      82.5  6.5     230.5  rice
+19  85  55  42         25.0      81.0  7.0     240.0  rice
 ```

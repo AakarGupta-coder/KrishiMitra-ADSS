@@ -10,21 +10,21 @@ def load_nasa_power(lat, lon, start, end):
         data = res.json()
         df = pd.DataFrame(data['properties']['parameter'])
         df.index = pd.to_datetime(df.index, format='%Y%m%d')
-        print("Success! NASA POWER Data (First 15 samples):")
-        print(df.head(15))
+        print("Success! NASA POWER Data (First 20 samples):")
+        print(df.head(20))
         return df
     else:
         print("Failed to load NASA POWER API")
 
 def load_open_meteo(lat, lon):
     print(f"\n--- Loading Open-Meteo Forecast Dataset ({lat}, {lon}) ---")
-    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&daily=temperature_2m_max,precipitation_sum&timezone=auto"
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&daily=temperature_2m_max,precipitation_sum&timezone=auto&forecast_days=16&past_days=4"
     res = requests.get(url)
     if res.status_code == 200:
         data = res.json()
         df = pd.DataFrame(data['daily'])
-        print("Success! Open-Meteo Forecast Data (First 15 samples):")
-        print(df.head(15))
+        print("Success! Open-Meteo Forecast Data (First 20 samples):")
+        print(df.head(20))
         return df
     else:
         print("Failed to load Open-Meteo API")
@@ -43,7 +43,7 @@ def load_soilgrids(lat, lon):
             parsed[name] = mean_val
         df = pd.DataFrame([parsed])
         print("Success! SoilGrids Parameters Data:")
-        print(df.head(15))
+        print(df.head(20))
         return df
     else:
         print("Failed to load SoilGrids API")
@@ -52,8 +52,8 @@ def load_local_csv(name, path):
     print(f"\n--- Loading {name} Dataset ---")
     try:
         df = pd.read_csv(path)
-        print(f"Success! {name} Data (First 15 samples):")
-        print(df.head(15))
+        print(f"Success! {name} Data (First 20 samples):")
+        print(df.head(20))
         return df
     except Exception as e:
         print(f"Failed to load {name} - {e}")

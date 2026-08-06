@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <strong>KrishiMitra: AI-powered Agricultural Decision Support System fusing NASA POWER, Open-Meteo, SoilGrids, and FAOSTAT data. Provides explainable crop advisories, yield predictions, and smart irrigation schedules using LightGBM, XGBoost, and SHAP.</strong>
+  <strong>KrishiMitra: AI-powered Agricultural Decision Support System for precision farming. Fuses multi-modal data (NASA POWER, SoilGrids, FAOSTAT) via an Explainable Fusion Network (XGBoost/LightGBM) to deliver crop suitability classification, yield estimation, and smart irrigation schedules with SHAP-based transparent advisories for rural farmers.</strong>
 </p>
 
 <p align="center">

@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <strong>Made by Aakar Gupta & Prathamesh Burange</strong>
+  <strong>Made by Aakar Gupta</strong>
 </p>
 
 ---
@@ -29,12 +29,12 @@
 | Field | Value |
 |---|---|
 | Repository name | `KrishiMitra-ADSS` |
-| Authors | Aakar Gupta (24BRS1321), Prathamesh Burange (24BRS1344) |
+| Author | Aakar Gupta |
 | Project type | Decision Support System (DSS) / Machine Learning Pipeline |
 | Primary domain | Precision Agriculture & Agronomy |
 | Secondary domain | Multi-Modal Data Fusion, Explainable AI (XAI) |
 | Core technologies | Python, Pandas, LightGBM, XGBoost, SHAP, Matplotlib |
-| Data sources | NASA POWER API, Open-Meteo, SoilGrids, FAOSTAT |
+| Data sources | NASA POWER API, Open-Meteo, SoilGrids, FAOSTAT, Kaggle Crop Recommendation |
 
 </div>
 
@@ -56,12 +56,27 @@ This repository currently focuses on the robust multi-modal data ingestion pipel
 |---|---|---|---|
 | **NASA POWER API** | Meteorological | Historical Temp, Humidity, Rain | Live REST API |
 | **Open-Meteo API** | Meteorological | 7-day Forward Weather Forecasts | Live REST API |
-| **SoilGrids** | Pedological | Soil pH, Nitrogen, Sand/Clay % | Historical Records |
-| **FAOSTAT** | Historical | True Yield Labels & Harvest Area | Historical Records |
+| **SoilGrids** | Pedological | Soil pH, Nitrogen, Sand/Clay % | Live REST API |
+| **FAOSTAT** | Historical | True Yield Labels & Harvest Area | Offline CSV |
+| **Kaggle Crop Data** | Agronomic | Synthesized N-P-K & Crop Labels | Offline CSV |
 
 </div>
 
-### Execution
+### Current Repository Structure
+
+```text
+KrishiMitra-ADSS/
+├── README.md                     # This file
+├── dataset_loader.py             # Data ingestion and API fetch script
+├── logo.png                      # Project logo
+├── data/                         
+│   ├── crop_recommendation.csv   # Kaggle synthetic crop dataset
+│   └── faostat_sample.csv        # FAOSTAT historical yield data
+└── report/                       
+    └── KrishiMitra_DA1_Report_v4.docx # DA1 Final Submission Document
+```
+
+### Execution Output
 
 Run the data loader script to verify API connections and data extraction:
 
@@ -72,6 +87,65 @@ python dataset_loader.py
 **Output:**
 ```text
 --- Loading NASA POWER Dataset (20.59, 78.96) ---
-Success! NASA POWER Data (First 5 rows):
-...
+Success! NASA POWER Data (First 15 samples):
+              T2M  PRECTOTCORR   RH2M
+2023-01-01  19.19         0.00  65.87
+2023-01-02  18.68         0.00  68.00
+2023-01-03  19.01         0.04  70.60
+2023-01-04  19.19         1.47  77.17
+2023-01-05  18.37         0.01  80.12
+2023-01-06  18.52         0.00  73.20
+2023-01-07  16.12         0.00  53.72
+2023-01-08  14.87         0.00  49.00
+2023-01-09  16.59         0.00  50.14
+2023-01-10  18.48         0.00  50.29
+2023-01-11  19.46         0.00  47.45
+2023-01-12  20.07         0.00  45.20
+2023-01-13  19.86         0.00  50.40
+2023-01-14  20.36         0.00  58.22
+2023-01-15  18.89         0.00  60.93
+
+--- Loading Open-Meteo Forecast Dataset (20.59, 78.96) ---
+Success! Open-Meteo Forecast Data (First 15 samples):
+         time  temperature_2m_max  precipitation_sum
+0  2026-08-06                32.2                0.7
+1  2026-08-07                28.8               13.9
+2  2026-08-08                29.0               18.5
+3  2026-08-09                31.8                2.2
+4  2026-08-10                31.6                0.9
+5  2026-08-11                31.7                4.2
+6  2026-08-12                30.9                1.2
+
+--- Loading SoilGrids Parameters Dataset (20.59, 78.96) ---
+Success! SoilGrids Parameters Data:
+     lat    lon  nitrogen  phh2o
+0  20.59  78.96       134     72
+
+--- Loading FAOSTAT Historical Yield Dataset ---
+Success! FAOSTAT Historical Yield Data (First 15 samples):
+  Country  Year   Crop  Area_Harvested_ha  Yield_hg_ha  Production_tonnes
+0   India  2018   Rice           44380000        26590          118040000
+1   India  2019   Rice           43660000        27050          118120000
+2   India  2020   Rice           45070000        27440          124370000
+3   India  2018  Wheat           29650000        33710           99870000
+4   India  2019  Wheat           29320000        35330          103600000
+
+--- Loading Kaggle Crop Recommendation Dataset ---
+Success! Kaggle Crop Recommendation Data (First 15 samples):
+     N   P   K  temperature  humidity   ph  rainfall label
+0   90  42  43         20.8      82.0  6.5     202.9  rice
+1   85  58  41         21.7      80.3  7.0     226.6  rice
+2   60  55  44         23.0      82.3  7.8     263.9  rice
+3   74  35  40         26.4      80.1  6.9     242.8  rice
+4   78  42  42         20.1      81.6  7.6     262.7  rice
+5   69  37  42         23.0      83.3  6.9     251.0  rice
+6   69  55  38         22.7      82.6  5.7     271.3  rice
+7   94  53  40         20.2      82.8  5.7     241.9  rice
+8   89  54  38         24.5      83.5  6.4     230.2  rice
+9   68  58  38         23.2      83.0  6.3     221.2  rice
+10  91  53  40         26.5      81.4  5.3     270.4  rice
+11  90  46  42         23.9      81.4  5.9     264.4  rice
+12  78  58  44         26.8      80.5  5.9     244.7  rice
+13  93  51  35         24.0      82.3  6.3     185.2  rice
+14  94  50  37         25.6      80.6  6.9     214.2  rice
 ```

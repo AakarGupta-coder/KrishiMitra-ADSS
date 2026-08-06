@@ -1,7 +1,7 @@
 # KRISHIMITRA: AI-Powered Agricultural Decision Support System
 
 <p align="center">
-  <img src="logo.png" alt="KRISHIMITRA" width="80%" />
+  <img src="assets/images/logo.png" alt="KRISHIMITRA" width="80%" />
 </p>
 
 <p align="center">

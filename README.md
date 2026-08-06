@@ -1,4 +1,4 @@
-# KRISHIMITRA: AI-Powered Agricultural Decision Support System
+# KRISHIMITRA: AI-Powered Agricultural Decision Support System (DSS)
 
 <p align="center">
   <img src="assets/images/logo.png" alt="KRISHIMITRA" width="80%" />

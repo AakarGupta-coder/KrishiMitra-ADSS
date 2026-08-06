@@ -42,7 +42,3 @@ if __name__ == "__main__":
     lat, lon = 20.59, 78.96 # India
     nasa_df = load_nasa_power(lat, lon, "20230101", "20230110")
     meteo_df = load_open_meteo(lat, lon)
-    
-    # Load sample local files (simulated historical and soil grids)
-    faostat_df = load_local_csv("FAOSTAT Historical Yield", "faostat_sample.csv")
-    soil_df = load_local_csv("SoilGrids Parameters", "soilgrids_sample.csv")

@@ -1,4 +1,5 @@
 import React from 'react';
+import InfoButton from '../components/InfoButton';
 import { Link } from 'react-router-dom';
 import { Area, Bar, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { FarmSummary } from '../lib/types';
@@ -79,7 +80,7 @@ const IrrigationView: React.FC<{ s: FarmSummary }> = ({ s }) => {
           </div>
         </Panel>
 
-        <Panel icon="water" title="7-day water balance" subtitle={`All series in ${u}/day on one axis, aligned to the forecast dates`}
+        <Panel icon="water" title="7-day water balance" actions={<InfoButton id="irrigation" label="the irrigation water balance" />} subtitle={`All series in ${u}/day on one axis, aligned to the forecast dates`}
           footer={<div className="flex flex-wrap gap-x-4 gap-y-1">{weatherSourceTag(s)}{soilSourceTag(s)}</div>}>
           <Legend items={[
             { label: 'Forecast rainfall', color: CHART.rain, shape: 'bar' },
@@ -128,7 +129,7 @@ const IrrigationView: React.FC<{ s: FarmSummary }> = ({ s }) => {
           </div>
         </Panel>
 
-        <Panel icon="rule" title="Method & assumptions">
+        <Panel icon="rule" title="Method & assumptions" actions={<InfoButton id="irrigation" label="the irrigation water balance" />}>
           <ul className="space-y-1.5 text-body-sm text-on-surface">
             {irr.assumptions.map((a) => <li key={a} className="flex gap-2"><Icon name="check" className="!text-[16px] text-outline mt-px" />{localizeText(a)}</li>)}
             <li className="flex gap-2"><Icon name="check" className="!text-[16px] text-outline mt-px" />Growth stage not recorded: the mid-season crop coefficient is applied throughout.</li>

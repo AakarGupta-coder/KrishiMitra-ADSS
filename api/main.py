@@ -23,6 +23,7 @@ from src.data.hwsd import get_soil_properties
 from src.models.crop_ml import load_classifiers
 from src.models.yield_service import estimate_yield, historical_yields, model_info
 from src.services.farm_summary import VERSION, build_summary
+from src.services.model_cards import dataset_details, model_cards
 
 app = FastAPI(title="KRISHIMITRA API", description="Backend API for KRISHIMITRA ADSS", version=VERSION)
 
@@ -147,7 +148,7 @@ def _catalogue():
     this_year = datetime.date.today().year
     ym = model_info()
     cm = load_classifiers()[1]
-    return [
+    entries = [
         {"id": "open_meteo", "name": "Open-Meteo", "kind": "remote", "category": "Weather & forecast",
          "purpose": "Current conditions, 7-day forecast, FAO-56 reference ET₀ and modelled soil moisture.",
          "resolution": "Best-available NWP model per location (≈1–11 km grid)", "coverage": "Global",
@@ -226,6 +227,8 @@ def _catalogue():
          "resolution": "Administrative boundaries", "coverage": "Global", "cache_ttl": "30 days",
          "url": "https://nominatim.openstreetmap.org/", "used_by": ["Location", "Crop Advisor"]},
     ]
+    # Collection method, split, classes and categories for each dataset.
+    return [{**e, **dataset_details(e["id"])} for e in entries]
 
 
 def _status_for(entry, reg):
@@ -249,6 +252,19 @@ def provider_statuses():
         out.append({**entry, "status": _status_for(entry, reg), "last_attempt": r.get("last_attempt"),
                     "last_success": r.get("last_success"), "last_error": r.get("last_error")})
     return out
+
+
+@app.get("/api/models")
+async def list_models():
+    return {"models": model_cards()}
+
+
+@app.get("/api/models/{model_id}")
+async def get_model(model_id: str):
+    card = model_cards().get(model_id)
+    if not card:
+        raise HTTPException(status_code=404, detail=f"Unknown model {model_id}")
+    return card
 
 
 @app.get("/api/sources")

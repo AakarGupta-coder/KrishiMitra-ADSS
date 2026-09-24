@@ -1,4 +1,5 @@
 import React from 'react';
+import InfoButton from '../components/InfoButton';
 import { Link } from 'react-router-dom';
 import type { FarmSummary, RiskCategory } from '../lib/types';
 import {
@@ -177,7 +178,7 @@ const InsightsView: React.FC<{ s: FarmSummary }> = ({ s }) => {
             })}
           </div>
         </Panel>
-        <Panel icon="grid_view" title="Risk matrix" subtitle="Select a category to open its module">
+        <Panel icon="grid_view" title="Risk matrix" actions={<InfoButton id="risk_engine" label="the risk engine" />} subtitle="Select a category to open its module">
           <RiskMatrix categories={risk.categories} />
         </Panel>
       </section>
@@ -208,7 +209,7 @@ const InsightsView: React.FC<{ s: FarmSummary }> = ({ s }) => {
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {canon ? (
-          <Panel icon="query_stats" title={`Explainability: ${canon.crop}`} subtitle={`Agronomic suitability ${fmtPct01(canon.agronomic_score)}, as exact rule-factor penalties`}>
+          <Panel icon="query_stats" title={`Explainability: ${canon.crop}`} actions={<InfoButton id="rules_engine" label="the agronomic rules engine" />} subtitle={`Agronomic suitability ${fmtPct01(canon.agronomic_score)}, as exact rule-factor penalties`}>
             <FactorAttribution items={canon.attribution} />
           </Panel>
         ) : (
@@ -219,8 +220,18 @@ const InsightsView: React.FC<{ s: FarmSummary }> = ({ s }) => {
         <Panel icon="model_training" title="Model transparency">
           <div className="space-y-3 text-body-sm text-on-surface">
             <Callout tone="neutral" icon="info" title="Why no SHAP for crop ranking">
-              The bundled crop classifier was trained on a single-class dataset, so it cannot rank crops and is excluded. Crop ranking uses the transparent rules engine above, whose factor penalties are exact rather than approximated.
+              Crop ranking uses the transparent rules engine above, whose factor penalties are exact rather than approximated, so SHAP is not needed. The crop classifier (XGBoost) is shown separately as the ML opinion in Crop Advisor and never changes the ranking.
             </Callout>
+            <ul className="divide-y divide-hairline">
+              {([['rules_engine', 'Agronomic rules engine', 'Crop suitability and recommendation'], ['crop_classifier', 'Crop classifier (XGBoost)', 'ML opinion · precision, recall, F1, confusion matrix'],
+                ['yield_model', 'Yield model (XGBoost + reference)', 'MAE, RMSE, R² · SHAP'], ['irrigation', 'FAO-56 water balance', 'Irrigation schedule'],
+                ['soil_rules', 'Soil interpretation rules', 'Constraints and amendments'], ['risk_engine', 'Risk engine', '7 threshold-based categories']] as const).map(([id, name, what]) => (
+                <li key={id} className="flex items-center justify-between gap-2 py-1.5">
+                  <span className="min-w-0"><span className="font-semibold">{name}</span> <span className="text-on-surface-variant">· {what}</span></span>
+                  <InfoButton id={id} label={name} />
+                </li>
+              ))}
+            </ul>
             <p>
               Yield: {!canon ? 'no recommended crop.' : canon.yield.method === 'ml'
                 ? <>the XGBoost yield model supports {canon.crop}; its SHAP explanation is on the <Link to="/yield-prediction" className="font-semibold text-forest hover:underline">Yield Prediction</Link> page.</>

@@ -10,6 +10,7 @@ import { MARKET_BASIS_LABEL, fmtArea, fmtCoord, fmtDateTime, fmtNum, fmtRelative
 import { useUnitStore } from '../lib/units';
 import { useAppSettings, type RefreshInterval } from '../store/useAppSettings';
 import { sourceLabel } from '../components/LocationPicker';
+import InfoButton from '../components/InfoButton';
 
 const STATUS: Record<SourceEntry['status'], { tone: Tone; label: string; icon: string }> = {
   connected: { tone: 'ok', label: 'Connected', icon: 'check_circle' },
@@ -60,7 +61,13 @@ function applicability(id: string, s: FarmSummary | null): { text: string; fallb
     case 'faostat':
       return { text: 'National (India) series; not location-specific' };
     case 'crop_dataset':
-      return { text: 'Not used for recommendations' };
+      return { text: 'Training data for the ML opinion; not used for the recommendation' };
+    case 'crop_model': {
+      const ml = s.ml_opinion;
+      return ml?.status === 'ok'
+        ? { text: `${ml.variant === 'full' ? 'Full variant (soil test)' : 'Climate + pH variant (no soil test)'}; top prediction ${ml.top_crop}` }
+        : { text: 'No ML opinion for this location', fallback: ml?.reason };
+    }
     default:
       return null;
   }
@@ -298,6 +305,29 @@ const SettingsPage: React.FC = () => {
                         {(e.variables ?? e.features ?? []).map((v) => <span key={v} className="px-1.5 py-0.5 rounded bg-surface-container-low border border-hairline text-[11px] font-label-sm text-on-surface-variant">{v}</span>)}
                       </div>
                     )}
+                    {(e.collection || e.split || e.classes || e.categories || e.quality) && (
+                      <details className="mt-2 group">
+                        <summary className="cursor-pointer list-none inline-flex items-center gap-1 font-semibold text-forest hover:underline">
+                          <Icon name="expand_more" className="!text-[18px] group-open:rotate-180 transition-transform" /> Collection method, split and classes
+                        </summary>
+                        <div className="mt-1.5 space-y-1.5 text-on-surface">
+                          {e.collection && <p><span className="font-semibold">Collection method:</span> {e.collection}</p>}
+                          {e.split && <p><span className="font-semibold">Split:</span> {e.split}</p>}
+                          {e.quality && <p className="text-[#B45309]"><span className="font-semibold">Data quality:</span> {e.quality}</p>}
+                          {e.categories && (
+                            <div><span className="font-semibold">Categories:</span>
+                              <ul className="list-disc pl-5 text-on-surface-variant">{e.categories.map((c) => <li key={c}>{c}</li>)}</ul>
+                            </div>
+                          )}
+                          {e.classes && (
+                            <div>
+                              <span className="font-semibold">Classes ({e.classes.length}):</span>
+                              <div className="mt-1 flex flex-wrap gap-1">{e.classes.map((c) => <span key={c} className="px-1.5 py-0.5 rounded bg-surface-container-low border border-hairline text-[11px] font-label-sm">{c}</span>)}</div>
+                            </div>
+                          )}
+                        </div>
+                      </details>
+                    )}
                     {app && (
                       <div className="mt-2 rounded-lg bg-canvas border border-hairline px-3 py-2">
                         <div className="text-on-surface"><span className="font-semibold">This location:</span> {app.text}</div>
@@ -326,14 +356,23 @@ const SettingsPage: React.FC = () => {
       </Panel>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Panel id="models" icon="model_training" title="Model information">
-          <KV label="Crop recommendation" value={`Agronomic Rules Engine ${summary?._meta.rules_version ?? ''}`} />
-          <KV label="Economic outlook" value="Yield × observed mandi price − reference cost" />
-          <KV label="Yield" value="yield_xgb (Rice, Wheat) · reference × suitability (others)" />
-          <KV label="Irrigation" value="FAO-56 root-zone water balance" />
-          <KV label="Risk" value="Threshold rules (IMD, FAO-56)" />
-          <KV label="Crop classifier" value={<span className="text-outline">Excluded: trained on a single class</span>} />
-          <p className="mt-2 text-body-sm text-on-surface-variant">No deep-learning model is used. Explanations are exact rule penalties; SHAP is shown only for the XGBoost yield model.</p>
+        <Panel id="models" icon="model_training" title="Model information" subtitle="Select i for the method, data, split and evaluation metrics">
+          {([
+            ['rules_engine', 'Crop recommendation', `Agronomic Rules Engine ${summary?._meta.rules_version ?? ''}`],
+            ['crop_classifier', 'ML opinion', 'crop_xgb · XGBoost classifier, 22 crops'],
+            ['yield_model', 'Yield', 'yield_xgb (Rice, Wheat) · reference × suitability (others)'],
+            ['economics', 'Economic outlook', 'Yield × observed mandi price − reference cost'],
+            ['irrigation', 'Irrigation', 'FAO-56 root-zone water balance'],
+            ['soil_rules', 'Soil', 'Soil interpretation rules'],
+            ['risk_engine', 'Risk', 'Threshold rules (IMD, FAO-56)'],
+          ] as const).map(([id, label, value]) => (
+            <div key={id} className="flex items-center gap-2 py-1 border-b border-hairline last:border-0 text-body-sm">
+              <span className="w-36 shrink-0 text-on-surface-variant">{label}</span>
+              <span className="flex-1 min-w-0 text-on-surface font-medium">{value}</span>
+              <InfoButton id={id} label={label} />
+            </div>
+          ))}
+          <p className="mt-2 text-body-sm text-on-surface-variant">No deep-learning model is used. Crop scores are explained by exact rule penalties; SHAP explains the XGBoost yield model.</p>
         </Panel>
         <Panel id="app" icon="dns" title="Application">
           <KV label="API status" value={<Badge tone={health === 'online' ? 'ok' : health === 'offline' ? 'critical' : 'neutral'}>{health === 'online' ? 'Online' : health === 'offline' ? 'Unreachable' : 'Checking…'}</Badge>} />

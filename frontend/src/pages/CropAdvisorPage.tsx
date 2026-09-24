@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import InfoButton from '../components/InfoButton';
 import { Link } from 'react-router-dom';
 import { CartesianGrid, LabelList, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from 'recharts';
 import { apiGet, farmParams } from '../lib/api';
@@ -215,7 +216,7 @@ const MlOpinionPanel: React.FC<{ ml: MlOpinion | undefined }> = ({ ml }) => {
   return (
     <Panel icon="model_training" title="ML opinion" accent="water"
       subtitle="A trained classifier's view of this farm, for comparison. It does not change the rules-based recommendation."
-      actions={<Badge tone="water">Model-derived</Badge>}
+      actions={<><Badge tone="water">Model-derived</Badge><InfoButton id="crop_classifier" label="the crop classifier" /></>}
       footer={ml?.dataset && <SourceTag label="Training data" source={`${ml.dataset.rows.toLocaleString('en-IN')} rows, ${ml.classes} crops (public benchmark)`} state="historical" />}>
       {!ml || ml.status !== 'ok' ? (
         <Callout tone="neutral" icon="info" title="ML opinion unavailable">{ml?.reason ?? 'The backend did not return an ML opinion.'}</Callout>
@@ -375,7 +376,7 @@ const CropAdvisorView: React.FC<{ s: FarmSummary }> = ({ s }) => {
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
         <div className="space-y-6 min-w-0">
           {view === 'agronomic' && (
-            <Panel icon="eco" title="Top agronomic matches" subtitle={`Crops sowable within 60 days with ≥ ${Math.round(s._meta.min_agronomic * 100)}% suitability rank first; the rest follow, labelled not eligible.`} bodyClassName="p-0 divide-y divide-hairline"
+            <Panel icon="eco" title="Top agronomic matches" actions={<InfoButton id="rules_engine" label="the agronomic rules engine" />} subtitle={`Crops sowable within 60 days with ≥ ${Math.round(s._meta.min_agronomic * 100)}% suitability rank first; the rest follow, labelled not eligible.`} bodyClassName="p-0 divide-y divide-hairline"
               footer={<div className="flex flex-wrap gap-x-4 gap-y-1">{climateSourceTag(s)}{soilSourceTag(s)}<SourceTag label="Crop rules" source={s._meta.rules_version} state="historical" /></div>}>
               {crops.slice(0, 6).map((c) => (
                 <CropRow key={c.crop} c={c} rank={c.rank} area={s.request.area} emphasis={c.rank === 1} selected={selected === c.crop} onSelect={() => setSelected(c.crop)} />
@@ -385,7 +386,7 @@ const CropAdvisorView: React.FC<{ s: FarmSummary }> = ({ s }) => {
 
           {view === 'economic' && (
             <>
-              <Panel icon="payments" title="Financial crop analysis" subtitle={`Expected yield × current regional price − estimated production cost, for ${fmtArea(s.request.area)}. Select a row for its build-up.`} bodyClassName="p-0"
+              <Panel icon="payments" title="Financial crop analysis" actions={<InfoButton id="economics" label="the economic outlook" />} subtitle={`Expected yield × current regional price − estimated production cost, for ${fmtArea(s.request.area)}. Select a row for its build-up.`} bodyClassName="p-0"
                 footer={<SourceTag label="Market" source="Agmarknet via data.gov.in" time={s.sources.agmarknet?.fetched_at as number | null}
                   state={tagState(providerRow(s, 'agmarknet').state)}
                   note={`${s.sources.agmarknet?.live ?? 0}/${s.sources.agmarknet?.total ?? 0} crops with live prices`} />}>
@@ -433,7 +434,7 @@ const CropAdvisorView: React.FC<{ s: FarmSummary }> = ({ s }) => {
         <aside className="space-y-6 min-w-0">
           <MlOpinionPanel ml={s.ml_opinion} />
 
-          <Panel icon="query_stats" title={`Why ${sel.crop}?`} subtitle="Agronomic Rules Engine: exact rule penalties (not SHAP)">
+          <Panel icon="query_stats" title={`Why ${sel.crop}?`} actions={<InfoButton id="rules_engine" label="the agronomic rules engine" />} subtitle="Agronomic Rules Engine: exact rule penalties (not SHAP)">
             <div className="flex items-baseline justify-between mb-3">
               <span className="text-body-sm text-on-surface-variant">Agronomic suitability</span>
               <span className={`text-title-lg font-telemetry-metric ${TONE_TEXT[scoreTone(sel.agronomic_score)]}`}>{fmtPct01(sel.agronomic_score)}</span>

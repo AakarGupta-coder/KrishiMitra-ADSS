@@ -368,3 +368,23 @@ def test_ml_opinion_reports_missing_inputs(monkeypatch):
     ml = run(fs.build_summary(20.0, 73.8))["ml_opinion"]
     assert ml["status"] == "unavailable"
     assert set(ml["missing"]) == {"temperature", "humidity", "rainfall", "ph"}
+
+
+def test_model_cards_report_classifier_and_regression_metrics():
+    from src.services.model_cards import dataset_details, model_cards
+    cards = model_cards()
+    assert {"rules_engine", "crop_classifier", "yield_model", "irrigation", "soil_rules", "risk_engine", "economics"} <= set(cards)
+    clf = cards["crop_classifier"]
+    for v in clf["variants"].values():
+        for k in ("accuracy", "precision_macro", "recall_macro", "f1_macro"):
+            assert 0 <= v[k] <= 1
+        cm = v["confusion_matrix"]
+        assert len(cm) == len(clf["classes"]) and all(len(r) == len(cm) for r in cm)
+        # Each confusion-matrix row sums to that crop's test rows; the diagonal gives recall.
+        for row, pc in zip(cm, v["per_class"]):
+            assert sum(row) == pc["support"]
+        assert sum(cm[i][i] for i in range(len(cm))) / sum(map(sum, cm)) == pytest.approx(v["accuracy"])
+    assert "split" in clf["dataset"] and "collection" in clf["dataset"]
+    assert {"mae_t_ha", "rmse_t_ha", "r2"} <= set(cards["yield_model"]["regression"])
+    assert "cannot be computed" in cards["rules_engine"]["evaluation"]
+    assert dataset_details("hwsd")["collection"]

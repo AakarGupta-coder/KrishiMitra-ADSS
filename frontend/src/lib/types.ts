@@ -335,4 +335,55 @@ export interface SourceEntry {
   last_attempt: number | null;
   last_success: number | null;
   last_error: string | null;
+  // How the dataset was collected, how it was split, and its classes / categories.
+  collection?: string;
+  split?: string;
+  classes?: string[];
+  categories?: string[];
+  quality?: string;
+}
+
+export interface ClassMetrics { label: string; precision: number; recall: number; f1: number; support: number }
+
+export interface ClassifierVariant {
+  features: string[];
+  accuracy: number;
+  precision_macro: number;
+  recall_macro: number;
+  f1_macro: number;
+  precision_weighted: number;
+  recall_weighted: number;
+  f1_score: number;
+  cv_accuracy_mean?: number;
+  cv_accuracy_std?: number;
+  per_class: ClassMetrics[];
+  confusion_matrix: number[][];
+}
+
+export interface ModelCard {
+  id: string;
+  title: string;
+  kind: string;
+  available: boolean;
+  summary: string;
+  why: string[];
+  how: string[];
+  limitations: string[];
+  used_in: string[];
+  evaluation?: string;
+  algorithm?: string;
+  hyperparameters?: Record<string, string | number>;
+  trained_at?: string;
+  dataset?: {
+    name: string; collection?: string; split?: string; categories?: string[]; classes?: string[]; quality?: string;
+    rows?: number; train_rows?: number; test_rows?: number; crops?: string[]; year_min?: number; year_max?: number;
+  };
+  categories?: Record<string, string[]>;
+  classes?: { label: string; name: string; in_rules: boolean }[];
+  variants?: Record<string, ClassifierVariant>;
+  regression?: {
+    mae_t_ha: number; rmse_t_ha: number | null; r2: number;
+    test_predictions: { year: number; crop: string | null; actual_t_ha: number; predicted_t_ha: number }[];
+  };
+  reference_crops?: string[];
 }

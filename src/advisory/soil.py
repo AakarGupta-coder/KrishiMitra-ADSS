@@ -36,20 +36,23 @@ def usda_texture(sand: Optional[float], silt: Optional[float], clay: Optional[fl
     return "Sandy loam"
 
 
+# (upper pH bound, class, tone); above the last bound the soil is "Very strongly alkaline".
+PH_CLASSES = [
+    (4.5, "Extremely acidic", "critical"),
+    (5.5, "Strongly acidic", "critical"),
+    (6.0, "Moderately acidic", "caution"),
+    (6.5, "Slightly acidic", "ok"),
+    (7.3, "Neutral", "ok"),
+    (7.8, "Slightly alkaline", "ok"),
+    (8.4, "Moderately alkaline", "caution"),
+    (9.0, "Strongly alkaline", "critical"),
+]
+
+
 def ph_class(ph: Optional[float]) -> Optional[dict]:
     if ph is None:
         return None
-    classes = [
-        (4.5, "Extremely acidic", "critical"),
-        (5.5, "Strongly acidic", "critical"),
-        (6.0, "Moderately acidic", "caution"),
-        (6.5, "Slightly acidic", "ok"),
-        (7.3, "Neutral", "ok"),
-        (7.8, "Slightly alkaline", "ok"),
-        (8.4, "Moderately alkaline", "caution"),
-        (9.0, "Strongly alkaline", "critical"),
-    ]
-    for upper, label, tone in classes:
+    for upper, label, tone in PH_CLASSES:
         if ph <= upper:
             return {"label": label, "tone": tone}
     return {"label": "Very strongly alkaline", "tone": "critical"}

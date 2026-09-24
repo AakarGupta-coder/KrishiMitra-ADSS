@@ -21,6 +21,7 @@ KRISHIMITRA is a full-scale AI-powered Agricultural Decision Support System (ADS
 - **Live notifications**: Alerts are evaluated from the current data (IMD heavy-rain thresholds, heat/frost, irrigation threshold, crop/soil constraints, mandi price changes, source outages), deduplicated per farm location.
 - **PDF reports**: Generated in the browser from the live summary (jsPDF), with a source-status table on every report.
 - **Data transparency**: Settings → Data Sources & Provenance shows every source's real status, last successful fetch, fallback use and raw payload, with refresh/retry.
+- **Model cards ("i" buttons)**: Every panel driven by a model or rule engine has an info button that opens its card (`/api/models`): why the approach was chosen, how it works, dataset collection method, split, classes and categories, evaluation metrics and limitations.
 - **UI**: React + Vite + Tailwind, following the Stitch design system.
 
 ## Architecture
@@ -89,6 +90,23 @@ KrishiMitra-ADSS/
 | **OSM Nominatim** | Geocoding | District/state resolution for market matching | Live REST API |
 | **FAOSTAT** | Historical | National yields; yield-model training (19-row local sample) | Offline CSV |
 | **Crop recommendation** ([Kaggle](https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset)) | Agronomic | crop_xgb training data (2,200 rows, 22 crops) | Offline CSV |
+
+## Model Evaluation
+
+Metrics are computed by `python -m src.models.train`, saved in `models/*_meta.json` and shown in the app's model cards.
+
+**Crop classifier (`crop_xgb`)**: stratified 80/20 split (1,760 train / 440 test rows, 20 per crop, `random_state=42`) plus stratified 5-fold cross-validation. Precision, recall and F1 are macro averages over the 22 crops; with balanced classes the weighted averages are the same.
+
+| Variant | Inputs | Accuracy | Precision | Recall | F1 | 5-fold CV accuracy |
+|---|---|---|---|---|---|---|
+| Full (soil test) | N, P, K, temperature, humidity, pH, rainfall | 98.9 % | 98.9 % | 98.9 % | 98.8 % | 99.3 % ± 0.3 |
+| Climate + pH | temperature, humidity, pH, rainfall | 94.1 % | 94.2 % | 94.1 % | 94.0 % | 95.8 % ± 0.5 |
+
+Per-crop precision, recall, F1 and the full 22 × 22 confusion matrix are in `models/crop_meta.json` and the Crop classifier model card. Weakest crops: lentil (full, recall 85 %), pomegranate and orange (climate, F1 81–82 %).
+
+**Yield regressor (`yield_xgb`)**: random 80/20 split of the FAOSTAT sample (15 train / 4 test rows). MAE 0.031 t/ha, RMSE 0.047 t/ha, R² −5.33. Precision, recall and F1 do not apply to regression. Three of the four test rows are placeholder values, so these numbers say little about real accuracy.
+
+**Rules engine, irrigation, soil and risk logic**: no labelled ground truth exists, so accuracy, precision, recall and F1 cannot be computed. Their behaviour is covered by unit tests in `tests/test_core.py`.
 
 ## Installation & Setup
 

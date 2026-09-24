@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import InfoButton from '../components/InfoButton';
 import { Link } from 'react-router-dom';
 import type { FarmSummary } from '../lib/types';
 import { apiPost } from '../lib/api';
@@ -112,7 +113,7 @@ const SoilView: React.FC<{ s: FarmSummary }> = ({ s }) => {
               )}
             </Panel>
 
-            <Panel icon="rule" title="Suitability interpretation">
+            <Panel icon="rule" title="Suitability interpretation" actions={<InfoButton id="soil_rules" label="the soil interpretation rules" />}>
               {interp.constraints.length > 0 ? (
                 <div className="space-y-2">
                   <Eyebrow>Potential constraints</Eyebrow>

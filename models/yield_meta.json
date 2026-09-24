@@ -1,10 +1,56 @@
 {
-    "version": "v1.0",
+    "version": "v1.1",
+    "trained_at": "2026-09-24",
+    "algorithm": "XGBoost gradient-boosted trees (XGBRegressor), 100 trees",
     "mae": 309.9990234375,
+    "rmse": 467.59638043936997,
     "r2_score": -5.328404426574707,
+    "target": "Yield_hg_ha (hectograms per hectare; 10,000 hg/ha = 1 t/ha)",
     "features": [
         "Year",
         "Crop_Rice",
         "Crop_Wheat"
+    ],
+    "dataset": {
+        "rows": 20,
+        "train_rows": 16,
+        "test_rows": 4,
+        "crops": [
+            "Rice",
+            "Wheat"
+        ],
+        "year_min": 2010,
+        "year_max": 2029
+    },
+    "split": {
+        "method": "Random train/test split",
+        "test_size": 0.2,
+        "random_state": 42
+    },
+    "test_predictions": [
+        {
+            "year": 2018,
+            "crop": "Rice",
+            "actual_hg_ha": 26590.0,
+            "predicted_hg_ha": 27439.994140625
+        },
+        {
+            "year": 2013,
+            "crop": "Rice",
+            "actual_hg_ha": 27000.0,
+            "predicted_hg_ha": 27000.00390625
+        },
+        {
+            "year": 2011,
+            "crop": "Rice",
+            "actual_hg_ha": 27000.0,
+            "predicted_hg_ha": 27000.00390625
+        },
+        {
+            "year": 2019,
+            "crop": "Rice",
+            "actual_hg_ha": 27050.0,
+            "predicted_hg_ha": 27439.994140625
+        }
     ]
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import InfoButton from '../components/InfoButton';
 import { CartesianGrid, Line, LineChart, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { apiGet, farmParams } from '../lib/api';
 import type { FarmSummary, YieldDetail } from '../lib/types';
@@ -142,7 +143,7 @@ const YieldBody: React.FC<{ s: FarmSummary; d: YieldDetail; isCanonical: boolean
         <DataTable columns={featureColumns} rows={featureRows(s, d)} rowKey={(r) => r.key} minWidth={760} />
       </Panel>
 
-      <Panel icon="model_training" title="Model" subtitle="What produced this number">
+      <Panel icon="model_training" title="Model" subtitle="What produced this number" actions={<InfoButton id="yield_model" label="the yield model" />}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <div>
             <KV label="Method" value={e.method === 'ml' ? 'Machine Learning Model' : e.method === 'reference' ? 'Statistical estimate (reference × suitability)' : 'Unavailable'} />
@@ -239,7 +240,7 @@ const YieldBody: React.FC<{ s: FarmSummary; d: YieldDetail; isCanonical: boolean
           )}
         </Panel>
 
-        <Panel icon="insights" title={e.shap ? 'Model explanation (SHAP)' : 'Important factors'} subtitle={e.shap ? `Base value ${fmtYield(e.shap.base_t_ha, 3)}` : 'Rule-factor attribution driving the suitability-scaled estimate (not SHAP)'}>
+        <Panel icon="insights" title={e.shap ? 'Model explanation (SHAP)' : 'Important factors'} actions={<InfoButton id="yield_model" label="the yield model" />} subtitle={e.shap ? `Base value ${fmtYield(e.shap.base_t_ha, 3)}` : 'Rule-factor attribution driving the suitability-scaled estimate (not SHAP)'}>
           {e.shap ? (
             <div className="space-y-2">
               {e.shap.contributions.map((c) => (

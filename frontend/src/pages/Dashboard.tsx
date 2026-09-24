@@ -1,4 +1,5 @@
 import React from 'react';
+import InfoButton from '../components/InfoButton';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useFarmStore } from '../store/useFarmStore';
@@ -287,7 +288,7 @@ const DashboardView: React.FC<{ s: FarmSummary }> = ({ s }) => {
 
         {canon ? (
         <Panel className="lg:col-span-5" icon="psychology" title="Farm advisory profile" accent="forest"
-          actions={<Badge tone={canon.confidence === 'High' ? 'ok' : canon.confidence === 'Medium' ? 'water' : 'caution'}>Confidence: {canon.confidence}</Badge>}
+          actions={<><Badge tone={canon.confidence === 'High' ? 'ok' : canon.confidence === 'Medium' ? 'water' : 'caution'}>Confidence: {canon.confidence}</Badge><InfoButton id="rules_engine" label="the agronomic rules engine" /></>}
           footer={climateSourceTag(s)}>
           <div className="rounded-lg border border-hairline bg-canvas p-4">
             <Eyebrow>Canonical recommendation · {s.season.planning_label}</Eyebrow>
@@ -328,7 +329,7 @@ const DashboardView: React.FC<{ s: FarmSummary }> = ({ s }) => {
       </section>
 
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <Panel className="lg:col-span-7" icon="shield" title="Risk overview" subtitle={`${risk.total} evidence-backed categories. Select one to open its module.`}>
+        <Panel className="lg:col-span-7" icon="shield" title="Risk overview" actions={<InfoButton id="risk_engine" label="the risk engine" />} subtitle={`${risk.total} evidence-backed categories. Select one to open its module.`}>
           <RiskMatrix categories={risk.categories} />
         </Panel>
         <Panel className="lg:col-span-5" icon="notifications_active" title="Active alerts" subtitle="Generated from the current data for this farm">

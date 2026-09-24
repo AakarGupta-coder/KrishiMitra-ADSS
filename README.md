@@ -1,208 +1,139 @@
-# KRISHIMITRA: AI-Powered Agricultural Decision Support System (DSS)
+# KRISHIMITRA: AI-Powered Agricultural Decision Support System
 
 <p align="center">
   <img src="assets/images/logo.png" alt="KRISHIMITRA" width="80%" />
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/AI_ML-XGBoost%20%7C%20LightGBM-29B5E8?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/License-MIT-purple?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Domain-Precision_Agriculture-FF9900?style=for-the-badge" />
-</p>
+## Overview
 
-<p align="center">
-  <strong>Comprehensive AI-driven agricultural decision support framework fusing multi-modal environmental datasets (weather, soil, historical yields) to deliver explainable crop advisories, yield predictions, and dynamic irrigation schedules.</strong>
-</p>
+KRISHIMITRA is a full-scale AI-powered Agricultural Decision Support System (ADSS) designed to deliver professional agronomic insights. It synthesizes geospatial, meteorological, and pedological data pipelines into a low-latency ensemble architecture, providing explainable crop advisories, yield predictions, and dynamic irrigation schedules.
 
-<p align="center">
-  <strong>Made by Aakar Gupta</strong>
-</p>
+## V2 Features
 
----
+- **Farm Profile**: Configurable farm details (location, area, crop).
+- **Data Engineering Pipeline**: Robust ingestion from NASA POWER, Open-Meteo, ISRIC SoilGrids WCS, and FAOSTAT with proper validation, caching, and error handling.
+- **Crop Recommendation**: XGBoost classification model predicting the most suitable crop based on N, P, K, pH, rainfall, temp, and humidity.
+- **Yield Prediction**: XGBoost regression model estimating historical and future yield trajectories (t/ha).
+- **Explainable AI (XAI)**: SHAP-powered feature importance charts explaining *why* a crop was recommended.
+- **Irrigation & Risk Advisory**: Heuristic-based engines combining expected rainfall, temperature, and soil conditions to output actionable advice.
+- **Canonical recommendation**: One backend summary (`/api/farm/summary`) feeds every page, so Dashboard, Crop Advisor, Yield, AI Insights and Reports always agree. Overall = 60% agronomic + 40% financial, restricted to crops sowable in the next 60 days.
+- **Live notifications**: Alerts are evaluated from the current data (IMD heavy-rain thresholds, heat/frost, irrigation threshold, crop/soil constraints, mandi price changes, source outages), deduplicated per farm location.
+- **PDF reports**: Generated in the browser from the live summary (jsPDF), with a source-status table on every report.
+- **Data transparency**: Settings → Data Sources & Provenance shows every source's real status, last successful fetch, fallback use and raw payload, with refresh/retry.
+- **UI**: React + Vite + Tailwind, following the Stitch design system.
 
-## Repository Metadata
+## Architecture
 
-<div align="center">
+The system operates via a decoupled frontend-backend architecture. 
 
-| Field | Value |
-|---|---|
-| Repository name | `KrishiMitra-ADSS` |
-| Author | Aakar Gupta |
-| Project type | Decision Support System (DSS) / Machine Learning Pipeline |
-| Primary domain | Precision Agriculture & Agronomy |
-| Secondary domain | Multi-Modal Data Fusion, Explainable AI (XAI) |
-| Core technologies | Python, Pandas, LightGBM, XGBoost, SHAP, Matplotlib |
-| Data sources | NASA POWER API, Open-Meteo, SoilGrids, FAOSTAT, Kaggle Crop Recommendation |
+```mermaid
+flowchart TD
+    subgraph Frontend [React + Vite]
+        UI[User Interface]
+        State[Zustand Store]
+        PDF[PDF Generator]
+    end
 
-</div>
+    subgraph Backend [FastAPI]
+        API[API Router]
+        Data[Data Fetchers]
+        ML[ML Models & SHAP]
+        Engines[Decision Engines]
+    end
 
-<div style="border-left: 6px solid #2e7d32; background: #edf7ed; padding: 12px 16px; margin: 16px 0;">
-<strong>Project Highlight:</strong> Synthesizing disparate geospatial, meteorological, and pedological data pipelines into a unified, low-latency ensemble architecture that provides <em>interpretable (SHAP-backed)</em> agronomic insights for rural farmers.
-</div>
+    subgraph External [External APIs]
+        NASA(NASA POWER)
+        Meteo(Open-Meteo)
+        Soil(ISRIC SoilGrids WCS)
+        Gov(data.gov.in Agmarknet)
+        OSM(Nominatim)
+    end
 
----
+    UI <-->|JSON over HTTP| API
+    API --> Data
+    API --> ML
+    API --> Engines
+    Data <--> External
+    Data <--> Cache[(SQLite Cache)]
+```
 
-## Data Loading and Datasets Used
-
-This repository currently focuses on the robust multi-modal data ingestion pipeline located in `dataset_loader.py`. 
-
-### Datasets Integrated
-
-<div align="center">
-
-| Dataset Source | Modality | Target Use | Access Method |
-|---|---|---|---|
-| **NASA POWER API** | Meteorological | Historical Temp, Humidity, Rain | Live REST API |
-| **Open-Meteo API** | Meteorological | 7-day Forward Weather Forecasts | Live REST API |
-| **SoilGrids** | Pedological | Soil pH, Nitrogen, Sand/Clay % | Live REST API |
-| **FAOSTAT** | Historical | True Yield Labels & Harvest Area | Offline CSV |
-| **Kaggle Crop Data** | Agronomic | Synthesized N-P-K & Crop Labels | Offline CSV |
-
-</div>
-
-### Current Repository Structure
+### Directory Structure
 
 ```text
 KrishiMitra-ADSS/
-├── README.md                     # This file
-├── dataset_loader.py             # Data ingestion and API fetch script
-├── logo.png                      # Project logo
-├── data/                         
-│   ├── crop_recommendation.csv   # Kaggle synthetic crop dataset
-│   └── faostat_sample.csv        # FAOSTAT historical yield data
-└── report/                       
-    └── KrishiMitra_DA1_Report_v4.docx # DA1 Final Submission Document
+├── api/                     # FastAPI backend application
+├── src/                     # Backend core logic
+│   ├── data/                # API clients (NASA, OpenMeteo, ISRIC, Agmarknet)
+│   ├── features/            # Feature engineering pipelines
+│   ├── models/              # ML training & inference logic
+│   ├── advisory/            # Decision engines (Irrigation, Risk)
+│   └── explainability/      # SHAP integration
+├── data/                    # Local CSV datasets & DBs
+├── frontend/                # React Vite application
+├── models/                  # Pickled ML models & metrics
+├── v1/                      # Original V1 preserved code
+└── requirements.txt         # Python Dependencies
 ```
 
-### Execution Output
+## Datasets & Provenance
 
-Run the data loader script to verify API connections and data extraction:
+| Dataset Source | Modality | Target Use | Access Method |
+|---|---|---|---|
+| **Open-Meteo API** | Meteorological | Current conditions, 7-day forecast, FAO-56 ET₀, modelled soil moisture | Live REST API |
+| **NASA POWER API** | Meteorological | 5-year monthly climatology → crop-specific growing-season climate | Live REST API |
+| **ISRIC SoilGrids v2.0** | Pedological | Soil pH, USDA texture, sand/silt/clay, OC, total N, CEC (250m resolution) | Live WCS API |
+| **Agmarknet (data.gov.in)**| Market | Current daily mandi modal prices, local district or nearest market | Live REST API |
+| **OSM Nominatim** | Geocoding | District/state resolution for market matching | Live REST API |
+| **FAOSTAT** | Historical | National yields; yield-model training (local sample) | Offline CSV |
+| **Crop recommendation**| Agronomic | crop_xgb training data | Offline CSV |
 
-```bash
-python dataset_loader.py
-```
+## Installation & Setup
 
-**Output:**
-```text
---- Loading NASA POWER Dataset (20.59, 78.96) ---
-Success! NASA POWER Data (First 20 samples):
-              T2M  PRECTOTCORR   RH2M
-2023-01-01  19.19         0.00  65.87
-2023-01-02  18.68         0.00  68.00
-2023-01-03  19.01         0.04  70.60
-2023-01-04  19.19         1.47  77.17
-2023-01-05  18.37         0.01  80.12
-2023-01-06  18.52         0.00  73.20
-2023-01-07  16.12         0.00  53.72
-2023-01-08  14.87         0.00  49.00
-2023-01-09  16.59         0.00  50.14
-2023-01-10  18.48         0.00  50.29
-2023-01-11  19.46         0.00  47.45
-2023-01-12  20.07         0.00  45.20
-2023-01-13  19.86         0.00  50.40
-2023-01-14  20.36         0.00  58.22
-2023-01-15  18.89         0.00  60.93
-2023-01-16  18.85         0.00  58.25
-2023-01-17  20.34         0.00  61.56
-2023-01-18  19.63         0.00  61.90
-2023-01-19  20.38         0.00  63.90
-2023-01-20  21.87         0.00  60.97
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Set up environment variables by creating a `.env` file in the root directory. Required format:
+   ```env
+   # KrishiMitra Configuration
+   
+   # Agmarknet mandi prices (data.gov.in). Without a key the public sample key is used,
+   # which returns at most 10 records per call and is quickly rate-limited (HTTP 429).
+   # Register for a free personal key at https://data.gov.in and set it here.
+   DATA_GOV_IN_API_KEY=""
+   
+   # Where runtime state (source health, market observations, geocode cache) is stored.
+   KRISHIMITRA_STATE_DB="data/krishimitra_state.sqlite"
+   
+   # Frontend: backend URL used by the React app (Vite reads VITE_* variables).
+   VITE_API_BASE="http://localhost:8000"
+   
+   # Application Settings
+   ENVIRONMENT="development"
+   LOG_LEVEL="INFO"
+   ```
+4. Train models (Optional, pre-trained provided):
+   ```bash
+   python -m src.models.train
+   ```
+5. Run the backend (from the repository root):
+   ```bash
+   python -m uvicorn api.main:app --reload
+   ```
+6. Run the frontend:
+   ```bash
+   cd frontend && npm install && npm run dev
+   ```
+   Open http://localhost:5173 and choose a location.
 
---- Loading Open-Meteo Forecast Dataset (20.59, 78.96) ---
-Success! Open-Meteo Forecast Data (First 20 samples):
-          time  temperature_2m_max  precipitation_sum
-0   2026-08-02                32.2                0.6
-1   2026-08-03                32.8                0.6
-2   2026-08-04                32.4                0.3
-3   2026-08-05                32.3                0.1
-4   2026-08-06                32.2                0.7
-5   2026-08-07                28.8               13.9
-6   2026-08-08                29.0               18.5
-7   2026-08-09                31.8                2.2
-8   2026-08-10                31.6                0.9
-9   2026-08-11                31.7                4.2
-10  2026-08-12                30.9                1.2
-11  2026-08-13                30.6                1.2
-12  2026-08-14                28.7                1.2
-13  2026-08-15                28.8                0.0
-14  2026-08-16                29.0                0.6
-15  2026-08-17                28.4                0.0
-16  2026-08-18                29.6                1.2
-17  2026-08-19                30.3                0.0
-18  2026-08-20                30.8                0.6
-19  2026-08-21                31.1                2.1
+## Limitations & Ethical Considerations
 
---- Loading SoilGrids Parameters Dataset for 20 locations ---
-Success! SoilGrids Parameters Data:
-      lat    lon  nitrogen  phh2o
-0   20.59  78.96     134.0   72.0
-1   21.15  79.09     134.0   72.0
-2   22.57  88.36     134.0   72.0
-3   28.70  77.10     134.0   72.0
-4   19.08  72.88     134.0   72.0
-5   13.08  80.27     134.0   72.0
-6   12.97  77.59     134.0   72.0
-7   17.38  78.49     134.0   72.0
-8   23.02  72.57     134.0   72.0
-9   26.91  75.79     134.0   72.0
-10  26.85  80.95     134.0   72.0
-11  25.59  85.14     134.0   72.0
-12  21.17  72.83     134.0   72.0
-13  22.31  73.18     134.0   72.0
-14  18.52  73.86     134.0   72.0
-15  28.45  77.03     134.0   72.0
-16  27.18  78.01     134.0   72.0
-17  25.32  83.00     134.0   72.0
-18  30.73  76.78     134.0   72.0
-19  15.30  74.12     134.0   72.0
+- **Experimental AI**: Predictions are based on historical ML models and are intended for decision support, not absolute agronomic guarantees.
+- **Data Fallbacks**: If external APIs are unavailable, the system gracefully handles missing values and informs the user rather than hallucinating measurements.
+- **Yield Ranges**: Yield predictions represent an estimated statistical trajectory rather than a guaranteed output.
+- **Market data**: The public data.gov.in sample key is heavily rate-limited; without a personal key, prices may fall back to the last observed Agmarknet price.
 
---- Loading FAOSTAT Historical Yield Dataset ---
-Success! FAOSTAT Historical Yield Data (First 20 samples):
-   Country   Year   Crop  Area_Harvested_ha  Yield_hg_ha  Production_tonnes
-0    India   2018   Rice           44380000        26590          118040000
-1    India   2019   Rice           43660000        27050          118120000
-2    India   2020   Rice           45070000        27440          124370000
-3    India   2018  Wheat           29650000        33710           99870000
-4    India   2019  Wheat           29320000        35330          103600000
-5    India   2021   Rice           45000000        27000          120000000
-6    India   2022   Rice           45000000        27000          120000000
-7    India   2023   Rice           45000000        27000          120000000
-8    India   2024   Rice           45000000        27000          120000000
-9    India   2025   Rice           45000000        27000          120000000
-10   India   2026   Rice           45000000        27000          120000000
-11   India   2027   Rice           45000000        27000          120000000
-12   India   2028   Rice           45000000        27000          120000000
-13   India   2029   Rice           45000000        27000          120000000
-14   India  20210   Rice           45000000        27000          120000000
-15   India  20211   Rice           45000000        27000          120000000
-16   India  20212   Rice           45000000        27000          120000000
-17   India  20213   Rice           45000000        27000          120000000
-18   India  20214   Rice           45000000        27000          120000000
-19   India  20215   Rice           45000000        27000          120000000
+## License
 
---- Loading Kaggle Crop Recommendation Dataset ---
-Success! Kaggle Crop Recommendation Data (First 20 samples):
-     N   P   K  temperature  humidity   ph  rainfall label
-0   90  42  43         20.8      82.0  6.5     202.9  rice
-1   85  58  41         21.7      80.3  7.0     226.6  rice
-2   60  55  44         23.0      82.3  7.8     263.9  rice
-3   74  35  40         26.4      80.1  6.9     242.8  rice
-4   78  42  42         20.1      81.6  7.6     262.7  rice
-5   69  37  42         23.0      83.3  6.9     251.0  rice
-6   69  55  38         22.7      82.6  5.7     271.3  rice
-7   94  53  40         20.2      82.8  5.7     241.9  rice
-8   89  54  38         24.5      83.5  6.4     230.2  rice
-9   68  58  38         23.2      83.0  6.3     221.2  rice
-10  91  53  40         26.5      81.4  5.3     270.4  rice
-11  90  46  42         23.9      81.4  5.9     264.4  rice
-12  78  58  44         26.8      80.5  5.9     244.7  rice
-13  93  51  35         24.0      82.3  6.3     185.2  rice
-14  94  50  37         25.6      80.6  6.9     214.2  rice
-15  60  39  36         24.2      81.1  5.5     225.4  rice
-16  60  39  36         24.2      81.1  5.5     225.4  rice
-17  70  40  40         22.0      80.0  6.0     200.0  rice
-18  80  50  45         23.5      82.5  6.5     230.5  rice
-19  85  55  42         25.0      81.0  7.0     240.0  rice
-```
+MIT License

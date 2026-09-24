@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KRISHIMITRA ADSS - Enterprise Farm Intelligence Dashboard</title>
+<!-- Google Fonts: Manrope & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Verbatim Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-dim": "#d9dad7",
+            "secondary-fixed": "#7ffc97",
+            "secondary-fixed-dim": "#62df7d",
+            "inverse-on-surface": "#f0f1ed",
+            "on-secondary": "#ffffff",
+            "on-primary-fixed-variant": "#204f3e",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "primary-fixed": "#bbedd6",
+            "on-secondary-container": "#007230",
+            "on-primary-container": "#7eae99",
+            "error": "#ba1a1a",
+            "inverse-surface": "#2e312f",
+            "on-secondary-fixed": "#002109",
+            "on-primary": "#ffffff",
+            "background": "#f9faf6",
+            "surface-container": "#edeeea",
+            "tertiary-container": "#003e61",
+            "tertiary-fixed": "#cce5ff",
+            "primary": "#002b1e",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#005320",
+            "on-tertiary-container": "#4cacf1",
+            "surface-container-low": "#f3f4f0",
+            "on-tertiary-fixed": "#001d31",
+            "surface": "#f9faf6",
+            "on-tertiary-fixed-variant": "#004b73",
+            "surface-tint": "#396755",
+            "on-primary-fixed": "#002116",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#93ccff",
+            "outline-variant": "#c0c8c3",
+            "on-background": "#191c1a",
+            "secondary-container": "#7cf994",
+            "inverse-primary": "#a0d1bb",
+            "on-surface": "#191c1a",
+            "surface-bright": "#f9faf6",
+            "primary-container": "#114232",
+            "outline": "#717974",
+            "surface-variant": "#e2e3df",
+            "surface-container-high": "#e7e9e5",
+            "surface-container-highest": "#e2e3df",
+            "primary-fixed-dim": "#a0d1bb",
+            "secondary": "#006e2d",
+            "on-surface-variant": "#414944",
+            "tertiary": "#002740",
+            "on-tertiary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1.5rem",
+            "gutter": "1.5rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "margin": "2rem",
+            "gutter-mobile": "0.75rem",
+            "space-md": "1rem",
+            "margin-mobile": "1rem",
+            "space-xl": "2.5rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Manrope"],
+            "body-md": ["Manrope"],
+            "headline-xl": ["Manrope"],
+            "headline-lg-mobile": ["Manrope"],
+            "title-lg": ["Manrope"],
+            "headline-xl-mobile": ["Manrope"],
+            "label-md": ["JetBrains Mono"],
+            "telemetry-metric": ["JetBrains Mono"],
+            "headline-lg": ["Manrope"],
+            "body-lg": ["Manrope"],
+            "label-sm": ["JetBrains Mono"],
+            "body-sm": ["Manrope"],
+            "title-md": ["Manrope"]
+          },
+          "fontSize": {
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "title-lg": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "telemetry-metric": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "title-md": ["16px", { "lineHeight": "22px", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+    }
+    /* Subtle custom scrollbar for telemetry widgets */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f3f4f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c0c8c3;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex selection:bg-secondary-container selection:text-on-secondary-fixed">
+<!-- ========================================================================= -->
+<!-- SIDEBAR NAVIGATION (Shared Component: SideNavBar)                         -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-full w-64 flex flex-col z-40 bg-surface-container-lowest border-r border-outline-variant shadow-sm transition-colors duration-150 ease-in-out">
+<div class="flex flex-col h-screen p-4 justify-between">
+<!-- Brand & Version Header -->
+<div class="flex flex-col gap-5">
+<div class="px-2 pt-1 pb-2 border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img alt="KRISHIMITRA Institutional Brandmark" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vrmv4BS51pO4svkVhIxmNwMIwbfR6WLkbBs0OtOQTAMAMGS-3ob8t3xpWtDsRl7zF5R1cBrgBLPvwngNrFBrVw5T5P24voTnK5zT2Ahzn5s6wU470aRdwrrZ9r-L9TfGe44YgMWBR4ceq1BgPpkrf89ZoNTJ7HBQw6xImLYXvw3K0vVPr9YxdrhtItlLkG1JsSeilsWrDOWdIUrHC8qmjnLsLH-TdD6-cywgbelYi8jsJqKMAqrfOhn2Go"/>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface-variant border border-outline-variant">
+            v4.2
+          </span>
+</div>
+<!-- Navigation Tabs: Dashboard is ACTIVE (semantic exact match) -->
+<nav class="flex flex-col space-y-1">
+<!-- 1. Dashboard (Active) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface-container text-primary font-semibold border-l-4 border-primary transition-colors" href="#">
+<span class="material-symbols-outlined fill-icon text-primary" data-icon="dashboard">dashboard</span>
+<span class="text-body-md font-body-md text-primary font-semibold">Dashboard</span>
+</a>
+<!-- 2. Crop Advisor -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+<span class="text-body-md font-body-md">Crop Advisor</span>
+</a>
+<!-- 3. Yield Prediction -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+<span class="text-body-md font-body-md">Yield Prediction</span>
+</a>
+<!-- 4. Irrigation Advisor -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="text-body-md font-body-md">Irrigation Advisor</span>
+</a>
+<!-- 5. Weather Intelligence -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="routine">routine</span>
+<span class="text-body-md font-body-md">Weather Intelligence</span>
+</a>
+<!-- 6. Soil Intelligence -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="science">science</span>
+<span class="text-body-md font-body-md">Soil Intelligence</span>
+</a>
+<!-- 7. AI Insights & Risk -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="model_training">model_training</span>
+<span class="text-body-md font-body-md">AI Insights &amp; Risk</span>
+</a>
+<!-- 8. Farm Profile -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="agriculture">agriculture</span>
+<span class="text-body-md font-body-md">Farm Profile</span>
+</a>
+<!-- 9. Reports -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-body-md font-body-md">Reports</span>
+</a>
+<!-- 10. Settings -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-body-md font-body-md">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footers & CTA -->
+<div class="flex flex-col gap-3 pt-3 border-t border-outline-variant">
+<button class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-body-sm font-body-sm font-semibold rounded-lg bg-primary text-on-primary hover:bg-[#16533f] transition-colors border border-[#0d3528] shadow-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="sync">sync</span>
+<span>Execute Telemetry Sync</span>
+</button>
+<div class="flex flex-col space-y-0.5">
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="menu_book">menu_book</span>
+<span>Documentation</span>
+</a>
+<a class="flex items-center gap-2.5 px-3 py-1.5 rounded-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="headset_mic">headset_mic</span>
+<span>Support Portal</span>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- MAIN WORKSPACE                                                            -->
+<!-- ========================================================================= -->
+<div class="flex-1 ml-64 flex flex-col min-w-0">
+<!-- TOP NAVIGATION BAR (Shared Component: TopNavBar) -->
+<header class="sticky top-0 z-30 flex items-center justify-between px-8 py-3 w-full border-b border-outline-variant bg-surface-container-lowest shadow-sm">
+<!-- Left side: Page Title & Global Search -->
+<div class="flex items-center gap-6 flex-1 max-w-xl">
+<div class="flex items-center gap-2">
+<span class="text-title-md font-title-md font-bold text-primary">Farm Intelligence Dashboard</span>
+</div>
+<div class="relative w-full max-w-xs">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]" data-icon="search">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 text-body-sm font-body-sm bg-surface-container-low border border-outline-variant rounded-lg text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Search plots, soil metrics, alerts..." type="text"/>
+</div>
+</div>
+<!-- Right side: Actions, Selectors & Profile Avatar -->
+<div class="flex items-center gap-4">
+<!-- Farm Selector Dropdown -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container text-on-surface text-body-sm font-body-sm border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="agriculture">agriculture</span>
+<span class="font-semibold text-primary">My Farm: Maharashtra • 2.5 ha</span>
+<span class="material-symbols-outlined text-outline text-[18px]" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Last Sync Telemetry Badge -->
+<div class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#f1f5ee] border border-outline-variant text-label-sm font-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>Weather updated 8 min ago • Model v1.0</span>
+</div>
+<!-- Trailing Action Icons -->
+<div class="flex items-center gap-1 border-l border-r border-outline-variant px-2">
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors relative" title="Telemetry Schedule">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+</button>
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors relative" title="Notifications">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container-lowest"></span>
+</button>
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Tune Model Parameters">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- User Profile Pill -->
+<div class="flex items-center gap-3 pl-1">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-label-md border border-[#204f3e]">
+            A
+          </div>
+<div class="hidden lg:flex flex-col text-left">
+<span class="text-body-sm font-body-sm font-bold text-on-surface leading-tight">Aakar</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Lead Agronomist</span>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN SCROLLABLE CANVAS -->
+<main class="p-8 max-w-[1440px] w-full mx-auto space-y-6">
+<!-- WELCOME HERO BANNER -->
+<section class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-outline-variant">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h1 class="text-headline-md font-headline-md text-primary">Good morning, Aakar. Here is your farm intelligence for today.</h1>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Plot #MH-2490 • Western Vidarbha Agro-climatic Zone • Kharif Season 2025</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-label-sm font-label-sm bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#15803d]"></span>
+            Demo Farm Telemetry Connected
+          </span>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-body-sm font-body-sm font-medium rounded-lg bg-surface-container-lowest text-primary border border-outline-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="download">download</span>
+            Export Run
+          </button>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- SECTION 1: EXECUTIVE KPIS (4 CARDS)                                   -->
+<!-- ===================================================================== -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- KPI 1: Recommended Crop -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant p-5 shadow-[0_1px_2px_rgba(17,66,50,0.04)] flex flex-col justify-between">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Recommended Crop</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]">
+              94% Probability
+            </span>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-lg font-headline-lg text-primary">Rice</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant font-medium">(Oryza sativa)</span>
+</div>
+<div class="mt-2 flex items-center gap-1 text-label-sm font-label-sm text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="eco">eco</span>
+<span>Kharif Cycle • High Biome Affinity</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-variant text-body-sm font-body-sm text-on-surface-variant flex justify-between items-center">
+<span>Optimal sowing window</span>
+<span class="font-medium text-on-surface">Jun 18 - Jun 26</span>
+</div>
+</div>
+<!-- KPI 2: Estimated Yield -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant p-5 shadow-[0_1px_2px_rgba(17,66,50,0.04)] flex flex-col justify-between">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Estimated Yield</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]">
+              ↑ +8.4%
+            </span>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-lg font-headline-lg text-primary font-telemetry-metric">3.8</span>
+<span class="text-body-md font-body-md text-on-surface-variant font-label-md">t/ha</span>
+</div>
+<div class="mt-2 text-label-sm font-label-sm text-on-surface-variant">
+              Historical Range: <span class="font-semibold text-on-surface">3.4 – 4.2 t/ha</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-variant text-body-sm font-body-sm text-on-surface-variant flex justify-between items-center">
+<span>Total Farm Output</span>
+<span class="font-medium text-on-surface font-label-md">9.5 Metric Tonnes</span>
+</div>
+</div>
+<!-- KPI 3: Irrigation Need -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant p-5 shadow-[0_1px_2px_rgba(17,66,50,0.04)] flex flex-col justify-between">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Irrigation Need</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#e0f2fe] text-[#0369a1] border border-[#bae6fd]">
+              Moderate
+            </span>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-lg font-headline-lg text-primary font-telemetry-metric">24</span>
+<span class="text-body-md font-body-md text-on-surface-variant font-label-md">mm req.</span>
+</div>
+<div class="mt-2 flex items-center gap-1 text-label-sm font-label-sm text-[#0369a1]">
+<span class="material-symbols-outlined text-[16px]" data-icon="water_drop">water_drop</span>
+<span>Next cycle scheduled: <strong>Thursday</strong></span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-variant text-body-sm font-body-sm text-on-surface-variant flex justify-between items-center">
+<span>Soil moisture depletion</span>
+<span class="font-medium text-on-surface">36% available reserve</span>
+</div>
+</div>
+<!-- KPI 4: Overall Farm Risk -->
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant p-5 shadow-[0_1px_2px_rgba(17,66,50,0.04)] flex flex-col justify-between">
+<div class="flex items-center justify-between mb-3">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Overall Farm Risk</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]">
+              Low Risk (12/100)
+            </span>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-headline-lg font-headline-lg text-[#15803d]">Stable</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Macro Index</span>
+</div>
+<div class="mt-2 text-label-sm font-label-sm text-on-surface-variant leading-tight">
+              Favorable meteorological and soil conditions across plot MH-2490
+            </div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-variant text-body-sm font-body-sm text-on-surface-variant flex justify-between items-center">
+<span>Primary watchpoint</span>
+<span class="font-medium text-on-surface text-amber-700">Wed Precipitation surge</span>
+</div>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- SECTION 2: ASYMMETRIC INTELLIGENCE CORE (60% / 40%)                   -->
+<!-- ===================================================================== -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- LEFT (60% -> 7 Cols): 7-Day Agricultural Weather & Evapotranspiration -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-lg border border-outline-variant p-6 shadow-[0_1px_2px_rgba(17,66,50,0.04)] flex flex-col justify-between">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+<div>
+<h3 class="text-title-lg font-title-lg text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="routine">routine</span>
+                  7-Day Agro-Meteorological &amp; Evapotranspiration Forecast
+                </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Integrated ECMWF IFS &amp; IMD Meso-scale telemetry</p>
+</div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm">
+<span class="inline-flex items-center gap-1 text-on-surface-variant">
+<span class="w-3 h-0.5 bg-[#d97706]"></span> Max Temp
+                </span>
+<span class="inline-flex items-center gap-1 text-on-surface-variant">
+<span class="w-3 h-2 rounded-sm bg-[#0284c7]"></span> Rain (mm)
+                </span>
+</div>
+</div>
+<!-- Weather Metric Cards Carousel (7 Days) -->
+<div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2 mb-5">
+<!-- Monday -->
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col items-center text-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Mon</span>
+<span class="material-symbols-outlined text-amber-500 my-1.5" data-icon="wb_sunny">wb_sunny</span>
+<span class="text-title-md font-title-md font-telemetry-metric text-on-surface">32°</span>
+<span class="text-label-sm font-label-sm text-outline">23°</span>
+<span class="mt-2 text-label-sm font-label-sm text-on-surface-variant">0 mm</span>
+</div>
+<!-- Tuesday -->
+<div class="p-2.5 rounded-lg bg-[#e0f2fe]/40 border border-[#bae6fd] flex flex-col items-center text-center ring-1 ring-[#0284c7]/20">
+<span class="text-label-sm font-label-sm text-[#0369a1] font-semibold">Tue</span>
+<span class="material-symbols-outlined text-[#0284c7] my-1.5" data-icon="rainy">rainy</span>
+<span class="text-title-md font-title-md font-telemetry-metric text-primary">29°</span>
+<span class="text-label-sm font-label-sm text-outline">22°</span>
+<span class="mt-2 px-1.5 py-0.5 rounded text-label-sm font-label-sm bg-[#0284c7] text-white font-semibold">14 mm</span>
+</div>
+<!-- Wednesday -->
+<div class="p-2.5 rounded-lg bg-[#e0f2fe]/40 border border-[#bae6fd] flex flex-col items-center text-center">
+<span class="text-label-sm font-label-sm text-[#0369a1] font-semibold">Wed</span>
+<span class="material-symbols-outlined text-[#0284c7] my-1.5" data-icon="water_drop">water_drop</span>
+<span class="text-title-md font-title-md font-telemetry-metric text-primary">28°</span>
+<span class="text-label-sm font-label-sm text-outline">21°</span>
+<span class="mt-2 px-1 rounded text-label-sm font-label-sm bg-[#bae6fd] text-[#0369a1] font-medium">8 mm</span>
+</div>
+<!-- Thursday -->
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col items-center text-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Thu</span>
+<span class="material-symbols-outlined text-slate-500 my-1.5" data-icon="partly_cloudy_day">partly_cloudy_day</span>
+<span class="text-title-md font-title-md font-telemetry-metric text-on-surface">30°</span>
+<span class="text-label-sm font-label-sm text-outline">22°</span>
+<span class="mt-2 text-label-sm font-label-sm text-on-surface-variant">2 mm</span>
+</div>
+<!-- Friday -->
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col items-center text-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Fri</span>
+<span class="material-symbols-outlined text-amber-500 my-1.5" data-icon="wb_sunny">wb_sunny</span>
+<span class="text-title-md font-title-md font-telemetry-metric text-on-surface">31°</span>
+<span class="text-label-sm font-label-sm text-outline">23°</span>
+<span class="mt-2 text-label-sm font-label-sm text-on-surface-variant">0 mm</span>
+</div>
+<!-- Saturday -->
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col items-center text-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Sat</span>
+<span class="material-symbols-outlined text-slate-500 my-1.5" data-icon="cloud">cloud</span>
+<span class="text-title-md font-title-md font-telemetry-metric text-on-surface">30°</span>
+<span class="text-label-sm font-label-sm text-outline">22°</span>
+<span class="mt-2 text-label-sm font-label-sm text-on-surface-variant">1 mm</span>
+</div>
+<!-- Sunday -->
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex flex-col items-center text-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">Sun</span>
+<span class="material-symbols-outlined text-amber-500 my-1.5" data-icon="wb_sunny">wb_sunny</span>
+<span class="text-title-md font-title-md font-telemetry-metric text-on-surface">33°</span>
+<span class="text-label-sm font-label-sm text-outline">24°</span>
+<span class="mt-2 text-label-sm font-label-sm text-on-surface-variant">0 mm</span>
+</div>
+</div>
+<!-- Temperature & Evapotranspiration Telemetry Visualization -->
+<div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant relative overflow-hidden">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant mb-2">
+<span>Diurnal Temperature Gradient &amp; Atmospheric Moisture Deficit</span>
+<span class="font-telemetry-metric text-primary">Avg RH: 68% • ET₀: 4.2 mm/day</span>
+</div>
+<!-- Synthetic Micro-SVG chart -->
+<div class="w-full h-24 relative">
+<!-- Bar Chart behind curve -->
+<div class="absolute inset-0 flex items-end justify-between px-4 pb-1">
+<div class="w-6 bg-transparent h-0"></div>
+<div class="w-6 bg-[#0284c7]/30 rounded-t-sm h-16 border-t-2 border-[#0284c7]"></div>
+<div class="w-6 bg-[#0284c7]/20 rounded-t-sm h-9 border-t-2 border-[#0284c7]/80"></div>
+<div class="w-6 bg-[#0284c7]/10 rounded-t-sm h-3"></div>
+<div class="w-6 bg-transparent h-0"></div>
+<div class="w-6 bg-[#0284c7]/10 rounded-t-sm h-2"></div>
+<div class="w-6 bg-transparent h-0"></div>
+</div>
+<!-- Temperature curve overlay -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<svg class="w-full h-full preserve-3d" fill="none" viewbox="0 0 700 90">
+<path d="M 40,20 C 130,50 170,60 250,55 C 340,48 430,30 520,38 C 610,45 640,15 670,12" stroke="#d97706" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Dots -->
+<circle class="border" cx="40" cy="20" fill="#d97706" r="3.5"></circle>
+<circle cx="145" cy="46" fill="#d97706" r="3.5"></circle>
+<circle cx="250" cy="55" fill="#d97706" r="3.5"></circle>
+<circle cx="355" cy="45" fill="#d97706" r="3.5"></circle>
+<circle cx="460" cy="32" fill="#d97706" r="3.5"></circle>
+<circle cx="565" cy="41" fill="#d97706" r="3.5"></circle>
+<circle cx="670" cy="12" fill="#d97706" r="3.5"></circle>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Agronomic Interpretation Banner -->
+<div class="mt-4 p-3 rounded-lg bg-[#f0f9ff] border border-[#bae6fd] flex items-start gap-3">
+<span class="material-symbols-outlined text-[#0369a1] text-[20px] mt-0.5" data-icon="lightbulb">lightbulb</span>
+<div class="text-body-sm font-body-sm text-[#0369a1]">
+<strong>Agronomic Actionable Note:</strong> Expected monsoon showers (22mm cumulative over Tue–Wed) may eliminate irrigation pump requirements for <strong>72 hours</strong>. Advise deferring Thursday irrigation schedule pending Wednesday runoff audit.
+            </div>
+</div>
+</div>
+<!-- RIGHT (40% -> 5 Cols): AI Advisory Command Card with XAI SHAP -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-lg border-2 border-primary/20 p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary fill-icon" data-icon="psychology">psychology</span>
+<span class="text-title-md font-title-md font-bold text-primary">AI Advisory Recommendation</span>
+</div>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-primary-container text-on-primary-container">
+                Confidence: High
+              </span>
+</div>
+<!-- Recommendation Main Callout -->
+<div class="mt-4 p-4 rounded-xl bg-surface-container-low border border-outline-variant">
+<div class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Top Agronomic Selection</div>
+<div class="flex items-center justify-between">
+<div class="text-headline-md font-headline-md font-bold text-primary">
+                  Recommended Crop: Rice
+                </div>
+<div class="text-headline-md font-headline-md font-telemetry-metric text-secondary font-bold">
+                  94%
+                </div>
+</div>
+<!-- Confidence Visual Breakdown Bar -->
+<div class="mt-3">
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant mb-1">
+<span>Probability Distribution</span>
+<span>Rice 94% • Cotton 4% • Maize 2%</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary" style="width: 94%"></div>
+<div class="h-full bg-amber-500" style="width: 4%"></div>
+<div class="h-full bg-slate-400" style="width: 2%"></div>
+</div>
+</div>
+<div class="mt-3 text-body-sm font-body-sm text-on-surface">
+<strong>Agronomic Justification:</strong> High nitrogen compatibility (134 kg/ha) &amp; anticipated precipitation optimize rooting depth with 91.2% root establishment certainty.
+              </div>
+</div>
+<!-- Explainable AI (XAI) SHAP Indicator -->
+<div class="mt-5">
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">XAI SHAP Feature Contribution</span>
+<span class="text-label-sm font-label-sm text-outline">Base: 0.50</span>
+</div>
+<!-- SHAP Bipolar Bars -->
+<div class="space-y-2.5 text-label-sm font-label-sm">
+<!-- Factor 1: Soil Nitrogen -->
+<div>
+<div class="flex justify-between text-on-surface mb-0.5">
+<span>Available Nitrogen (134 kg/ha)</span>
+<span class="text-[#15803d] font-semibold">+0.28 (Strong Positive)</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded flex relative">
+<div class="w-1/2 flex justify-end"></div>
+<div class="w-1/2 flex justify-start">
+<div class="h-full bg-[#16a34a] rounded-r" style="width: 56%"></div>
+</div>
+<div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-outline-variant"></div>
+</div>
+</div>
+<!-- Factor 2: Monsoon Forecast -->
+<div>
+<div class="flex justify-between text-on-surface mb-0.5">
+<span>Precipitation Pattern (Cumulative 24mm)</span>
+<span class="text-[#15803d] font-semibold">+0.16 (Positive)</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded flex relative">
+<div class="w-1/2 flex justify-end"></div>
+<div class="w-1/2 flex justify-start">
+<div class="h-full bg-[#16a34a] rounded-r" style="width: 32%"></div>
+</div>
+<div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-outline-variant"></div>
+</div>
+</div>
+<!-- Factor 3: Temperature Maxima -->
+<div>
+<div class="flex justify-between text-on-surface mb-0.5">
+<span>Peak Heat Spike (33°C Sunday)</span>
+<span class="text-amber-700 font-semibold">-0.05 (Minor Limiter)</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded flex relative">
+<div class="w-1/2 flex justify-end">
+<div class="h-full bg-[#d97706] rounded-l" style="width: 10%"></div>
+</div>
+<div class="w-1/2 flex justify-start"></div>
+<div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-outline-variant"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Deep Dive CTA -->
+<div class="mt-4">
+<a class="inline-flex items-center gap-1 text-body-sm font-body-sm font-semibold text-primary hover:text-secondary transition-colors" href="#">
+<span>View Model Explanation (SHAP)</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Official Agronomic Disclaimer Note -->
+<div class="mt-6 pt-3 border-t border-outline-variant text-[11px] leading-relaxed text-on-surface-variant">
+<span class="font-semibold text-on-surface">Institutional Compliance:</span> KrishiMitra provides data-driven decision support. Agricultural outcomes may vary based on micro-climatic variances, local pest occurrences, and input implementation quality.
+          </div>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- SECTION 3: HISTORICAL YIELD & SOIL HEALTH GAUGE                       -->
+<!-- ===================================================================== -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Historical Yield Trend Comparison (7 Cols) -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-lg border border-outline-variant p-6 shadow-[0_1px_2px_rgba(17,66,50,0.04)]">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="text-title-lg font-title-lg text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+                Historical Yield Trend Comparison (2021 – 2025F)
+              </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Benchmark against regional Maharashtra Vidarbha cluster avg</p>
+</div>
+<span class="px-2.5 py-1 rounded text-label-sm font-label-sm bg-surface-container text-on-surface border border-outline-variant">
+              Telemetry Confidence: 95%
+            </span>
+</div>
+<!-- Yield Visual Timeline Grid -->
+<div class="bg-surface-container-low rounded-lg p-5 border border-outline-variant">
+<div class="grid grid-cols-5 gap-3 text-center mb-6">
+<!-- 2021 -->
+<div class="flex flex-col items-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">2021</span>
+<span class="text-headline-md font-headline-md font-telemetry-metric text-on-surface mt-1">3.1</span>
+<span class="text-label-sm font-label-sm text-outline">t/ha</span>
+<div class="w-full bg-surface-variant h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-outline h-full" style="width: 70%"></div>
+</div>
+<span class="text-[10px] text-outline mt-1">Baseline</span>
+</div>
+<!-- 2022 -->
+<div class="flex flex-col items-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">2022</span>
+<span class="text-headline-md font-headline-md font-telemetry-metric text-on-surface mt-1">3.3</span>
+<span class="text-label-sm font-label-sm text-outline">t/ha</span>
+<div class="w-full bg-surface-variant h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-outline h-full" style="width: 75%"></div>
+</div>
+<span class="text-[10px] text-secondary mt-1">+6.4%</span>
+</div>
+<!-- 2023 -->
+<div class="flex flex-col items-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">2023</span>
+<span class="text-headline-md font-headline-md font-telemetry-metric text-on-surface mt-1">3.2</span>
+<span class="text-label-sm font-label-sm text-outline">t/ha</span>
+<div class="w-full bg-surface-variant h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-outline h-full" style="width: 72%"></div>
+</div>
+<span class="text-[10px] text-amber-700 mt-1">-3.0% (El Niño)</span>
+</div>
+<!-- 2024 -->
+<div class="flex flex-col items-center">
+<span class="text-label-sm font-label-sm text-on-surface-variant">2024</span>
+<span class="text-headline-md font-headline-md font-telemetry-metric text-on-surface mt-1">3.5</span>
+<span class="text-label-sm font-label-sm text-outline">t/ha</span>
+<div class="w-full bg-surface-variant h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-secondary h-full" style="width: 82%"></div>
+</div>
+<span class="text-[10px] text-secondary mt-1">+9.3%</span>
+</div>
+<!-- 2025 Predicted -->
+<div class="flex flex-col items-center p-2 rounded-lg bg-surface-container-lowest border-2 border-primary shadow-sm relative">
+<span class="inline-flex px-1.5 py-0.5 rounded text-[9px] font-label-sm bg-primary text-on-primary absolute -top-2.5">
+                  PREDICTED
+                </span>
+<span class="text-label-sm font-label-sm text-primary font-bold mt-1">2025</span>
+<span class="text-headline-md font-headline-md font-telemetry-metric text-primary font-bold mt-1">3.8</span>
+<span class="text-label-sm font-label-sm text-primary">t/ha</span>
+<div class="w-full bg-secondary-container h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-secondary h-full" style="width: 90%"></div>
+</div>
+<span class="text-[10px] font-semibold text-secondary mt-1">Band: 3.4-4.2</span>
+</div>
+</div>
+<!-- Narrative Yield Context -->
+<div class="flex items-center justify-between text-body-sm font-body-sm text-on-surface-variant border-t border-outline-variant/60 pt-3">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Ensemble Model: Gradient Boosting + Sentinel-2 Vegetation Indices</span>
+</span>
+<span class="font-medium text-primary">Projected Gross: ₹2,14,000 / ha</span>
+</div>
+</div>
+</div>
+<!-- Soil Health Summary Matrix (5 Cols) -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-lg border border-outline-variant p-6 shadow-[0_1px_2px_rgba(17,66,50,0.04)] flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="text-title-lg font-title-lg text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="science">science</span>
+                  Soil Biome &amp; Chemistry Matrix
+                </h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Calibrated from IoT probe array #04</p>
+</div>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]">
+                Status: Optimal
+              </span>
+</div>
+<!-- N-P-K & pH & Moisture Parameter Grid -->
+<div class="space-y-3">
+<!-- Nitrogen (N) -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60">
+<div class="flex items-center gap-3">
+<span class="w-7 h-7 rounded bg-primary-container text-on-primary-container font-label-sm flex items-center justify-center font-bold">N</span>
+<div>
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">Available Nitrogen</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Target: 120–140 kg/ha</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-title-md font-title-md font-telemetry-metric text-primary">134 <span class="text-body-sm text-outline">kg/ha</span></div>
+<span class="inline-flex px-1.5 py-0.2 rounded text-[10px] font-label-sm bg-[#dcfce7] text-[#15803d]">Optimal</span>
+</div>
+</div>
+<!-- Phosphorus (P) -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60">
+<div class="flex items-center gap-3">
+<span class="w-7 h-7 rounded bg-surface-container text-on-surface font-label-sm flex items-center justify-center font-bold border border-outline-variant">P</span>
+<div>
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">Phosphorus (P₂O₅)</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Target: 35–50 kg/ha</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-title-md font-title-md font-telemetry-metric text-primary">42 <span class="text-body-sm text-outline">kg/ha</span></div>
+<span class="inline-flex px-1.5 py-0.2 rounded text-[10px] font-label-sm bg-[#dcfce7] text-[#15803d]">Balanced</span>
+</div>
+</div>
+<!-- Potassium (K) -->
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60">
+<div class="flex items-center gap-3">
+<span class="w-7 h-7 rounded bg-surface-container text-on-surface font-label-sm flex items-center justify-center font-bold border border-outline-variant">K</span>
+<div>
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">Potassium (K₂O)</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">Target: 150–200 kg/ha</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-title-md font-title-md font-telemetry-metric text-primary">180 <span class="text-body-sm text-outline">kg/ha</span></div>
+<span class="inline-flex px-1.5 py-0.2 rounded text-[10px] font-label-sm bg-[#e0f2fe] text-[#0369a1]">Rich</span>
+</div>
+</div>
+<!-- Dual Pill: pH & Soil Moisture -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex items-center justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Soil pH</span>
+<div class="text-title-md font-title-md font-telemetry-metric text-primary">6.8</div>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm bg-[#dcfce7] text-[#15803d]">Neutral</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low border border-outline-variant/60 flex items-center justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Moisture</span>
+<div class="text-title-md font-title-md font-telemetry-metric text-[#0369a1]">64%</div>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm bg-[#e0f2fe] text-[#0369a1]">Field Cap.</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Sensor Telemetry Node #MH-4</span>
+<span class="text-secondary font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Live Signal 98%
+            </span>
+</div>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- SECTION 4: REAL-TIME AGRICULTURAL ALERTS & ACTIVITY FEED              -->
+<!-- ===================================================================== -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-6 shadow-[0_1px_2px_rgba(17,66,50,0.04)] mb-8">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="crisis_alert">crisis_alert</span>
+<h3 class="text-title-lg font-title-lg text-primary">Real-time Agricultural Alerts &amp; Field Feed</h3>
+</div>
+<button class="text-body-sm font-body-sm text-primary font-semibold hover:underline">
+            Mark all verified
+          </button>
+</div>
+<div class="space-y-3">
+<!-- Alert 1: Rain warning -->
+<div class="p-4 rounded-lg bg-[#fffbeb] border border-[#fef3c7] flex items-start justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-amber-600 mt-0.5" data-icon="warning">warning</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-body-md font-body-md font-bold text-amber-950">Precipitation Inflow Warning: Wednesday High Influx</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#fef3c7] text-[#b45309] border border-[#fde68a]">
+                    Meteorological Alert
+                  </span>
+</div>
+<p class="text-body-sm font-body-sm text-amber-900 mt-0.5">
+                  14 mm rainfall forecasted over 6 hours on Wednesday morning. Ensure drainage furrow gates on Plot Section B are unobstructed to prevent temporary waterlogging.
+                </p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm text-amber-800 whitespace-nowrap">22 min ago</span>
+</div>
+<!-- Alert 2: Fertilizer nitrogen top-dress window -->
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant flex items-start justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="spa">spa</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-body-md font-body-md font-bold text-on-surface">Fertilizer Application Window: Nitrogen Top-Dress</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface-variant border border-outline-variant">
+                    Agronomy Action
+                  </span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+                  Recommend applying second urea split (35 kg/ha) immediately prior to Tuesday evening light drizzle for optimal root zone absorption and reduced ammonia volatilization.
+                </p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm text-outline whitespace-nowrap">2 hours ago</span>
+</div>
+<!-- Alert 3: Soil telemetry refresh status -->
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant flex items-start justify-between gap-4">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#15803d] mt-0.5" data-icon="check_circle">check_circle</span>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-body-md font-body-md font-bold text-on-surface">Soil Telemetry Node Refresh Completed</span>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]">
+                    System Telemetry
+                  </span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+                  Multi-depth electrical conductivity and matric potential readings successfully synchronized across all 6 capacitive sensors in Maharashtra 2.5 ha boundary.
+                </p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm text-outline whitespace-nowrap">3 hours ago</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Institutional Enterprise Footer -->
+<footer class="mt-auto px-8 py-4 border-t border-outline-variant bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between text-body-sm font-body-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="font-bold text-primary">KRISHIMITRA ADSS</span>
+<span>•</span>
+<span>Agricultural Decision Support System Architecture v4.2</span>
+</div>
+<div class="flex items-center gap-4 mt-2 sm:mt-0 text-label-sm font-label-sm">
+<span>Security Clearance: Enterprise Agronomy Tier-1</span>
+<span>•</span>
+<span>Latency: 42ms</span>
+</div>
+</footer>
+</div>
+</body></html>

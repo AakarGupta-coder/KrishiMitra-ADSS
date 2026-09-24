@@ -1,0 +1,10 @@
+{
+    "version": "v1.0",
+    "mae": 309.9990234375,
+    "r2_score": -5.328404426574707,
+    "features": [
+        "Year",
+        "Crop_Rice",
+        "Crop_Wheat"
+    ]
+}

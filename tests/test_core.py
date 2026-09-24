@@ -166,6 +166,40 @@ def test_market_district_matching():
     assert market._district_candidates("Nashik District") == ["Nashik"]
 
 
+def _arrival(market_name, district, price):
+    return {"commodity": "Onion", "state": "Maharashtra", "district": district, "market": market_name, "variety": None,
+            "grade": None, "arrival_date": "23/09/2026", "min_price": price, "max_price": price, "modal_price": price}
+
+
+def _patch_market(monkeypatch, by_query):
+    async def q(commodity, state, district=None):
+        return by_query.get((commodity, state, district), []), 1.0
+
+    monkeypatch.setattr(market, "_query", q)
+    monkeypatch.setattr(market.store, "save_market_observation", lambda rec: None)
+    monkeypatch.setattr(market.store, "previous_market_observation", lambda *a: None)
+
+
+def test_market_price_is_live_with_district_pool(monkeypatch):
+    _patch_market(monkeypatch, {(None, "Maharashtra", "Nashik"): [
+        _arrival("Lasalgaon", "Nashik", 1800), _arrival("Pimpalgaon", "Nashik", 2200), _arrival("Nashik", "Nashik", 2000)]})
+    m = run(market.get_market_price("Onion", 20.0, 73.8, "Maharashtra", "Nashik"))
+    assert m["status"] == "live" and m["basis"] == "local_district"
+    assert m["modal_price"] == 2000
+    assert (m["markets_considered"], m["pool_min"], m["pool_max"]) == (3, 1800, 2200)
+
+
+def test_market_price_falls_back_to_national_without_state(monkeypatch):
+    async def far(*a):
+        return None, None
+
+    _patch_market(monkeypatch, {("Onion", None, None): [_arrival("Azadpur", "Delhi", 2500)]})
+    monkeypatch.setattr(market, "_nearest", far)
+    m = run(market.get_market_price("Onion", 20.0, 73.8, None, None))
+    assert m["status"] == "live" and m["basis"] == "national_median"
+    assert m["markets_considered"] == 1
+
+
 def test_negative_cache_backs_off_exponentially(monkeypatch):
     class Boom:
         def __init__(self, *a, **k):

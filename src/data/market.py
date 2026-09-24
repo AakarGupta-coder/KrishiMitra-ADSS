@@ -161,31 +161,35 @@ async def get_market_price(commodity: Optional[str], lat: float, lon: float,
         return base
 
     try:
-        basis, chosen, distance, records, ts = None, None, None, [], None
+        # pool: the arrivals the chosen price was picked from (drives markets_considered and the price spread).
+        basis, chosen, distance, records, pool, ts = None, None, None, [], [], None
         if ag_state:
             if district:
                 dist_records, dist_ts = await _query(None, ag_state, district)
                 local = [r for r in dist_records if _norm(r.get("commodity")) == _norm(commodity)]
                 if local:
-                    chosen, basis = _representative(local), "local_district"
+                    chosen, basis, pool = _representative(local), "local_district", local
                     distance = 0.0
                     ts = dist_ts
             
             if not chosen:
                 records, ts = await _query(commodity, ag_state)
                 if records:
+                    pool = records
                     chosen, distance = await _nearest(records, lat, lon)
                     basis = "nearest_in_state" if chosen else None
                     if chosen is None:
                         chosen, basis = _representative(records), "state_median"
-            
-            if not chosen and not records:
-                records, ts = await _query(commodity, None)
-                if records:
-                    chosen, distance = await _nearest(records, lat, lon)
-                    basis = "nearest_national" if chosen else None
-                    if chosen is None:
-                        chosen, basis = _representative(records), "national_median"
+
+        # National search also covers farms whose state could not be resolved.
+        if not chosen and not records:
+            records, ts = await _query(commodity, None)
+            if records:
+                pool = records
+                chosen, distance = await _nearest(records, lat, lon)
+                basis = "nearest_national" if chosen else None
+                if chosen is None:
+                    chosen, basis = _representative(records), "national_median"
 
         if not chosen:
             base["reason"] = f"No {commodity} arrivals reported by Agmarknet today in {ag_state or 'India'}."

@@ -8,7 +8,7 @@ import LocationPicker, { LocationSearch, sourceLabel } from './LocationPicker';
 import NotificationCenter from './NotificationCenter';
 import Popover from './Popover';
 import { Icon } from './ui';
-import { DOT, providerRows } from '../lib/providerStatus';
+import { DOT, completenessNotes, providerRows } from '../lib/providerStatus';
 
 
 const USER = { name: 'Aakar', role: 'Lead Agronomist' };
@@ -28,6 +28,7 @@ const TopNavBar: React.FC<{ onMenu: () => void }> = ({ onMenu }) => {
 
   const rows = summary ? providerRows(summary) : [];
   const degraded = rows.filter((r) => r.state === 'unavailable' || r.state === 'partial');
+  const notes = summary ? completenessNotes(summary) : [];
   let pill: { dot: string; text: string };
   if (status === 'loading') pill = { dot: 'bg-water animate-pulse', text: 'Loading' };
   else if (status === 'refreshing') pill = { dot: 'bg-water animate-pulse', text: 'Updating' };
@@ -72,6 +73,7 @@ const TopNavBar: React.FC<{ onMenu: () => void }> = ({ onMenu }) => {
           onClick={() => setOpen(open === 'status' ? null : 'status')}
           className="hidden sm:flex items-center gap-1.5 h-9 px-2.5 rounded-lg text-label-sm font-label-sm text-on-surface-variant hover:bg-surface-container-low"
           aria-label={`Data status: ${pill.text}`}
+          title={notes.length ? `${pill.text}: ${notes.join('; ')}` : undefined}
         >
           <span className={`w-2 h-2 rounded-full ${pill.dot}`} />
           <span className="hidden xl:inline">{pill.text}</span>
@@ -86,13 +88,19 @@ const TopNavBar: React.FC<{ onMenu: () => void }> = ({ onMenu }) => {
           </div>
           <ul className="py-1">
             {rows.map((r) => (
-              <li key={r.id} className="flex items-center gap-2 px-4 py-1.5 text-body-sm">
+              <li key={r.id} className="grid grid-cols-[8px_minmax(0,1fr)_auto] items-center gap-x-2 px-4 py-1.5 text-body-sm" title={r.detail ?? undefined}>
                 <span className={`w-2 h-2 rounded-full ${DOT[r.state]}`} />
-                <span className="flex-1 text-on-surface">{r.label}</span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant">{r.text}</span>
+                <span className="text-on-surface truncate">{r.label}</span>
+                <span className={`font-label-sm text-label-sm whitespace-nowrap ${r.state === 'ok' ? 'text-on-surface-variant' : r.state === 'unavailable' ? 'text-[#B91C1C]' : 'text-[#B45309]'}`}>{r.text}</span>
+                {r.detail && <span className="col-start-2 col-span-2 text-label-sm font-label-sm text-outline">{r.detail}</span>}
               </li>
             ))}
           </ul>
+          {notes.some((n) => n.startsWith('Not evaluated')) && (
+            <p className="px-4 pb-2 text-label-sm font-label-sm text-outline">
+              Crop scores use the available factors only. {notes.find((n) => n.startsWith('Not evaluated'))}.
+            </p>
+          )}
           <div className="px-4 py-2 border-t border-hairline flex items-center justify-between">
             <button className="text-body-sm font-semibold text-forest hover:underline disabled:opacity-40" disabled={status === 'loading' || status === 'refreshing'} onClick={() => { refresh(); close(); }}>Refresh now</button>
             <Link to="/settings#sources" onClick={close} className="text-body-sm font-semibold text-forest hover:underline">Data sources</Link>

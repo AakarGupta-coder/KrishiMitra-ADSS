@@ -38,9 +38,15 @@ const SowingBadge: React.FC<{ c: CropResult }> = ({ c }) => {
   return null;
 };
 
+// Badges in the narrow card columns may wrap instead of overflowing into the neighbouring column.
+const WRAP_BADGE = 'whitespace-normal! max-w-full';
+const FitBadge: React.FC<{ c: Compatibility }> = ({ c }) => <Badge tone={compatTone(c)} className={WRAP_BADGE}>{compatLabel(c)}</Badge>;
+
 const CropRow: React.FC<{ c: CropResult; rank: number; area: number; selected: boolean; onSelect: () => void; emphasis?: boolean }> = ({ c, rank, area, selected, onSelect, emphasis }) => {
   const f = c.financials;
   const [wlo, whi] = c.profile.water_requirement_mm;
+  const [open, setOpen] = useState(false);
+  const panelId = `factors-${c.crop.replace(/\W+/g, '-')}`;
   return (
     <article className={`grid grid-cols-1 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)_minmax(0,1fr)] gap-5 px-5 py-5 ${emphasis ? 'bg-[#F6FBF7]' : ''} ${selected ? 'ring-2 ring-inset ring-forest/25' : ''}`}>
       <div className="min-w-0">
@@ -58,16 +64,16 @@ const CropRow: React.FC<{ c: CropResult; rank: number; area: number; selected: b
           <SowingBadge c={c} />
           {!c.eligible && <Badge tone="caution" icon="block" title={c.ineligible_reasons.join('; ')}>Not eligible</Badge>}
         </div>
-        <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-body-sm">
-          <dt className="text-on-surface-variant">Duration</dt><dd className="text-on-surface">{isNum(c.profile.duration_months) ? `${c.profile.duration_months} months` : 'Unavailable'}</dd>
-          <dt className="text-on-surface-variant">Water need</dt><dd className="text-on-surface">{fmtMm(wlo, 0)}–{fmtMm(whi, 0)}</dd>
-          <dt className="text-on-surface-variant">Weather</dt><dd><Badge tone={compatTone(c.profile.weather_compatibility)}>{compatLabel(c.profile.weather_compatibility)}</Badge></dd>
-          <dt className="text-on-surface-variant">Soil</dt><dd><Badge tone={compatTone(c.profile.soil_compatibility)}>{compatLabel(c.profile.soil_compatibility)}</Badge></dd>
+        <dl className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-body-sm">
+          <dt className="text-on-surface-variant">Duration</dt><dd className="min-w-0 text-on-surface">{isNum(c.profile.duration_months) ? `${c.profile.duration_months} months` : 'Unavailable'}</dd>
+          <dt className="text-on-surface-variant">Water need</dt><dd className="min-w-0 text-on-surface">{fmtMm(wlo, 0)}–{fmtMm(whi, 0)}</dd>
+          <dt className="text-on-surface-variant">Weather</dt><dd className="min-w-0"><FitBadge c={c.profile.weather_compatibility} /></dd>
+          <dt className="text-on-surface-variant">Soil</dt><dd className="min-w-0"><FitBadge c={c.profile.soil_compatibility} /></dd>
         </dl>
       </div>
 
-      <div className="min-w-0 text-body-sm">
-        <ul className="space-y-1">
+      <div className="min-w-0 text-body-sm flex flex-col items-start gap-2">
+        <ul className="space-y-1 self-stretch">
           {c.positives.slice(0, 4).map((p) => (
             <li key={p} className="flex gap-1.5 text-on-surface"><Icon name="check_circle" className="text-chlorophyll !text-[16px] mt-px" />{localizeText(p)}</li>
           ))}
@@ -78,15 +84,18 @@ const CropRow: React.FC<{ c: CropResult; rank: number; area: number; selected: b
             </li>
           ))}
         </ul>
-        {c.excluded_factors.length > 0 && <p className="mt-2 text-outline">Not evaluated (no data): {c.excluded_factors.join(', ')}</p>}
-        {!c.eligible && <p className="mt-2 text-[#B45309]">Not eligible as the recommendation: {c.ineligible_reasons.join('; ')}.</p>}
-        <button onClick={onSelect} className="mt-2 inline-flex items-center gap-1 font-semibold text-forest hover:underline">
-          <Icon name="bar_chart" className="!text-[16px]" /> {selected ? 'Showing factor breakdown' : 'Show factor breakdown'}
+        {c.excluded_factors.length > 0 && <p className="text-outline">Not evaluated (no data): {c.excluded_factors.join(', ')}</p>}
+        {!c.eligible && <p className="text-[#B45309]">Not eligible as the recommendation: {c.ineligible_reasons.join('; ')}.</p>}
+        <button type="button" aria-expanded={open} aria-controls={panelId}
+          onClick={() => { setOpen(!open); if (!open) onSelect(); }}
+          className="inline-flex items-center gap-1 rounded font-semibold text-forest hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest">
+          <Icon name={open ? 'expand_less' : 'expand_more'} className="!text-[18px]" /> {open ? 'Hide factor breakdown' : 'Show factor breakdown'}
         </button>
+        {open && <div id={panelId} className="self-stretch pt-1"><FactorAttribution items={c.attribution} /></div>}
       </div>
 
       <div className="min-w-0">
-        <div className="flex items-center justify-between gap-2 flex-wrap"><Eyebrow>Economic outlook</Eyebrow>{economicBadge(c)}</div>
+        <div className="flex items-center justify-between gap-2 flex-wrap"><Eyebrow>Economic outlook</Eyebrow>{economicBadge(c, WRAP_BADGE)}</div>
         <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2.5">
           <div><Eyebrow>Yield</Eyebrow><div className="text-title-md font-telemetry-metric text-on-surface">{fmtYield(f.yield_t_ha)}</div></div>
           <div><Eyebrow>Production</Eyebrow><div className="text-title-md font-telemetry-metric text-on-surface">{isNum(f.production_t) ? `${fmtNum(f.production_t, 2)} t` : 'Unavailable'}</div></div>

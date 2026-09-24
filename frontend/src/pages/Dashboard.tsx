@@ -261,8 +261,9 @@ const DashboardView: React.FC<{ s: FarmSummary }> = ({ s }) => {
         />
       </section>
 
+      {/* Weather panel sizes to its content; row stretch would pad it to the taller advisory panel's height. */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <Panel className="lg:col-span-7" icon="routine" title="7-day agro-meteorological forecast"
+        <Panel className="lg:col-span-7 lg:self-start" icon="routine" title="7-day agro-meteorological forecast"
           subtitle="Daily max/min temperature and rainfall. Labels come from the same forecast rows as the values."
           footer={weatherSourceTag(s)}>
           {s.weather.status !== 'ok' ? (

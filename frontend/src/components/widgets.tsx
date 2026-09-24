@@ -86,10 +86,10 @@ export const MarketLine: React.FC<{ m: Market; compact?: boolean }> = ({ m, comp
   );
 };
 
-export const economicBadge = (c: CropResult) => {
+export const economicBadge = (c: CropResult, className?: string) => {
   const conf = c.economic.confidence;
-  if (conf === 'Unavailable') return <Badge tone="neutral" icon="block" title={c.economic.basis}>Economics not assessable</Badge>;
-  return <Badge tone={conf === 'Medium' ? 'water' : 'caution'} title={c.economic.basis}>Economic confidence: {conf}</Badge>;
+  if (conf === 'Unavailable') return <Badge tone="neutral" icon="block" title={c.economic.basis} className={className}>Economics not assessable</Badge>;
+  return <Badge tone={conf === 'Medium' ? 'water' : 'caution'} title={c.economic.basis} className={className}>Economic confidence: {conf}</Badge>;
 };
 
 export const priceBasisBadge = (c: CropResult) => {

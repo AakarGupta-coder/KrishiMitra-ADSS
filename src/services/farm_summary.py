@@ -12,6 +12,7 @@ from src.data.market import get_market_price
 from src.data.nasa_power import get_monthly_climatology
 from src.data.open_meteo import get_weather_bundle
 from src.data.hwsd import get_soil_properties, haversine_distance
+from src.models.crop_ml import ml_opinion
 from src.models.yield_service import estimate_yield
 
 VERSION = "2.1"
@@ -236,6 +237,7 @@ async def _build_summary(lat: float, lon: float, area: float = 1.0, irrigation_t
     irrigation = compute_water_balance(weather.get("daily", []), current_crop, irrigation_type,
                                        soil_interp.get("texture"), weather.get("soil_moisture"), area)
     risk = assess(weather.get("daily", []), irrigation, irrigation_type, canonical, soil, soil_interp)
+    ml = ml_opinion(climatology, soil, soil_test, today, canonical["crop"] if canonical else None, [c["crop"] for c in crops])
     return _assemble(locals())
 
 
@@ -271,6 +273,7 @@ def _assemble(v):
     soil_test, overrides, weather, climatology, soil = v["soil_test"], v["overrides"], v["weather"], v["climatology"], v["soil"]
     geo, markets, season, soil_interp, crops = v["geo"], v["markets"], v["season"], v["soil_interp"], v["crops"]
     canonical, top_econ, explanation, irrigation, risk, started = v["canonical"], v["top_econ"], v["explanation"], v["irrigation"], v["risk"], v["started"]
+    ml = v["ml"]
 
     live_markets = sum(1 for m in markets.values() if m.get("status") == "live")
     sources = {
@@ -312,6 +315,8 @@ def _assemble(v):
             "top_economic": top_econ["crop"] if top_econ else None,
             "explanation": explanation,
         },
+        # Second opinion from the crop_xgb classifier; it never changes the rules-based ranking above.
+        "ml_opinion": ml,
         "irrigation": irrigation,
         "risk": risk,
         "sources": sources,

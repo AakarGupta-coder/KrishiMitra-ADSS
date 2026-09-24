@@ -20,6 +20,7 @@ from src.data.nasa_power import get_monthly_climatology
 from src.data.open_meteo import get_weather_bundle
 from src.data import hwsd
 from src.data.hwsd import get_soil_properties
+from src.models.crop_ml import load_classifiers
 from src.models.yield_service import estimate_yield, historical_yields, model_info
 from src.services.farm_summary import VERSION, build_summary
 
@@ -145,6 +146,7 @@ def _catalogue():
         pass
     this_year = datetime.date.today().year
     ym = model_info()
+    cm = load_classifiers()[1]
     return [
         {"id": "open_meteo", "name": "Open-Meteo", "kind": "remote", "category": "Weather & forecast",
          "purpose": "Current conditions, 7-day forecast, FAO-56 reference ET₀ and modelled soil moisture.",
@@ -189,13 +191,15 @@ def _catalogue():
          "file": _file_info("data/faostat_sample.csv"), "available": fao_df is not None,
          "used_by": ["Yield Prediction"]},
         {"id": "crop_dataset", "name": "Crop recommendation dataset", "kind": "local", "category": "ML training data",
-         "purpose": "Training data for the crop_xgb classifier.",
+         "purpose": "Training data for the crop_xgb classifier (the ML opinion shown beside the rules-based ranking).",
          "dataset": f"{len(crop_df)} rows, {crop_df['label'].nunique()} class(es): {', '.join(sorted(crop_df['label'].unique()))}" if crop_df is not None else None,
          "features": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
          "notes": ["The classifier trained on this file has a single class, so it cannot rank crops. It is excluded from recommendations."]
-         if crop_df is not None and crop_df["label"].nunique() < 2 else [],
+         if crop_df is not None and crop_df["label"].nunique() < 2 else
+         ["Public benchmark dataset, not specific to this region; its rainfall column is on a monthly scale.",
+          "The ML opinion is reported separately and never changes the rules-based recommendation."] if crop_df is not None else [],
          "file": _file_info("data/crop_recommendation.csv"), "available": crop_df is not None,
-         "used_by": []},
+         "used_by": ["Crop Advisor"]},
         {"id": "yield_model", "name": "Yield model (yield_xgb)", "kind": "local", "category": "ML model",
          "purpose": "Year + crop regression on FAOSTAT sample.",
          "dataset": f"Supports: {', '.join(ym.get('supported_crops', []))}" if ym.get("available") else None,
@@ -203,6 +207,14 @@ def _catalogue():
                    "Used only for supported crops; others use the labelled reference-yield method."] if ym.get("available") else [],
          "file": _file_info("models/yield_xgb.pkl"), "available": ym.get("available", False),
          "used_by": ["Yield Prediction"]},
+        {"id": "crop_model", "name": "Crop classifier (crop_xgb)", "kind": "local", "category": "ML model",
+         "purpose": "XGBoost classifier over 22 crops; its ranking is shown as a separate ML opinion in Crop Advisor.",
+         "dataset": ", ".join(f"{n}: {', '.join(v['features'])} (hold-out accuracy {v['accuracy']:.1%})"
+                              for n, v in cm["variants"].items()) if cm else None,
+         "notes": ["The 'full' variant needs a soil test (N, P, K); otherwise the 'climate' variant runs on temperature, humidity, pH and rainfall.",
+                   "Never used to rank or recommend crops."] if cm else [],
+         "file": _file_info("models/crop_xgb.pkl"), "available": cm is not None,
+         "used_by": ["Crop Advisor"]},
         {"id": "rules", "name": "Agronomic rules engine", "kind": "local", "category": "Crop constraints & thresholds",
          "purpose": "Crop climate/soil ranges, Indian sowing calendar, FAO-56 Kc, IMD rainfall categories, soil interpretation.",
          "dataset": f"{rules.RULES_VERSION}: {len(rules.CROP_KNOWLEDGE)} crops",

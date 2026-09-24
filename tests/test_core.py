@@ -338,3 +338,33 @@ def test_identical_concurrent_summaries_are_coalesced(monkeypatch):
 
     a, b = run(both())
     assert calls["n"] == 1 and a is b
+
+
+def test_ml_opinion_uses_climate_variant_without_soil_test(monkeypatch):
+    soil = {**SOIL_DOWN, "status": "ok", "phh2o": 6.5}
+    _patch(monkeypatch, soil=soil)
+    s = run(fs.build_summary(20.0, 73.8))
+    ml = s["ml_opinion"]
+    assert ml["status"] == "ok" and ml["variant"] == "climate"
+    assert set(ml["features"]) == {"temperature", "humidity", "rainfall", "ph"}
+    assert ml["features"]["rainfall"] == 80.0  # monthly mean, the training data's scale
+    assert len(ml["top"]) == 5 and abs(sum(t["probability"] for t in ml["top"])) <= 1.0001
+    assert ml["agreement"] in ("agree", "differ", "not_comparable")
+    # The opinion never changes the rules-based recommendation.
+    assert s["recommendation"]["canonical"] == s["crops"][0]["crop"]
+    _no_bad_numbers(ml)
+
+
+def test_ml_opinion_uses_full_variant_with_soil_test(monkeypatch):
+    _patch(monkeypatch)
+    s = run(fs.build_summary(20.0, 73.8, soil_test={"N": 80, "P": 40, "K": 40, "ph": 6.8}))
+    ml = s["ml_opinion"]
+    assert ml["status"] == "ok" and ml["variant"] == "full" and ml["unused_inputs"] == []
+    assert ml["feature_sources"]["N"].startswith("Soil test")
+
+
+def test_ml_opinion_reports_missing_inputs(monkeypatch):
+    _patch(monkeypatch, climate={"status": "unavailable", "monthly": [], "error": "down"})
+    ml = run(fs.build_summary(20.0, 73.8))["ml_opinion"]
+    assert ml["status"] == "unavailable"
+    assert set(ml["missing"]) == {"temperature", "humidity", "rainfall", "ph"}

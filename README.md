@@ -12,7 +12,8 @@ KRISHIMITRA is a full-scale AI-powered Agricultural Decision Support System (ADS
 
 - **Farm Profile**: Configurable farm details (location, area, crop).
 - **Data Engineering Pipeline**: Robust ingestion from NASA POWER, Open-Meteo, Agmarknet and Nominatim, plus local FAO/IIASA HWSD v2.0 soil data and FAOSTAT, with validation, caching, retry/back-off and per-source health tracking.
-- **Crop Recommendation**: Agronomic rules engine (`src/advisory/crop_rules.py`) scoring 12 crops against their preferred N, P, K, pH, seasonal rainfall, temperature and humidity ranges and the Indian sowing calendar. Each factor outside its range multiplies the score down; every factor is attributed to its data source. An XGBoost classifier (`crop_xgb`) exists but is not used for recommendations until it is trained on a multi-class dataset (see Limitations).
+- **Crop Recommendation**: Agronomic rules engine (`src/advisory/crop_rules.py`) scoring 12 crops against their preferred N, P, K, pH, seasonal rainfall, temperature and humidity ranges and the Indian sowing calendar. Each factor outside its range multiplies the score down; every factor is attributed to its data source.
+- **ML opinion**: An XGBoost classifier (`crop_xgb`, 22 crops, trained on the 2,200-row Kaggle crop-recommendation dataset) gives a second opinion in Crop Advisor: its top 5 crops with probabilities and whether it agrees with the rules engine. It never changes the recommendation. With a soil test it uses all 7 inputs (98.9 % hold-out accuracy); without one it uses temperature, humidity, pH and rainfall (94.1 %). Climate inputs are 5-year NASA POWER means over the current month and the next three; rainfall is the monthly mean, matching the dataset's scale.
 - **Yield Prediction**: XGBoost regressor (`yield_xgb`) for crops present in the FAOSTAT sample (Rice, Wheat), shown with its hold-out error and reliability; other crops use a labelled reference yield × agronomic suitability.
 - **Explainable AI (XAI)**: Per-factor attribution explains *why* a crop was ranked where it is; SHAP values explain the yield model's predictions.
 - **Irrigation & Risk Advisory**: Heuristic-based engines combining expected rainfall, temperature, and soil conditions to output actionable advice.
@@ -87,7 +88,7 @@ KrishiMitra-ADSS/
 | **Agmarknet (data.gov.in)**| Market | Current daily mandi modal prices, local district or nearest market | Live REST API |
 | **OSM Nominatim** | Geocoding | District/state resolution for market matching | Live REST API |
 | **FAOSTAT** | Historical | National yields; yield-model training (19-row local sample) | Offline CSV |
-| **Crop recommendation**| Agronomic | crop_xgb training data (20-row sample, single class) | Offline CSV |
+| **Crop recommendation** ([Kaggle](https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset)) | Agronomic | crop_xgb training data (2,200 rows, 22 crops) | Offline CSV |
 
 ## Installation & Setup
 
@@ -138,7 +139,8 @@ KrishiMitra-ADSS/
 ## Limitations & Ethical Considerations
 
 - **Experimental AI**: Recommendations come from a transparent rules engine and are intended for decision support, not absolute agronomic guarantees.
-- **Sample training data**: The bundled training files are small samples. `crop_recommendation.csv` has 20 rows of one class (rice), so `crop_xgb` cannot rank crops and is excluded from recommendations. `faostat_sample.csv` has 19 rows and the yield model's hold-out R² is negative, so its estimates are marked low reliability. Replacing both files with full datasets and re-running `python -m src.models.train` is required before the models carry real weight.
+- **ML opinion**: The crop classifier is trained on a public benchmark dataset that is not specific to any region, and its classes separate so cleanly that probabilities are often near 100 %. Only 2 of its 22 crops (mung bean, black gram) are among the 12 the rules engine evaluates, so the two are often not directly comparable. It is shown for comparison only.
+- **Yield sample data**: `faostat_sample.csv` has 19 rows and the yield model's hold-out R² is negative, so its estimates are marked low reliability. A full FAOSTAT export and re-running `python -m src.models.train` is required before the yield model carries real weight.
 - **Data Fallbacks**: If external APIs are unavailable, the system gracefully handles missing values and informs the user rather than hallucinating measurements.
 - **Yield Ranges**: Yield predictions represent an estimated statistical trajectory rather than a guaranteed output.
 - **Market data**: The public data.gov.in sample key is heavily rate-limited; without a personal key, prices may fall back to the last observed Agmarknet price.

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CartesianGrid, LabelList, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from 'recharts';
 import { apiGet, farmParams } from '../lib/api';
-import type { CropResult, FarmSummary, Compatibility } from '../lib/types';
+import type { CropResult, FarmSummary, Compatibility, MlOpinion } from '../lib/types';
 import { useFarmStore } from '../store/useFarmStore';
 import {
   Badge, Button, CHART, Callout, DataTable, Eyebrow, FactorAttribution, Icon, KV, PageHeader, Panel, Progress, Segmented, SourceTag, SummaryGate, TONE_TEXT, axisProps,
@@ -203,6 +203,84 @@ const featureValue = (k: string, v: number | undefined) => {
   return `${v}${u ? ` ${u}` : ''}`;
 };
 
+const ML_FEATURE_LABELS: Record<string, string> = {
+  temperature: 'Mean temperature', humidity: 'Mean humidity', rainfall: 'Mean monthly rainfall', ph: 'Soil pH', N: 'Soil N', P: 'Soil P', K: 'Soil K',
+};
+const fmtProb = (p: number) => (p > 0 && p < 0.005 ? '<1%' : fmtPct01(p));
+const monthName = (m: number) => new Date(2000, m - 1, 1).toLocaleString('en', { month: 'short' });
+
+// Second opinion from the crop_xgb classifier. Shown beside the rules-based ranking; it never changes it.
+const MlOpinionPanel: React.FC<{ ml: MlOpinion | undefined }> = ({ ml }) => {
+  const months = ml?.window_months?.length ? `${monthName(ml.window_months[0])}–${monthName(ml.window_months[ml.window_months.length - 1])}` : null;
+  return (
+    <Panel icon="model_training" title="ML opinion" accent="water"
+      subtitle="A trained classifier's view of this farm, for comparison. It does not change the rules-based recommendation."
+      actions={<Badge tone="water">Model-derived</Badge>}
+      footer={ml?.dataset && <SourceTag label="Training data" source={`${ml.dataset.rows.toLocaleString('en-IN')} rows, ${ml.classes} crops (public benchmark)`} state="historical" />}>
+      {!ml || ml.status !== 'ok' ? (
+        <Callout tone="neutral" icon="info" title="ML opinion unavailable">{ml?.reason ?? 'The backend did not return an ML opinion.'}</Callout>
+      ) : (
+        <div className="space-y-4">
+          {ml.agreement === 'agree' && (
+            <Callout tone="ok" icon="check_circle" title="Agrees with the rules engine">Both rank <strong>{ml.rules_pick}</strong> first.</Callout>
+          )}
+          {ml.agreement === 'differ' && (
+            <Callout tone="caution" icon="compare_arrows" title="Differs from the rules engine">
+              The model favours <strong>{ml.top_crop}</strong>; the rules engine picks <strong>{ml.rules_pick}</strong>
+              {isNum(ml.rules_pick_probability) && <>, which the model gives {fmtProb(ml.rules_pick_probability)}</>}.
+            </Callout>
+          )}
+          {ml.agreement === 'not_comparable' && (
+            <Callout tone="neutral" icon="info" title="Not directly comparable">
+              The rules pick, {ml.rules_pick}, is not one of the model's {ml.classes} training crops.
+            </Callout>
+          )}
+          <ol className="space-y-2.5">
+            {ml.top?.map((t, i) => (
+              <li key={t.label}>
+                <div className="flex items-baseline justify-between gap-2 text-body-sm">
+                  <span className="min-w-0 text-on-surface"><span className="text-outline tabular mr-1.5">{i + 1}.</span>{t.crop}
+                    {!t.in_rules && <span className="ml-1.5 text-label-sm font-label-sm text-outline" title="Not among the crops the rules engine evaluates">· not in rules</span>}
+                  </span>
+                  <span className="font-label-md tabular text-on-surface">{fmtProb(t.probability)}</span>
+                </div>
+                <Progress value={t.probability} tone="water" className="mt-1" />
+              </li>
+            ))}
+          </ol>
+          <details className="text-body-sm group">
+            <summary className="cursor-pointer font-semibold text-forest hover:underline list-none flex items-center gap-1">
+              <Icon name="expand_more" className="!text-[18px] group-open:rotate-180 transition-transform" /> Inputs and model
+            </summary>
+            <div className="mt-2">
+              {Object.entries(ml.features ?? {}).map(([k, v]) => (
+                <div key={k} className="py-1.5 border-b border-hairline">
+                  <div className="flex justify-between gap-2">
+                    <span className="text-on-surface-variant">{ML_FEATURE_LABELS[k] ?? k}</span>
+                    <span className="font-label-md tabular text-on-surface">{featureValue(k, v)}</span>
+                  </div>
+                  {ml.feature_sources?.[k] && <div className="text-[11px] font-label-sm text-outline">{ml.feature_sources[k]}</div>}
+                </div>
+              ))}
+              <KV label="Model" value={ml.model} />
+              <KV label="Hold-out accuracy" value={`${fmtPct01(ml.accuracy ?? null)} (${ml.dataset?.test_rows} test rows)`} mono />
+              {months && <KV label="Climate window" value={`${months}, 5-year means`} />}
+              <p className="mt-2 text-on-surface-variant">
+                Trained on a public benchmark dataset that is not specific to this region. Its classes separate cleanly, so probabilities are often near 100 % and overstate certainty; high hold-out accuracy does not mean the crop suits this farm.
+              </p>
+            </div>
+          </details>
+          {!!ml.unused_inputs?.length && (
+            <p className="text-body-sm text-on-surface-variant">
+              No soil test, so {ml.unused_inputs.join(', ')} are not used. <Link to="/farm-profile" className="font-semibold text-forest hover:underline">Enter soil test</Link>
+            </p>
+          )}
+        </div>
+      )}
+    </Panel>
+  );
+};
+
 const CropAdvisorView: React.FC<{ s: FarmSummary }> = ({ s }) => {
   const farm = useFarmStore((st) => st.selectedFarm)!;
   const [view, setView] = useState<View>('agronomic');
@@ -353,6 +431,8 @@ const CropAdvisorView: React.FC<{ s: FarmSummary }> = ({ s }) => {
         </div>
 
         <aside className="space-y-6 min-w-0">
+          <MlOpinionPanel ml={s.ml_opinion} />
+
           <Panel icon="query_stats" title={`Why ${sel.crop}?`} subtitle="Agronomic Rules Engine: exact rule penalties (not SHAP)">
             <div className="flex items-baseline justify-between mb-3">
               <span className="text-body-sm text-on-surface-variant">Agronomic suitability</span>

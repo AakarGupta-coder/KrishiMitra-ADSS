@@ -1,17 +1,59 @@
 {
-    "version": "v1.0",
-    "accuracy": 1.0,
-    "f1_score": 1.0,
+    "version": "v2.0",
+    "dataset": {
+        "source": "Kaggle 'Crop Recommendation Dataset' (Atharva Ingle), 2,200 rows, 22 crops; mirrored from github.com/Gladiator07/Harvestify",
+        "rows": 2200,
+        "test_rows": 440
+    },
     "classes": [
-        "rice"
+        "apple",
+        "banana",
+        "blackgram",
+        "chickpea",
+        "coconut",
+        "coffee",
+        "cotton",
+        "grapes",
+        "jute",
+        "kidneybeans",
+        "lentil",
+        "maize",
+        "mango",
+        "mothbeans",
+        "mungbean",
+        "muskmelon",
+        "orange",
+        "papaya",
+        "pigeonpeas",
+        "pomegranate",
+        "rice",
+        "watermelon"
     ],
-    "features": [
-        "N",
-        "P",
-        "K",
-        "temperature",
-        "humidity",
-        "ph",
-        "rainfall"
-    ]
+    "variants": {
+        "full": {
+            "file": "crop_xgb.pkl",
+            "features": [
+                "N",
+                "P",
+                "K",
+                "temperature",
+                "humidity",
+                "ph",
+                "rainfall"
+            ],
+            "accuracy": 0.9886363636363636,
+            "f1_score": 0.9884930494686593
+        },
+        "climate": {
+            "file": "crop_xgb_climate.pkl",
+            "features": [
+                "temperature",
+                "humidity",
+                "ph",
+                "rainfall"
+            ],
+            "accuracy": 0.9409090909090909,
+            "f1_score": 0.9401430485617129
+        }
+    }
 }

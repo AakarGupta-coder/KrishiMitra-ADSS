@@ -260,6 +260,29 @@ export interface SourceSnapshot {
   [k: string]: unknown;
 }
 
+export interface MlOpinion {
+  status: 'ok' | 'unavailable';
+  reason?: string;
+  variant?: 'full' | 'climate';
+  model?: string;
+  version?: string;
+  accuracy?: number;
+  f1_score?: number;
+  dataset?: { source: string; rows: number; test_rows: number };
+  classes?: number;
+  window_months?: number[];
+  features?: Record<string, number>;
+  feature_sources?: Record<string, string>;
+  unused_inputs?: string[];
+  missing?: string[];
+  top?: { label: string; crop: string; probability: number; in_rules: boolean }[];
+  top_crop?: string;
+  rules_pick?: string | null;
+  rules_pick_probability?: number | null;
+  agreement?: 'agree' | 'differ' | 'not_comparable' | 'no_rules_pick';
+  overlap?: { crop: string; rules_rank: number; probability: number }[];
+}
+
 export interface FarmSummary {
   _meta: { version: string; generated_at: string; build_ms: number; rules_version: string; min_agronomic: number };
   request: { lat: number; lon: number; area: number; irrigation_type: string; current_crop: string | null; soil_test: Record<string, number>; overrides: Record<string, number> };
@@ -270,6 +293,7 @@ export interface FarmSummary {
   soil: Soil;
   crops: CropResult[];
   recommendation: { canonical: string | null; top_agronomic: string | null; top_economic: string | null; explanation: string[] };
+  ml_opinion?: MlOpinion;
   irrigation: Irrigation;
   risk: { overall: RiskLevel; categories: RiskCategory[]; timeline: RiskTimelineDay[]; available: number; total: number };
   sources: Record<string, SourceSnapshot>;

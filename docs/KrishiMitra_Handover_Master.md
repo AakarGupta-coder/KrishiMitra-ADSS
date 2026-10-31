@@ -308,7 +308,7 @@ Branch `chore/project-cleanup`, nothing pushed. Commit or push only when the use
 
 ### Archived working files
 
-`media/` is ignored by git, so none of this is on GitHub. All of it is under `media/archive/`.
+At the time, `media/` was ignored by git, so none of this was on GitHub. All of it was under `media/archive/` (now `_deletable/video_work/archive/`). Since Nov 1, 2026 the final video, the silent master and the video master file are on GitHub.
 
 | Path | What it is |
 | --- | --- |

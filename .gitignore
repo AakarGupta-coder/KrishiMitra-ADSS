@@ -8,9 +8,14 @@ krishimitra_cache.sqlite
 data/hwsd/
 .pytest_cache/
 .venv/
-media/
+media/*
 *.mp4
 *.webm
 *.wav
 *.m4a
 _deletable/
+
+# Final video deliverables are published; everything else in media/ stays local.
+!media/KrishiMitra_Video_Final.mov
+!media/KrishiMitra_Video_Final_Master.md
+!media/KrishiMitra_Demo_Final_Silent.mp4

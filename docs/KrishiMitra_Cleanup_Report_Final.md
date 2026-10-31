@@ -16,6 +16,8 @@ The earlier rename log and cleanup report are kept at the end of this file as ap
 | `docs/presentation/KrishiMitra_Presentation_Final.pptx` | The presentation used in the video |
 | `docs/presentation/KrishiMitra_Script_Prompter_Final.html` | New combined prompter: the 8 slides and 11 website sections, 00:00 to 05:30 |
 
+These three `media/` files and the `docs/` files are on GitHub (published Nov 1, 2026). The rest of `media/` stays local, because `.gitignore` excludes everything in it except these three.
+
 The old prompter covered the website only (02:00–05:30). The combined prompter adds the slides script, with each sentence's time spread across its slide by word count. The website timings are unchanged.
 
 ## 2. Master documents
@@ -56,7 +58,7 @@ The old prompter covered the website only (02:00–05:30). The combined prompter
 
 ## 5. How to delete
 
-Back up anything you want first: git ignores `_deletable/` and `media/`, so they cannot be recovered from GitHub.
+Back up anything you want first: git ignores `_deletable/`, so it cannot be recovered from GitHub. Only the three final files in `media/` are on GitHub.
 
 ```bash
 rm -rf _deletable

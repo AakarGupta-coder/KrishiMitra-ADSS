@@ -8,6 +8,26 @@
 
 KrishiMitra is an explainable, multi-source Agricultural Decision Support System (ADSS). It combines live weather, climatology, soil and market data into one farm summary, then gives crop, yield, irrigation and risk advice that shows the factors and data sources behind every recommendation.
 
+## Course Project Submission
+
+Artificial Intelligence (BCSE306L), School of Computer Science and Engineering (SCOPE), VIT Chennai, 2026–2027.
+
+| Team member | Registration no. |
+|---|---|
+| Aakar Gupta | 24BRS1321 |
+| Prathamesh Avinash Burange | 24BRS1344 |
+
+Guide: Dr. K. Vijayaprabakaran, SCOPE, VIT Chennai.
+
+| Deliverable | In this repository | Online |
+|---|---|---|
+| Demo video (5:24) | [`media/KrishiMitra_Video_Final.mov`](media/KrishiMitra_Video_Final.mov) | [Google Drive](https://drive.google.com/file/d/1A8Z8P53Pe-GyHYCh7ZUpmb4MXLLrvqrE/view?usp=sharing) |
+| Project report (IEEE format) | [`docs/report/KrishiMitra_Report_Final.pdf`](docs/report/KrishiMitra_Report_Final.pdf) | [Google Drive](https://drive.google.com/file/d/1ODPabxXc193b3RotmXoQLIxI2CugU0vI/view?usp=sharing) |
+| Submission sheet | [`docs/submission/KrishiMitra_Submission_Sheet_Final.pdf`](docs/submission/KrishiMitra_Submission_Sheet_Final.pdf) | |
+| Presentation | [`docs/presentation/KrishiMitra_Presentation_Final.pptx`](docs/presentation/KrishiMitra_Presentation_Final.pptx) | |
+
+GitHub shows a download link rather than a player for the `.mov`; use the Drive link to watch it in the browser.
+
 ## Features
 
 - **Farm Profile**: Configurable farm details (location, area, crop).
@@ -80,7 +100,7 @@ KrishiMitra-ADSS/
 ├── models/                  # Pickled ML models & metrics
 ├── assets/images/           # Logos and architecture image
 ├── docs/                    # Report, submission sheet, presentation, research paper, design, planning, archive
-├── media/                   # Final video, silent master and its master file (not in git)
+├── media/                   # Final video, silent master and the video's master file
 └── requirements.txt         # Python Dependencies
 ```
 
@@ -158,6 +178,22 @@ Per-crop precision, recall, F1 and the full 22 × 22 confusion matrix are in `mo
    cd frontend && npm install && npm run dev
    ```
    Open http://localhost:5173 and choose a location.
+
+## Documentation
+
+| File | What it holds |
+|---|---|
+| [`docs/report/`](docs/report/) | Final report (`.docx` and `.pdf`) |
+| [`docs/submission/`](docs/submission/) | One-page submission sheet; rebuild with `python scripts/report/build_submission_sheet.py --video URL --report URL` |
+| [`docs/presentation/`](docs/presentation/) | Presentation and a full-script prompter (`KrishiMitra_Script_Prompter_Final.html`, open in a browser) |
+| [`media/KrishiMitra_Video_Final_Master.md`](media/KrishiMitra_Video_Final_Master.md) | Video files, full narration script, timeline, feature coverage and subtitles |
+| [`media/KrishiMitra_Demo_Final_Silent.mp4`](media/KrishiMitra_Demo_Final_Silent.mp4) | Silent slides-and-website master (5:30) |
+| [`docs/research_paper/KrishiMitra_Research_Master.md`](docs/research_paper/KrishiMitra_Research_Master.md) | Paper index and status, plus every audit and literature ledger; figures, results and the experiment script sit beside it |
+| [`docs/KrishiMitra_Handover_Master.md`](docs/KrishiMitra_Handover_Master.md) | Technical handover for anyone picking up the project |
+| [`docs/planning/KrishiMitra_Planning_Master.md`](docs/planning/KrishiMitra_Planning_Master.md) | Initial idea and implementation plan; the DA1 report is beside it |
+| [`docs/design/`](docs/design/) | Design system and dashboard mockup the frontend follows |
+| [`docs/archive/KrishiMitra_Archive_Master.md`](docs/archive/KrishiMitra_Archive_Master.md) | Every retired document, including the earlier demo video versions |
+| [`docs/KrishiMitra_Cleanup_Report_Final.md`](docs/KrishiMitra_Cleanup_Report_Final.md) | How the project was cleaned up and what was removed |
 
 ## Limitations & Ethical Considerations
 

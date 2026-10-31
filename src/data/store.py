@@ -3,18 +3,25 @@ import os
 import sqlite3
 import threading
 import time
-from typing import Any, Optional
+from contextlib import contextmanager
+from typing import Any, Iterator, Optional
 
 DB_PATH = os.environ.get("KRISHIMITRA_STATE_DB", os.path.join("data", "krishimitra_state.sqlite"))
 
 _lock = threading.Lock()
 
 
-def _connect() -> sqlite3.Connection:
+@contextmanager
+def _connect() -> Iterator[sqlite3.Connection]:
+    # sqlite3's own context manager commits but never closes, so close here.
     os.makedirs(os.path.dirname(DB_PATH) or ".", exist_ok=True)
     conn = sqlite3.connect(DB_PATH, timeout=5)
     conn.row_factory = sqlite3.Row
-    return conn
+    try:
+        with conn:
+            yield conn
+    finally:
+        conn.close()
 
 
 def init_db() -> None:

@@ -278,6 +278,8 @@ async def get_soil_properties(lat: float, lon: float, radius_km: Optional[float]
 def clear_cache() -> int:
     n = _resolve.cache_info().currsize
     _resolve.cache_clear()
+    if _db.cache_info().currsize:
+        _db().close()
     for f in (_raster, _db, _domain):
         f.cache_clear()
     return n

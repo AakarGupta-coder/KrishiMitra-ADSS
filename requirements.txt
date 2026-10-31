@@ -1,10 +1,11 @@
-pandas
-numpy
-requests
-scikit-learn
-xgboost
-shap
-httpx
-python-dotenv
-fastapi
-uvicorn
+# Pinned to the versions the models in models/ were trained and tested with (Python 3.14).
+pandas==2.3.3
+numpy==2.3.4
+requests==2.32.5
+scikit-learn==1.7.2
+xgboost==3.4.1
+shap==0.52.0
+httpx==0.28.1
+python-dotenv==1.2.2
+fastapi==0.139.2
+uvicorn==0.51.0

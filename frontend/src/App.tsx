@@ -1,24 +1,34 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
-import { useEffect, useRef, useState } from 'react';
-import LocationPicker, { useChooseLocation } from './components/LocationPicker';
 import { DEFAULT_LOCATION_PRESET_ID, LOCATION_PRESETS } from './lib/presets';
 import Dashboard from './pages/Dashboard';
-import FarmProfilePage from './pages/FarmProfilePage';
-import CropAdvisorPage from './pages/CropAdvisorPage';
-import YieldPredictionPage from './pages/YieldPredictionPage';
-import IrrigationAdvisorPage from './pages/IrrigationAdvisorPage';
-import WeatherIntelligencePage from './pages/WeatherIntelligencePage';
-import SoilIntelligencePage from './pages/SoilIntelligencePage';
-import AIInsightsPage from './pages/AIInsightsPage';
-import ReportsPage from './pages/ReportsPage';
-import SettingsPage from './pages/SettingsPage';
 import { useFarmStore } from './store/useFarmStore';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import LocationPicker from './components/LocationPicker';
+import { useChooseLocation } from './hooks/useChooseLocation';
+
+// Dashboard is the landing page; the rest load on first visit to keep the initial bundle small.
+const FarmProfilePage = lazy(() => import('./pages/FarmProfilePage'));
+const CropAdvisorPage = lazy(() => import('./pages/CropAdvisorPage'));
+const YieldPredictionPage = lazy(() => import('./pages/YieldPredictionPage'));
+const IrrigationAdvisorPage = lazy(() => import('./pages/IrrigationAdvisorPage'));
+const WeatherIntelligencePage = lazy(() => import('./pages/WeatherIntelligencePage'));
+const SoilIntelligencePage = lazy(() => import('./pages/SoilIntelligencePage'));
+const AIInsightsPage = lazy(() => import('./pages/AIInsightsPage'));
+const ReportsPage = lazy(() => import('./pages/ReportsPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+
+const PageLoading = () => (
+  <div className="flex items-center justify-center gap-2 py-24 text-body-md text-on-surface-variant">
+    <span className="material-symbols-outlined animate-spin text-forest">progress_activity</span>
+    Loading…
+  </div>
+);
 
 const FirstRunSetup = () => {
   const deviceAttempted = useFarmStore((s) => s.deviceAttempted);
   const setDeviceAttempted = useFarmStore((s) => s.setDeviceAttempted);
-  const { useDevice, pickPreset } = useChooseLocation();
+  const { locateDevice, pickPreset } = useChooseLocation();
   const [phase, setPhase] = useState<'detecting' | 'choose'>(deviceAttempted ? 'choose' : 'detecting');
   const [reason, setReason] = useState<string | null>(null);
   const started = useRef(false);
@@ -27,7 +37,7 @@ const FirstRunSetup = () => {
     if (deviceAttempted || started.current) return;
     started.current = true;
     setDeviceAttempted();
-    useDevice((msg) => {
+    locateDevice((msg) => {
       setReason(msg);
       const fallback = LOCATION_PRESETS.find((p) => p.id === DEFAULT_LOCATION_PRESET_ID);
       if (fallback) pickPreset(fallback, 'default');
@@ -71,6 +81,7 @@ const AppContent = () => {
   if (!selectedFarm) return <FirstRunSetup />;
   return (
     <Layout>
+      <Suspense fallback={<PageLoading />}>
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -85,6 +96,7 @@ const AppContent = () => {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
+      </Suspense>
     </Layout>
   );
 };

@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import type { FarmSummary } from '../lib/types';
 import { apiPost } from '../lib/api';
 import { useFarmStore } from '../store/useFarmStore';
-import {
-  Badge, Button, Callout, Eyebrow, Icon, KV, Metric, MetricStrip, PageHeader, Panel, SummaryGate, TONE_TEXT, UnavailableBlock,
-} from '../components/ui';
-import { FarmContextBar, soilSourceTag } from '../components/widgets';
 import { fmtCoord, fmtNum, isNum } from '../lib/format';
 import { useSummary } from '../hooks/useSummary';
+import { Badge, Button, Callout, Eyebrow, Icon, KV, Metric, MetricStrip, PageHeader, Panel, SummaryGate, UnavailableBlock } from '../components/ui';
+import { FarmContextBar } from '../components/widgets';
+import { soilSourceTag } from '../lib/badges';
+import { TONE_TEXT } from '../lib/tone';
 
 const TEXTURE_COLORS = { sand: '#D9A55B', silt: '#A8A29E', clay: '#8B5E3C' };
 

@@ -1,114 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { LOCATION_PRESETS, type LocationPreset } from '../lib/presets';
 import { useFarmStore, farmLabel, type FarmContext } from '../store/useFarmStore';
 import { Icon } from './ui';
 import Popover from './Popover';
 import { fmtCoord, fmtArea } from '../lib/format';
-
-interface NominatimPlace {
-  place_id: number;
-  lat: string;
-  lon: string;
-  name: string;
-  display_name: string;
-  addresstype?: string;
-  address?: Record<string, string>;
-}
-
-const placeName = (a: Record<string, string> | undefined, fallback: string) =>
-  a?.village || a?.town || a?.city || a?.suburb || a?.county || a?.state_district || a?.state || fallback;
-
-const SOURCE_LABEL: Record<FarmContext['locationSource'], string> = {
-  device: 'Device location', search: 'Search', map: 'Map', saved: 'Saved farm', preset: 'Preset', default: 'Default',
-};
-export const sourceLabel = (s: FarmContext['locationSource']) => SOURCE_LABEL[s] ?? s;
-
-async function reverseName(lat: number, lon: number) {
-  try {
-    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1&accept-language=en`);
-    if (!res.ok) throw new Error(String(res.status));
-    const d = await res.json();
-    return { name: placeName(d.address, 'Current location'), region: d.address?.state ?? null, district: d.address?.state_district ?? d.address?.county ?? null };
-  } catch {
-    return { name: 'Current location', region: null, district: null };
-  }
-}
-
-export function useChooseLocation(onDone?: () => void) {
-  const { selectedFarm, setFarm } = useFarmStore();
-  const [geoState, setGeoState] = useState<'idle' | 'locating' | 'error'>('idle');
-  const [geoError, setGeoError] = useState<string | null>(null);
-
-  const base = (): Pick<FarmContext, 'area' | 'unit' | 'irrigationType' | 'currentCrop' | 'soilTest' | 'farmId'> => ({
-    area: selectedFarm?.area ?? 1,
-    unit: 'ha',
-    irrigationType: selectedFarm?.irrigationType ?? 'Rainfed',
-    currentCrop: selectedFarm?.currentCrop ?? null,
-    soilTest: {},
-    farmId: null,
-  });
-
-  const choose = (farm: FarmContext) => {
-    setFarm(farm);
-    onDone?.();
-  };
-
-  const pickPreset = (p: LocationPreset, source: FarmContext['locationSource'] = 'preset') =>
-    choose({
-      ...base(), id: `preset-${p.id}`, name: p.name, region: p.region, district: p.district, lat: p.lat, lon: p.lon,
-      area: p.area, irrigationType: 'Rainfed', currentCrop: null, locationSource: source, presetId: p.id, context: p.context,
-    });
-
-  const pickPlace = (p: NominatimPlace) =>
-    choose({
-      ...base(), id: `osm-${p.place_id}`, name: placeName(p.address, p.name || p.display_name.split(',')[0]),
-      region: p.address?.state ?? null, district: p.address?.state_district ?? p.address?.county ?? null,
-      lat: Number(p.lat), lon: Number(p.lon), locationSource: 'search', presetId: null, context: null,
-    });
-
-  const useDevice = (onFail?: (msg: string) => void, opts: { onlyIfEmpty?: boolean } = {}) => {
-    const stillEmpty = () => !opts.onlyIfEmpty || !useFarmStore.getState().selectedFarm;
-    if (!navigator.geolocation) {
-      const msg = 'This browser does not support geolocation.';
-      setGeoState('error');
-      setGeoError(msg);
-      onFail?.(msg);
-      return;
-    }
-    setGeoState('locating');
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        const g = await reverseName(lat, lon);
-        setGeoState('idle');
-        if (!stillEmpty()) return;
-        choose({ ...base(), id: 'device', ...g, lat, lon, locationSource: 'device', presetId: null, context: null });
-      },
-      (err) => {
-        const msg = err.code === err.PERMISSION_DENIED ? 'Location permission was denied.' : 'Could not determine the device location.';
-        setGeoState('error');
-        setGeoError(msg);
-        if (stillEmpty()) onFail?.(msg);
-      },
-      { timeout: 12000, enableHighAccuracy: false },
-    );
-  };
-
-  return { choose, pickPreset, pickPlace, useDevice, geoState, geoError };
-}
+import { LOCATION_PRESETS } from '../lib/presets';
+import { placeName, sourceLabel, type NominatimPlace } from '../lib/location';
+import { useChooseLocation } from '../hooks/useChooseLocation';
 
 function useNominatimSearch(query: string) {
   const [results, setResults] = useState<NominatimPlace[]>([]);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const active = query.trim().length >= 3;
+
   useEffect(() => {
-    if (query.trim().length < 3) {
-      setResults([]);
-      setError(null);
-      return;
-    }
+    if (!active) return;
     const ctl = new AbortController();
     const t = setTimeout(async () => {
       setSearching(true);
@@ -130,8 +37,9 @@ function useNominatimSearch(query: string) {
       clearTimeout(t);
       ctl.abort();
     };
-  }, [query]);
-  return { results, searching, error };
+  }, [query, active]);
+  // Short queries show nothing; earlier results stay hidden rather than being cleared in the effect.
+  return { results: active ? results : [], searching: active && searching, error: active ? error : null };
 }
 
 const PlaceResults: React.FC<{ results: NominatimPlace[]; onPick: (p: NominatimPlace) => void }> = ({ results, onPick }) => (
@@ -201,7 +109,7 @@ const LocationPicker: React.FC<{ onDone?: () => void; compact?: boolean }> = ({ 
   const { selectedFarm, savedFarm, recent } = useFarmStore();
   const [query, setQuery] = useState('');
   const { results, searching, error } = useNominatimSearch(query);
-  const { choose, pickPreset, pickPlace, useDevice, geoState, geoError } = useChooseLocation(onDone);
+  const { choose, pickPreset, pickPlace, locateDevice, geoState, geoError } = useChooseLocation(onDone);
 
   const row = 'w-full text-left px-3 py-2 rounded-lg hover:bg-sage flex items-start gap-2.5 transition-colors';
   const isActive = (lat: number, lon: number) => !!selectedFarm && Math.abs(selectedFarm.lat - lat) < 1e-4 && Math.abs(selectedFarm.lon - lon) < 1e-4;
@@ -242,7 +150,7 @@ const LocationPicker: React.FC<{ onDone?: () => void; compact?: boolean }> = ({ 
 
       <div className="p-2 space-y-1 overflow-y-auto min-h-0">
         <Section title="Current location">
-          <button className={row} onClick={() => useDevice()} disabled={geoState === 'locating'}>
+          <button className={row} onClick={() => locateDevice()} disabled={geoState === 'locating'}>
             <Icon name={geoState === 'locating' ? 'progress_activity' : 'my_location'} className={`text-water !text-[18px] mt-0.5 ${geoState === 'locating' ? 'animate-spin' : ''}`} />
             <span>
               <span className="block text-body-md font-semibold text-on-surface">Use my current location</span>

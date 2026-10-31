@@ -1,18 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { Attribution, FarmSummary, RiskLevel, Severity } from '../lib/types';
 import { fmtRelative, isNum } from '../lib/format';
 import { localizeText } from '../lib/units';
 import { useSummary } from '../hooks/useSummary';
-
+import type { Attribution, FarmSummary } from '../lib/types';
+import { TONE_TEXT, type Tone } from '../lib/tone';
 
 export const Icon: React.FC<{ name: string; className?: string; fill?: boolean; title?: string }> = ({ name, className = '', fill, title }) => (
   <span className={`material-symbols-outlined select-none ${fill ? 'fill-icon' : ''} ${className}`} aria-hidden={title ? undefined : true} title={title}>
     {name}
   </span>
 );
-
-export type Tone = 'ok' | 'water' | 'caution' | 'critical' | 'neutral' | 'brand';
 
 const TONE_BADGE: Record<Tone, string> = {
   ok: 'bg-[#DCFCE7] text-[#15803D] border-[#BBF7D0]',
@@ -23,30 +21,12 @@ const TONE_BADGE: Record<Tone, string> = {
   brand: 'bg-forest text-white border-forest',
 };
 
-export const TONE_TEXT: Record<Tone, string> = {
-  ok: 'text-[#15803D]',
-  water: 'text-[#0369A1]',
-  caution: 'text-[#B45309]',
-  critical: 'text-[#B91C1C]',
-  neutral: 'text-on-surface-variant',
-  brand: 'text-forest',
-};
-
 export const Badge: React.FC<{ tone?: Tone; icon?: string; children: React.ReactNode; className?: string; title?: string }> = ({ tone = 'neutral', icon, children, className = '', title }) => (
   <span title={title} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-label-sm font-label-sm whitespace-nowrap ${TONE_BADGE[tone]} ${className}`}>
     {icon && <Icon name={icon} className="!text-[13px]" />}
     {children}
   </span>
 );
-
-export const severityTone = (s: Severity | string): Tone =>
-  s === 'critical' ? 'critical' : s === 'warning' ? 'critical' : s === 'caution' ? 'caution' : s === 'info' ? 'water' : 'neutral';
-
-export const severityIcon = (s: Severity | string) =>
-  s === 'critical' ? 'error' : s === 'warning' ? 'warning' : s === 'caution' ? 'report' : 'info';
-
-export const riskTone = (l: RiskLevel): Tone => (l === 'high' ? 'critical' : l === 'moderate' ? 'caution' : l === 'low' ? 'ok' : 'neutral');
-export const riskLabel = (l: RiskLevel) => (l === 'unavailable' ? 'No data' : `${l[0].toUpperCase()}${l.slice(1)}`);
 
 type BtnVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 const BTN: Record<BtnVariant, string> = {
@@ -70,7 +50,6 @@ export const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { 
     {children}
   </button>
 );
-
 
 export const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
   <div className={`text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant ${className}`}>{children}</div>
@@ -232,7 +211,6 @@ export const Progress: React.FC<{ value: number | null; tone?: 'forest' | 'ok' |
   );
 };
 
-
 export const LoadingBlock: React.FC<{ label?: string; className?: string }> = ({ label = 'Loading…', className = 'h-48' }) => (
   <div className={`flex items-center justify-center gap-2 text-body-md text-on-surface-variant ${className}`} role="status">
     <Icon name="progress_activity" className="animate-spin text-forest" />
@@ -285,7 +263,6 @@ export const ModuleLink: React.FC<{ to: string; children: React.ReactNode }> = (
   </Link>
 );
 
-
 export const FactorAttribution: React.FC<{ items: Attribution[] }> = ({ items }) => (
   <div className="space-y-2.5">
     {items.map((a) => {
@@ -315,23 +292,6 @@ export const FactorAttribution: React.FC<{ items: Attribution[] }> = ({ items })
     })}
   </div>
 );
-
-
-export const CHART = {
-  rain: '#0284C7',
-  heat: '#D97706',
-  green: '#16A34A',
-  forest: '#114232',
-  grid: '#E2E8DE',
-  axis: '#414944',
-  muted: '#717974',
-};
-
-export const axisProps = {
-  axisLine: false,
-  tickLine: false,
-  tick: { fill: CHART.axis, fontSize: 11, fontFamily: 'JetBrains Mono, monospace' },
-} as const;
 
 interface TooltipRow { name?: string | number; value?: unknown; color?: string; unit?: string; dataKey?: unknown; payload?: Record<string, unknown> }
 
@@ -367,18 +327,6 @@ export const Legend: React.FC<{ items: { label: string; color: string; shape?: '
     ))}
   </div>
 );
-
-export function useIsNarrow(maxWidth = 640) {
-  const query = `(max-width: ${maxWidth}px)`;
-  const [narrow, setNarrow] = React.useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches);
-  React.useEffect(() => {
-    const mq = window.matchMedia(query);
-    const on = () => setNarrow(mq.matches);
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, [query]);
-  return narrow;
-}
 
 export interface Column<T> {
   key: string;

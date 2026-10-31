@@ -1,35 +1,14 @@
-import React, { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationStore, notificationKey, type AppNotification } from '../store/useNotificationStore';
 import { useFarmStore, farmLabel } from '../store/useFarmStore';
-import { useAppSettings } from '../store/useAppSettings';
-import { categoryOf } from '../lib/notifications';
-import { Badge, Icon, severityIcon, severityTone, TONE_TEXT } from './ui';
 import Popover from './Popover';
 import { fmtDateTime, fmtRelative } from '../lib/format';
 import { localizeText } from '../lib/units';
-
-export const locationKeyOf = (lat: number, lon: number) => `${lat.toFixed(4)},${lon.toFixed(4)}`;
-
-const SEVERITY_RANK = { critical: 0, warning: 1, caution: 2, info: 3 } as const;
-
-export function useLocationNotifications() {
-  const farm = useFarmStore((s) => s.selectedFarm);
-  const items = useNotificationStore((s) => s.items);
-  const farmAlerts = useAppSettings((s) => s.farmAlerts);
-  const systemAlerts = useAppSettings((s) => s.systemAlerts);
-  return useMemo(() => {
-    if (!farm) return [] as AppNotification[];
-    const lk = locationKeyOf(farm.lat, farm.lon);
-    return items
-      .filter((n) => n.locationKey === lk)
-      .filter((n) => (categoryOf(n.id) === 'farm' ? farmAlerts : systemAlerts))
-      .sort((a, b) =>
-        a.active !== b.active ? (a.active ? -1 : 1)
-          : a.read !== b.read ? (a.read ? 1 : -1)
-            : SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity] || b.updatedAt - a.updatedAt);
-  }, [farm, items, farmAlerts, systemAlerts]);
-}
+import React, { useRef, useState } from 'react';
+import { categoryOf, locationKeyOf } from '../lib/notifications';
+import { useLocationNotifications } from '../hooks/useLocationNotifications';
+import { Badge, Icon } from './ui';
+import { severityIcon, severityTone, TONE_TEXT } from '../lib/tone';
 
 const Item: React.FC<{ n: AppNotification; onOpen: (n: AppNotification) => void }> = ({ n, onOpen }) => {
   const markRead = useNotificationStore((s) => s.markRead);

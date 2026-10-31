@@ -5,14 +5,14 @@ import { CartesianGrid, LabelList, ReferenceLine, ResponsiveContainer, Scatter, 
 import { apiGet, farmParams } from '../lib/api';
 import type { CropResult, FarmSummary, Compatibility, MlOpinion } from '../lib/types';
 import { useFarmStore } from '../store/useFarmStore';
-import {
-  Badge, Button, CHART, Callout, DataTable, Eyebrow, FactorAttribution, Icon, KV, PageHeader, Panel, Progress, Segmented, SourceTag, SummaryGate, TONE_TEXT, axisProps,
-  type Column,
-} from '../components/ui';
-import { FarmContextBar, MarketLine, NoRecommendation, climateSourceTag, economicBadge, priceBasisBadge, soilSourceTag } from '../components/widgets';
 import { MARKET_BASIS_LABEL, fmtAgDate, fmtArea, fmtINR, fmtINRCompact, fmtMm, fmtNum, fmtPct01, fmtRelative, fmtYield, isNum } from '../lib/format';
 import { convRain, convTemp, localizeText, rainUnit, tempUnit } from '../lib/units';
 import { providerRow, tagState } from '../lib/providerStatus';
+import { Badge, Button, Callout, DataTable, Eyebrow, FactorAttribution, Icon, KV, PageHeader, Panel, Progress, Segmented, SourceTag, SummaryGate, type Column } from '../components/ui';
+import { FarmContextBar, MarketLine, NoRecommendation } from '../components/widgets';
+import { climateSourceTag, economicBadge, priceBasisBadge, soilSourceTag } from '../lib/badges';
+import { CHART, axisProps } from '../lib/chart';
+import { TONE_TEXT } from '../lib/tone';
 
 type View = 'agronomic' | 'economic' | 'tradeoff';
 
@@ -292,14 +292,20 @@ const CropAdvisorView: React.FC<{ s: FarmSummary }> = ({ s }) => {
   const simulating = rain !== null || temp !== null;
   const [selected, setSelected] = useState<string>(s.recommendation.canonical as string);
 
-  useEffect(() => { setSelected(s.recommendation.canonical as string); setRain(null); setTemp(null); }, [s.request.lat, s.request.lon]); // eslint-disable-line react-hooks/exhaustive-deps
+  // A new location resets the selection and the what-if sliders.
+  const locKey = `${s.request.lat}|${s.request.lon}`;
+  const [prevLocKey, setPrevLocKey] = useState(locKey);
+  if (locKey !== prevLocKey) {
+    setPrevLocKey(locKey);
+    setSelected(s.recommendation.canonical as string);
+    setRain(null);
+    setTemp(null);
+    setScenario(null);
+    setScenarioState('idle');
+  }
 
   useEffect(() => {
-    if (!simulating) {
-      setScenario(null);
-      setScenarioState('idle');
-      return;
-    }
+    if (!simulating) return;
     const ctl = new AbortController();
     const t = setTimeout(async () => {
       setScenarioState('loading');
@@ -506,7 +512,7 @@ const CropAdvisorView: React.FC<{ s: FarmSummary }> = ({ s }) => {
                   )}
                 </div>
               )}
-              <Button className="w-full" icon="restart_alt" disabled={!simulating} onClick={() => { setRain(null); setTemp(null); }}>Reset to baseline</Button>
+              <Button className="w-full" icon="restart_alt" disabled={!simulating} onClick={() => { setRain(null); setTemp(null); setScenario(null); setScenarioState('idle'); }}>Reset to baseline</Button>
             </div>
           </Panel>
         </aside>

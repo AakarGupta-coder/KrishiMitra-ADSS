@@ -5,12 +5,13 @@ import { useFarmStore, farmLabel } from '../store/useFarmStore';
 import { useNotificationStore } from '../store/useNotificationStore';
 import { useSummary } from '../hooks/useSummary';
 import { Link } from 'react-router-dom';
-import { Badge, Button, Callout, ErrorBlock, Eyebrow, Icon, KV, LoadingBlock, PageHeader, Panel, Segmented, type Tone } from '../components/ui';
 import { MARKET_BASIS_LABEL, fmtArea, fmtCoord, fmtDateTime, fmtNum, fmtRelative } from '../lib/format';
 import { useUnitStore } from '../lib/units';
 import { useAppSettings, type RefreshInterval } from '../store/useAppSettings';
-import { sourceLabel } from '../components/LocationPicker';
 import InfoButton from '../components/InfoButton';
+import { Badge, Button, Callout, ErrorBlock, Eyebrow, Icon, KV, LoadingBlock, PageHeader, Panel, Segmented } from '../components/ui';
+import { sourceLabel } from '../lib/location';
+import { type Tone } from '../lib/tone';
 
 const STATUS: Record<SourceEntry['status'], { tone: Tone; label: string; icon: string }> = {
   connected: { tone: 'ok', label: 'Connected', icon: 'check_circle' },
@@ -113,17 +114,17 @@ const SettingsPage: React.FC = () => {
   const units = useUnitStore();
   const appSettings = useAppSettings();
 
-  const load = useCallback(async () => {
-    try {
-      const r = await apiGet<{ sources: SourceEntry[] }>('/api/sources');
-      setSources(r.sources);
-      setLoadErr(null);
-    } catch (e) {
-      setLoadErr((e as Error).message);
-    }
-  }, []);
+  const load = useCallback(
+    () => apiGet<{ sources: SourceEntry[] }>('/api/sources')
+      .then((r) => { setSources(r.sources); setLoadErr(null); })
+      .catch((e) => setLoadErr((e as Error).message)),
+    [],
+  );
 
-  useEffect(() => { void load(); }, [load, summary?._meta.generated_at]);
+  // Reload whenever a fresh summary arrives; state is only set once the request settles.
+  useEffect(() => {
+    load();
+  }, [load, summary?._meta.generated_at]);
   useEffect(() => {
     apiGet('/api/health').then(() => setHealth('online')).catch(() => setHealth('offline'));
   }, [summary?._meta.generated_at]);

@@ -5,6 +5,8 @@ import { isRateLimit, providerRow } from './providerStatus';
 const fmtTemp = (v: unknown, d = 1) => (isNum(v) ? `${v.toFixed(d)} °C` : 'Unavailable');
 const fmtMm = (v: unknown, d = 1) => (isNum(v) ? `${v.toFixed(d)} mm` : 'Unavailable');
 
+export const locationKeyOf = (lat: number, lon: number) => `${lat.toFixed(4)},${lon.toFixed(4)}`;
+
 export type NotificationCategory = 'farm' | 'system';
 
 export const categoryOf = (id: string): NotificationCategory => (id.startsWith('data:') || id.startsWith('system:') ? 'system' : 'farm');

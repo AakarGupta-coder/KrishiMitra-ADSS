@@ -4,12 +4,12 @@ import { useFarmStore, farmLabel } from '../store/useFarmStore';
 import { useSummary } from '../hooks/useSummary';
 import { routeTitle } from '../lib/routes';
 import { fmtArea, fmtRelative } from '../lib/format';
-import LocationPicker, { LocationSearch, sourceLabel } from './LocationPicker';
 import NotificationCenter from './NotificationCenter';
 import Popover from './Popover';
 import { Icon } from './ui';
 import { DOT, completenessNotes, providerRows } from '../lib/providerStatus';
-
+import LocationPicker, { LocationSearch } from './LocationPicker';
+import { sourceLabel } from '../lib/location';
 
 const USER = { name: 'Aakar', role: 'Lead Agronomist' };
 

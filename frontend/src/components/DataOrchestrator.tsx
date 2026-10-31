@@ -4,8 +4,8 @@ import { useFarmDataStore } from '../store/useFarmDataStore';
 import { useNotificationStore } from '../store/useNotificationStore';
 import { evaluateNotifications } from '../lib/notifications';
 import { farmKey } from '../lib/api';
-import { locationKeyOf } from './NotificationCenter';
 import { useAppSettings } from '../store/useAppSettings';
+import { locationKeyOf } from '../lib/notifications';
 
 const PENDING_RETRY_MS = 20 * 1000;
 const MAX_PENDING_RETRIES = 6;

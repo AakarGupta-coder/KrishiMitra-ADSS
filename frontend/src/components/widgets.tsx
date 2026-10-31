@@ -1,17 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { CropResult, FarmSummary, Market, RiskCategory } from '../lib/types';
 import { MARKET_BASIS_LABEL, fmtAgDate, fmtCoord, fmtDayMonth, fmtLongDate, fmtMm, fmtNum, fmtRelative, fmtWeekday, isNum } from '../lib/format';
 import { weatherIcon, weatherLabel, isWet } from '../lib/weather';
-import { Badge, ContextBar, Icon, PageHeader, SourceTag, UnavailableBlock, riskLabel, riskTone, TONE_TEXT, type Tone } from './ui';
 import { useFarmStore } from '../store/useFarmStore';
 import { convTemp, localizeText } from '../lib/units';
-
-export const placeLabel = (s: FarmSummary, fallbackName?: string) => {
-  const l = s.location;
-  const name = fallbackName || l.place || 'Selected location';
-  return l.state && !name.includes(l.state) ? `${name}, ${l.state}` : name;
-};
+import type { FarmSummary, Market, RiskCategory } from '../lib/types';
+import { Badge, ContextBar, Icon, PageHeader, UnavailableBlock } from './ui';
+import { riskLabel, riskTone, TONE_TEXT, type Tone } from '../lib/tone';
+import { placeLabel } from '../lib/summaryText';
 
 export const FarmContextBar: React.FC<{ s: FarmSummary }> = ({ s }) => {
   const farm = useFarmStore((st) => st.selectedFarm);
@@ -55,25 +51,6 @@ export const ForecastStrip: React.FC<{ s: FarmSummary; days?: number }> = ({ s, 
   );
 };
 
-export const weatherSourceTag = (s: FarmSummary) => (
-  <SourceTag label="Weather" source="Open-Meteo" time={s.weather.status === 'ok' ? s.weather.fetched_at : undefined}
-    state={s.weather.status === 'ok' ? 'ok' : 'unavailable'} note={s.weather.status === 'ok' ? undefined : 'unavailable'} />
-);
-
-export const soilSourceTag = (s: FarmSummary) => {
-  const st = s.soil.status;
-  return (
-    <SourceTag label="Soil" source="FAO/IIASA HWSD v2.0"
-      state={st === 'ok' ? 'ok' : st === 'fallback' ? 'fallback' : st === 'pending' ? 'pending' : 'unavailable'}
-      note={st === 'fallback' ? `nearby ~1 km cell ${fmtNum(s.soil.distance_km, 1)} km away` : st === 'ok' ? '~1 km regional estimate' : st === 'pending' ? 'still loading' : 'unavailable'} />
-  );
-};
-
-export const climateSourceTag = (s: FarmSummary) => (
-  <SourceTag label="Climate" source={`NASA POWER ${s.climate.period ?? ''}`.trim()} time={s.climate.status === 'ok' ? s.climate.fetched_at : undefined}
-    state={s.climate.status === 'ok' ? 'ok' : 'unavailable'} note={s.climate.status === 'ok' ? undefined : 'unavailable, forecast used'} />
-);
-
 export const MarketLine: React.FC<{ m: Market; compact?: boolean }> = ({ m, compact }) => {
   if (m.status === 'unavailable')
     return <span className="text-body-sm text-on-surface-variant">No live price. {m.reason ?? ''} Reference price used.</span>;
@@ -86,20 +63,6 @@ export const MarketLine: React.FC<{ m: Market; compact?: boolean }> = ({ m, comp
   );
 };
 
-export const economicBadge = (c: CropResult, className?: string) => {
-  const conf = c.economic.confidence;
-  if (conf === 'Unavailable') return <Badge tone="neutral" icon="block" title={c.economic.basis} className={className}>Economics not assessable</Badge>;
-  return <Badge tone={conf === 'Medium' ? 'water' : 'caution'} title={c.economic.basis} className={className}>Economic confidence: {conf}</Badge>;
-};
-
-export const priceBasisBadge = (c: CropResult) => {
-  const b = c.financials.price_basis;
-  if (b === 'live') return <Badge tone="ok" icon="sensors">Live mandi</Badge>;
-  if (b === 'last_observed') return <Badge tone="caution" icon="history">Last observed</Badge>;
-  if (b === 'reference') return <Badge tone="neutral" icon="menu_book">Reference price</Badge>;
-  return <Badge tone="neutral">No price</Badge>;
-};
-
 const RISK_ICON: Record<string, string> = {
   climate: 'thermostat',
   water: 'water_drop',
@@ -109,7 +72,6 @@ const RISK_ICON: Record<string, string> = {
   soil: 'layers',
   market: 'storefront',
 };
-
 
 export const RiskMatrix: React.FC<{ categories: RiskCategory[]; dense?: boolean }> = ({ categories, dense }) => (
   <div className={`grid ${dense ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-[repeat(auto-fill,minmax(220px,1fr))]'} bg-white rounded-xl border-l border-t border-hairline overflow-hidden`}>
@@ -130,18 +92,6 @@ export const RiskMatrix: React.FC<{ categories: RiskCategory[]; dense?: boolean 
     })}
   </div>
 );
-
-export const totalRain = (s: FarmSummary) => s.weather.daily.reduce((a, d) => a + (isNum(d.precip) ? d.precip : 0), 0);
-
-export const irrigationHeadline = (s: FarmSummary): { text: string; tone: Tone; icon: string } => {
-  const st = s.irrigation.status;
-  if (st === 'unavailable') return { text: 'Unavailable', tone: 'neutral', icon: 'cloud_off' };
-  if (st === 'irrigate_now') return { text: 'Irrigate now', tone: 'critical', icon: 'water_drop' };
-  if (st === 'irrigate_soon') return { text: 'Irrigate within 3 days', tone: 'caution', icon: 'water_drop' };
-  if (st === 'scheduled') return { text: `Irrigate ${fmtWeekday(s.irrigation.next_irrigation!.date)} ${fmtDayMonth(s.irrigation.next_irrigation!.date)}`, tone: 'water', icon: 'event' };
-  return { text: 'Not needed this week', tone: 'ok', icon: 'check_circle' };
-};
-
 
 export const NoRecommendation: React.FC<{ s: FarmSummary; title: string }> = ({ s, title }) => (
   <>

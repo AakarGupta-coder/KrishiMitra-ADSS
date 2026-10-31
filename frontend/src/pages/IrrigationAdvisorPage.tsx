@@ -3,12 +3,14 @@ import InfoButton from '../components/InfoButton';
 import { Link } from 'react-router-dom';
 import { Area, Bar, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { FarmSummary } from '../lib/types';
-import {
-  Badge, CHART, Callout, ChartTooltip, Eyebrow, Icon, Legend, Metric, MetricStrip, PageHeader, Panel, SummaryGate, TONE_TEXT, UnavailableBlock, axisProps, type Tone,
-} from '../components/ui';
-import { FarmContextBar, irrigationHeadline, soilSourceTag, weatherSourceTag } from '../components/widgets';
 import { fmtArea, fmtDayLabel, fmtDayMonth, fmtMm, fmtNum, fmtWeekday, isNum, numRain } from '../lib/format';
 import { convRain, localizeText, rainUnit } from '../lib/units';
+import { Badge, Callout, ChartTooltip, Eyebrow, Icon, Legend, Metric, MetricStrip, PageHeader, Panel, SummaryGate, UnavailableBlock } from '../components/ui';
+import { FarmContextBar } from '../components/widgets';
+import { soilSourceTag, weatherSourceTag } from '../lib/badges';
+import { CHART, axisProps } from '../lib/chart';
+import { irrigationHeadline } from '../lib/summaryText';
+import { TONE_TEXT, type Tone } from '../lib/tone';
 
 type Kind = 'Forecast' | 'Estimated' | 'Model-derived' | 'Observed';
 const KIND_TONE: Record<Kind, Tone> = { Forecast: 'water', Estimated: 'neutral', 'Model-derived': 'caution', Observed: 'ok' };

@@ -1,13 +1,15 @@
 import React from 'react';
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { DailyForecast, FarmSummary } from '../lib/types';
-import {
-  CHART, ChartTooltip, Eyebrow, Icon, Legend, Metric, MetricStrip, PageHeader, Panel, SummaryGate, UnavailableBlock, axisProps, useIsNarrow,
-} from '../components/ui';
-import { FarmContextBar, ForecastStrip, climateSourceTag, totalRain, weatherSourceTag } from '../components/widgets';
 import { MONTHS, fmtDateTime, fmtDayLabel, fmtMm, fmtNum, fmtTemp, fmtUnit, fmtWeekday, isNum, numRain, numTemp } from '../lib/format';
 import { convRain, convTemp, localizeText, rainUnit, tempUnit } from '../lib/units';
 import { weatherIcon, weatherLabel } from '../lib/weather';
+import { ChartTooltip, Eyebrow, Icon, Legend, Metric, MetricStrip, PageHeader, Panel, SummaryGate, UnavailableBlock } from '../components/ui';
+import { FarmContextBar, ForecastStrip } from '../components/widgets';
+import { useIsNarrow } from '../hooks/useIsNarrow';
+import { climateSourceTag, weatherSourceTag } from '../lib/badges';
+import { CHART, axisProps } from '../lib/chart';
+import { totalRain } from '../lib/summaryText';
 
 const tick = (v: number) => (Number.isInteger(v) ? String(v) : v < 1 ? v.toFixed(2) : v.toFixed(1));
 
@@ -77,11 +79,8 @@ const WeatherView: React.FC<{ s: FarmSummary }> = ({ s }) => {
   const dim = new Date(Number(s.season.date.slice(0, 4)), month, 0).getDate();
   const climWeek = climMonth && isNum(climMonth.precip_mm) ? (climMonth.precip_mm / dim) * daily.length : null;
   const climPace = climMonth && isNum(climMonth.precip_mm) ? climMonth.precip_mm / dim : null;
-  let run = 0;
-  const accum = daily.map((d, i) => {
-    run += d.precip ?? 0;
-    return { date: d.date, cum: convRain(run), pace: climPace ? convRain(climPace * (i + 1)) : null };
-  });
+  const cumRain = daily.map((_, i) => daily.slice(0, i + 1).reduce((a, d) => a + (d.precip ?? 0), 0));
+  const accum = daily.map((d, i) => ({ date: d.date, cum: convRain(cumRain[i]), pace: climPace ? convRain(climPace * (i + 1)) : null }));
   const meanT = daily.filter((d) => isNum(d.tmax) && isNum(d.tmin));
   const weekMean = meanT.length ? meanT.reduce((a, d) => a + ((d.tmax as number) + (d.tmin as number)) / 2, 0) / meanT.length : null;
   const tAnom = isNum(weekMean) && climMonth && isNum(climMonth.t2m) ? weekMean - climMonth.t2m : null;

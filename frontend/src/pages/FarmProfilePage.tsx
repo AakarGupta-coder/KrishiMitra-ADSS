@@ -12,6 +12,14 @@ import { DOT, providerRow } from '../lib/providerStatus';
 
 const areaText = (ha: number) => String(Math.round((convArea(ha) ?? ha) * 1000) / 1000);
 
+const draftFrom = (farm: FarmContext) => ({
+  name: farm.name, region: farm.region ?? '', district: farm.district ?? '',
+  lat: farm.lat, lon: farm.lon, area: areaText(farm.area), irrigationType: farm.irrigationType,
+  currentCrop: farm.currentCrop ?? '', farmId: farm.farmId ?? '',
+  N: farm.soilTest?.N?.toString() ?? '', P: farm.soilTest?.P?.toString() ?? '', K: farm.soilTest?.K?.toString() ?? '', ph: farm.soilTest?.ph?.toString() ?? '',
+  locationSource: farm.locationSource,
+});
+
 const ClickPicker: React.FC<{ onPick: (lat: number, lon: number) => void }> = ({ onPick }) => {
   useMapEvents({ click: (e) => onPick(e.latlng.lat, e.latlng.lng) });
   return null;
@@ -46,23 +54,16 @@ const FarmProfilePage: React.FC = () => {
   const { summary, status } = useSummary();
   const farm = selectedFarm!;
 
-  const [draft, setDraft] = useState(() => ({
-    name: farm.name, region: farm.region ?? '', district: farm.district ?? '',
-    lat: farm.lat, lon: farm.lon, area: areaText(farm.area), irrigationType: farm.irrigationType,
-    currentCrop: farm.currentCrop ?? '', farmId: farm.farmId ?? '',
-    N: farm.soilTest?.N?.toString() ?? '', P: farm.soilTest?.P?.toString() ?? '', K: farm.soilTest?.K?.toString() ?? '', ph: farm.soilTest?.ph?.toString() ?? '',
-    locationSource: farm.locationSource,
-  }));
+  const [draft, setDraft] = useState(() => draftFrom(farm));
   const [geocoding, setGeocoding] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  useEffect(() => {
-    setDraft((d) => ({
-      ...d, name: farm.name, region: farm.region ?? '', district: farm.district ?? '', lat: farm.lat, lon: farm.lon,
-      locationSource: farm.locationSource, area: areaText(farm.area), irrigationType: farm.irrigationType, currentCrop: farm.currentCrop ?? '', farmId: farm.farmId ?? '',
-      N: farm.soilTest?.N?.toString() ?? '', P: farm.soilTest?.P?.toString() ?? '', K: farm.soilTest?.K?.toString() ?? '', ph: farm.soilTest?.ph?.toString() ?? '',
-    }));
-  }, [farm]);
+  // When the stored farm changes (saved here or picked elsewhere), reload the form from it.
+  const [prevFarm, setPrevFarm] = useState(farm);
+  if (farm !== prevFarm) {
+    setPrevFarm(farm);
+    setDraft(draftFrom(farm));
+  }
 
   const pick = async (lat: number, lon: number) => {
     setDraft((d) => ({ ...d, lat, lon, locationSource: 'map' }));

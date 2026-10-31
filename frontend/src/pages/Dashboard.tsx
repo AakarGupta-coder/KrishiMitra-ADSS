@@ -3,15 +3,16 @@ import InfoButton from '../components/InfoButton';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useFarmStore } from '../store/useFarmStore';
-import { useLocationNotifications } from '../components/NotificationCenter';
-import {
-  Badge, Button, CHART, ChartTooltip, Eyebrow, FactorAttribution, Icon, ModuleLink, PageHeader, Panel,
-  SummaryGate, TONE_TEXT, UnavailableBlock, axisProps, riskLabel, riskTone, severityIcon, severityTone,
-} from '../components/ui';
-import { FarmContextBar, ForecastStrip, RiskMatrix, climateSourceTag, irrigationHeadline, placeLabel, priceBasisBadge, totalRain, weatherSourceTag } from '../components/widgets';
 import { fmtAgDate, fmtArea, fmtDayLabel, fmtDayMonth, fmtINRCompact, fmtMm, fmtNum, fmtPct01, fmtRelative, fmtUnit, fmtWeekday, isNum, numRain, numYield } from '../lib/format';
 import { convTemp, localizeText, rainUnit, tempUnit, yieldUnit } from '../lib/units';
 import type { CropResult, FarmSummary } from '../lib/types';
+import { Badge, Button, ChartTooltip, Eyebrow, FactorAttribution, Icon, ModuleLink, PageHeader, Panel, SummaryGate, UnavailableBlock } from '../components/ui';
+import { FarmContextBar, ForecastStrip, RiskMatrix } from '../components/widgets';
+import { useLocationNotifications } from '../hooks/useLocationNotifications';
+import { climateSourceTag, priceBasisBadge, weatherSourceTag } from '../lib/badges';
+import { CHART, axisProps } from '../lib/chart';
+import { irrigationHeadline, placeLabel, totalRain } from '../lib/summaryText';
+import { TONE_TEXT, riskLabel, riskTone, severityIcon, severityTone } from '../lib/tone';
 
 const KpiCard: React.FC<{ label: string; badge?: React.ReactNode; value: React.ReactNode; unit?: string; sub: React.ReactNode; footLabel: string; foot: React.ReactNode; to: string; valueClass?: string }> = ({
   label, badge, value, unit, sub, footLabel, foot, to, valueClass = 'text-forest',

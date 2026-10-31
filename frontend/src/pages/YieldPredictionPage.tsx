@@ -4,32 +4,40 @@ import { CartesianGrid, Line, LineChart, ReferenceDot, ReferenceLine, Responsive
 import { apiGet, farmParams } from '../lib/api';
 import type { FarmSummary, YieldDetail } from '../lib/types';
 import { useFarmStore } from '../store/useFarmStore';
-import {
-  Badge, CHART, Callout, ChartTooltip, DataTable, ErrorBlock, Eyebrow, FactorAttribution, KV, Legend, LoadingBlock, Metric, PageHeader, Panel,
-  SummaryGate, UnavailableBlock, axisProps, type Column,
-} from '../components/ui';
-import { FarmContextBar, climateSourceTag, soilSourceTag } from '../components/widgets';
 import { fmtArea, fmtINRCompact, fmtMm, fmtNum, fmtPct01, fmtTemp, fmtYield, isNum, numYield } from '../lib/format';
 import { convYield, localizeText, yieldUnit } from '../lib/units';
+import { Badge, Callout, ChartTooltip, DataTable, ErrorBlock, Eyebrow, FactorAttribution, KV, Legend, LoadingBlock, Metric, PageHeader, Panel, SummaryGate, UnavailableBlock, type Column } from '../components/ui';
+import { FarmContextBar } from '../components/widgets';
+import { climateSourceTag, soilSourceTag } from '../lib/badges';
+import { CHART, axisProps } from '../lib/chart';
 
 const YieldView: React.FC<{ s: FarmSummary }> = ({ s }) => {
   const farm = useFarmStore((st) => st.selectedFarm)!;
   const [crop, setCrop] = useState(s.recommendation.canonical ?? s.crops[0].crop);
   const [detail, setDetail] = useState<YieldDetail | null>(null);
-  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [error, setError] = useState('');
+  const [result, setResult] = useState<{ key: string; error: string | null } | null>(null);
   const [nonce, setNonce] = useState(0);
 
-  useEffect(() => { setCrop(s.recommendation.canonical ?? s.crops[0].crop); }, [s.recommendation.canonical, s.request.lat, s.request.lon]);
+  // A new location or recommendation resets the selected crop to the recommended one.
+  const resetKey = `${s.recommendation.canonical}|${s.request.lat}|${s.request.lon}`;
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey);
+    setCrop(s.recommendation.canonical ?? s.crops[0].crop);
+  }
+
+  // Loading is derived: the request is loading until a result for this exact request arrives.
+  const reqKey = JSON.stringify([farmParams(farm, { crop }), nonce, s._meta.generated_at]);
+  const state: 'loading' | 'ready' | 'error' = result?.key !== reqKey ? 'loading' : result.error ? 'error' : 'ready';
+  const error = result?.error ?? '';
 
   useEffect(() => {
     const ctl = new AbortController();
-    setState('loading');
     apiGet<YieldDetail>('/api/advisory/yield', farmParams(farm, { crop }), ctl.signal)
-      .then((d) => { setDetail(d); setState('ready'); })
-      .catch((e) => { if (e.name !== 'AbortError') { setError(e.message); setState('error'); } });
+      .then((d) => { setDetail(d); setResult({ key: reqKey, error: null }); })
+      .catch((e) => { if (e.name !== 'AbortError') setResult({ key: reqKey, error: e.message }); });
     return () => ctl.abort();
-  }, [crop, farm, nonce, s._meta.generated_at]);
+  }, [reqKey, crop, farm]);
 
   const isCanonical = crop === s.recommendation.canonical;
   const cropOptions = [...s.crops].sort((a, b) => a.crop.localeCompare(b.crop));

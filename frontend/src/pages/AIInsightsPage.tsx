@@ -2,12 +2,12 @@ import React from 'react';
 import InfoButton from '../components/InfoButton';
 import { Link } from 'react-router-dom';
 import type { FarmSummary, RiskCategory } from '../lib/types';
-import {
-  Badge, Callout, Eyebrow, FactorAttribution, Icon, PageHeader, Panel, SummaryGate, TONE_TEXT, UnavailableBlock, riskLabel, riskTone, type Tone,
-} from '../components/ui';
-import { FarmContextBar, RiskMatrix, climateSourceTag, soilSourceTag, weatherSourceTag } from '../components/widgets';
 import { fmtAgDate, fmtDayLabel, fmtDayMonth, fmtMm, fmtNum, fmtPct01, fmtWeekday, isNum } from '../lib/format';
 import { localizeText } from '../lib/units';
+import { Badge, Callout, Eyebrow, FactorAttribution, Icon, PageHeader, Panel, SummaryGate, UnavailableBlock } from '../components/ui';
+import { FarmContextBar, RiskMatrix } from '../components/widgets';
+import { climateSourceTag, soilSourceTag, weatherSourceTag } from '../lib/badges';
+import { TONE_TEXT, riskLabel, riskTone, type Tone } from '../lib/tone';
 
 interface Insight { id: string; tone: Tone; icon: string; title: string; detail: string; data: string; to: string }
 

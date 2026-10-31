@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import type { FarmSummary } from '../lib/types';
 import { useFarmStore, farmLabel } from '../store/useFarmStore';
 import { REPORT_SECTIONS, type SectionId } from '../lib/reportSections';
-import { Badge, Button, Callout, Eyebrow, Icon, PageHeader, Panel, SummaryGate, type Tone } from '../components/ui';
 import { FarmContextBar } from '../components/widgets';
 import { fmtDateTime, fmtRelative } from '../lib/format';
+import { Badge, Button, Callout, Eyebrow, Icon, PageHeader, Panel, SummaryGate } from '../components/ui';
+import { type Tone } from '../lib/tone';
 
 interface Generated { file: string; at: number; sections: number; kind: 'PDF' | 'JSON'; size: number }
 

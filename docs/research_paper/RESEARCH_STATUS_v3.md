@@ -8,9 +8,9 @@ This document summarizes the comprehensive investigation, empirical auditing, li
 
 | Deliverable Artifact | File Path | Status | Verification Summary |
 |---|---|---|---|
-| **Authoritative Word Manuscript** | `docs/research_paper/KrishiMitra_IEEE_Research_Paper.docx` | **COMPLETE** | Formatted using the official `conference-template-a4(1).docx` styles. 9-page IEEE conference format with embedded figures, tables, and equations. |
-| **Final Rendered PDF** | `docs/research_paper/KrishiMitra_IEEE_Research_Paper.pdf` | **COMPLETE** | Compiled via Word/docx2pdf engine. All 9 pages rendered, inspected, and verified against layout standards. |
-| **Full Paper Markdown Source** | `docs/research_paper/KrishiMitra_IEEE_Conference_Paper.md` | **COMPLETE** | Complete text, sections I through IX, equations, 5 tables, 8 figures referenced, 12 verified references. |
+| **Authoritative Word Manuscript** | `media/archive/old_files/reports/KrishiMitra_Paper_v1.docx` | **COMPLETE** | Formatted using the official `conference-template-a4(1).docx` styles. 9-page IEEE conference format with embedded figures, tables, and equations. |
+| **Final Rendered PDF** | `media/archive/old_files/reports/KrishiMitra_Paper_v1.pdf` | **COMPLETE** | Compiled via Word/docx2pdf engine. All 9 pages rendered, inspected, and verified against layout standards. |
+| **Full Paper Markdown Source** | `docs/research_paper/KrishiMitra_Paper_v1.md` | **COMPLETE** | Complete text, sections I through IX, equations, 5 tables, 8 figures referenced, 12 verified references. |
 | **System Architecture Diagram** | `docs/research_paper/figures/fig1_system_architecture.svg` / `.png` | **COMPLETE** | Original 4-tier system architecture diagram matching the exact call graph. High-res 2x PNG generated. |
 | **Model & Decision Architecture** | `docs/research_paper/figures/fig2_model_decision_architecture.svg` / `.png` | **COMPLETE** | Detailed branching diagram illustrating dual-track crop selection, yield fallback, and SHAP hook. High-res 2x PNG generated. |
 | **Live Interface Screenshots (11)** | `docs/research_paper/figures/screenshots/*.png` | **COMPLETE** | Acquired via Chrome CDP across all 10 application pages + onboarding setup on a running local instance. |
@@ -22,7 +22,7 @@ This document summarizes the comprehensive investigation, empirical auditing, li
 | **Dataset Provenance Ledger** | `docs/research_paper/audit/DATASET_PROVENANCE_LEDGER.md` | **COMPLETE** | 7 data streams documented with schemas, resolutions, TTLs, and lineage. |
 | **Screenshot Evidence Manifest** | `docs/research_paper/audit/SCREENSHOT_MANIFEST.md` | **COMPLETE** | Route, scenario, data provenance, and image byte sizes recorded for all screenshots. |
 | **Experiment Reproduction Log** | `docs/research_paper/audit/EXPERIMENT_LOG.md` | **COMPLETE** | Checksums, hyperparameters, 5-fold CV metrics, confusion matrices, and yield analysis documented. |
-| **Final Quality Checklist** | `docs/research_paper/audit/FINAL_QUALITY_CHECKLIST.md` | **COMPLETE** | All 22 audit criteria marked PASS with evidence paths. |
+| **Final Quality Checklist** | `docs/research_paper/audit/QUALITY_CHECKLIST_v3.md` | **COMPLETE** | All 22 audit criteria marked PASS with evidence paths. |
 | **Reproducible Experiment Script**| `docs/research_paper/experiments/run_experiments.py` | **COMPLETE** | Re-computes all metrics and generates publication plots in `docs/research_paper/results/`. |
 | **Automated DOCX Paper Builder** | `scripts/report/build_docx_paper.py` | **COMPLETE** | Re-assembles the Word document from template and source text with single command. |
 

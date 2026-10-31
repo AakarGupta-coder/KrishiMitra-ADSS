@@ -8,10 +8,10 @@ This directory contains the complete, scientifically grounded research paper, co
 
 | Deliverable | Format | File Path | Pages / Description |
 | :--- | :--- | :--- | :--- |
-| **Comprehensive Course Project Report** | `.docx` | [`KrishiMitra_IEEE_Course_Project_Report.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.docx) | Full report with standalone VIT Chennai cover page |
-| **Comprehensive Course Project Report** | `.pdf` | [`KrishiMitra_IEEE_Course_Project_Report.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.pdf) | **34 Pages** (Single-column tables/figures, 2-column text, 300 DPI lossless PNGs) |
-| **IEEE Manuscript Only** | `.docx` | [`KrishiMitra_IEEE_Manuscript_Only.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.docx) | 2-column IEEE format starting on Page 1 |
-| **IEEE Manuscript Only** | `.pdf` | [`KrishiMitra_IEEE_Manuscript_Only.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.pdf) | **33 Pages** (Single-column tables/figures, 2-column text, 300 DPI lossless PNGs) |
+| **Comprehensive Course Project Report** | `.docx` | [`KrishiMitra_Report_v3.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Report_v3.docx) | Full report with standalone VIT Chennai cover page |
+| **Comprehensive Course Project Report** | `.pdf` | [`KrishiMitra_Report_v3.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Report_v3.pdf) | **34 Pages** (Single-column tables/figures, 2-column text, 300 DPI lossless PNGs) |
+| **IEEE Manuscript Only** | `.docx` | [`KrishiMitra_Manuscript_v3.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Manuscript_v3.docx) | 2-column IEEE format starting on Page 1 |
+| **IEEE Manuscript Only** | `.pdf` | [`KrishiMitra_Manuscript_v3.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Manuscript_v3.pdf) | **33 Pages** (Single-column tables/figures, 2-column text, 300 DPI lossless PNGs) |
 | **BibTeX Citations** | `.bib` | [`references.bib`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/references.bib) | 16 primary peer-reviewed literature citations with DOIs |
 
 ---

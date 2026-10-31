@@ -1,7 +1,7 @@
 # KRISHIMITRA: AI-Powered Agricultural Decision Support System
 
 <p align="center">
-  <img src="assets/images/logo.png" alt="KRISHIMITRA" width="80%" />
+  <img src="assets/images/krishimitra_logo.png" alt="KRISHIMITRA" width="80%" />
 </p>
 
 ## Overview
@@ -80,8 +80,7 @@ KrishiMitra-ADSS/
 ├── models/                  # Pickled ML models & metrics
 ├── assets/images/           # Logos and architecture image
 ├── docs/                    # Report, presentation, research paper, design, planning
-├── deliverables/            # Final demo video and narration (not in git)
-├── media/archive/           # Raw audio and video (not in git)
+├── media/                   # Final demo video, narration, subtitles and archive (not in git)
 └── requirements.txt         # Python Dependencies
 ```
 

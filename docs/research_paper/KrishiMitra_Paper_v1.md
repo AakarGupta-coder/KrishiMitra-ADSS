@@ -246,7 +246,7 @@ This decomposes yield predictions into exact quantitative contributions (t/ha ad
 
 ## V. IMPLEMENTATION DETAILS
 
-KrishiMitra is engineered as a full-stack, modular client-server application. The backend application service is built on FastAPI (Python 3.14) and Uvicorn, exposing asynchronous endpoints protected by CORS middleware. State persistence, caching, and API health tracking are governed by SQLite (`data/krishimitra_state.sqlite`). The presentation tier is constructed using React 19, TypeScript, Vite, and Tailwind CSS v4, adhering to the Stitch Design System (`assets/docs/Samples/DESIGN.md`) for high-legibility corporate agronomic telemetry.
+KrishiMitra is engineered as a full-stack, modular client-server application. The backend application service is built on FastAPI (Python 3.14) and Uvicorn, exposing asynchronous endpoints protected by CORS middleware. State persistence, caching, and API health tracking are governed by SQLite (`data/krishimitra_state.sqlite`). The presentation tier is constructed using React 19, TypeScript, Vite, and Tailwind CSS v4, adhering to the Stitch Design System (`docs/design/KrishiMitra_Design_System.md`) for high-legibility corporate agronomic telemetry.
 
 ### Authentic Source Code Extracts
 The following listings illustrate central algorithmic routines directly from the codebase.

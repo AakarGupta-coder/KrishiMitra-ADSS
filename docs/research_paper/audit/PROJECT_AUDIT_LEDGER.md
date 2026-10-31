@@ -6,10 +6,10 @@
 - **Active Branch:** `main`
 - **Commit SHA:** `21c73e6` ("Add evaluation metrics and model-card info buttons")
 - **Inspection Date:** 2026-10-28
-- **Working Tree State:** Clean tracking branch, untracked documentation files (`PROJECT_HANDOVER.md`, `assets/docs/conference-template-a4(1).docx`, `.agents/`, `.claude/`)
+- **Working Tree State:** Clean tracking branch, untracked documentation files (`KrishiMitra_Project_Handover.md`, `docs/templates/conference-template-a4.docx`, `.agents/`, `.claude/`)
 - **Python Runtime:** Python 3.14.0 (Windows 64-bit, AMD64)
 - **Node.js Runtime:** Node.js v23.8.0, npm v10.9.2, Vite v8.3.0
-- **Authoritative Layout Template:** `assets/docs/conference-template-a4(1).docx` (IEEE A4 Two-Column Format)
+- **Authoritative Layout Template:** `docs/templates/conference-template-a4.docx` (IEEE A4 Two-Column Format)
 
 ---
 
@@ -55,7 +55,7 @@
 | `models/crop_xgb.pkl` | Model Artifact | Serialized Model | Evaluated on Test Set | Stratified XGBoost Classifier (7 features: NPK + Climate). Test Accuracy: 98.86%, Macro F1: 98.85%, 5-Fold CV: 99.27% ± 0.33%. |
 | `models/crop_xgb_climate.pkl` | Model Artifact | Serialized Model | Evaluated on Test Set | Stratified XGBoost Classifier (4 features: Climate + pH). Test Accuracy: 94.09%, Macro F1: 94.01%, 5-Fold CV: 95.82% ± 0.53%. |
 | `models/yield_xgb.pkl` | Model Artifact | Serialized Model | Evaluated on Test Set | XGBoost Regressor trained on 20-row FAOSTAT sample. Test $R^2 = -5.33$, MAE = 310.0 hg/ha. Identified as prototype model. |
-| `assets/docs/conference-template-a4(1).docx`| Template | Document | Analyzed & Namespace Fixed | Official IEEE Conference A4 Two-Column Document Template. Authoritative style reference for final paper layout. |
-| `assets/docs/rough idea.md` | Planning Document | Legacy Text | Read & Reconciled | Conceptual project outline. Contains preliminary ideas, superseded by actual implementation. |
-| `assets/docs/project_walkthrough.txt`| Planning Document | Legacy Text | Read & Reconciled | Conceptual design note describing hypothetical 54-input multimodal neural network, k-NN imputation, and SMOTE. Confirmed absent in current code. |
-| `PROJECT_HANDOVER.md` | Handover Document | Markdown | Read & Reconciled | Comprehensive technical overview of KrishiMitra ADSS v2.1. |
+| `docs/templates/conference-template-a4.docx`| Template | Document | Analyzed & Namespace Fixed | Official IEEE Conference A4 Two-Column Document Template. Authoritative style reference for final paper layout. |
+| `docs/planning/KrishiMitra_Initial_Idea.md` | Planning Document | Legacy Text | Read & Reconciled | Conceptual project outline. Contains preliminary ideas, superseded by actual implementation. |
+| `docs/planning/KrishiMitra_Implementation_Plan.txt`| Planning Document | Legacy Text | Read & Reconciled | Conceptual design note describing hypothetical 54-input multimodal neural network, k-NN imputation, and SMOTE. Confirmed absent in current code. |
+| `KrishiMitra_Project_Handover.md` | Handover Document | Markdown | Read & Reconciled | Comprehensive technical overview of KrishiMitra ADSS v2.1. |

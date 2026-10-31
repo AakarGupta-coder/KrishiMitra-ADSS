@@ -12,10 +12,10 @@ import docx2pdf
 import fitz
 
 TEMPLATE_PATH = "docs/templates/conference-template-a4.docx"
-REPORT_DOCX = "docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.docx"
-REPORT_PDF = "docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.pdf"
-MANUSCRIPT_DOCX = "docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.docx"
-MANUSCRIPT_PDF = "docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.pdf"
+REPORT_DOCX = "docs/research_paper/KrishiMitra_Report_v3.docx"
+REPORT_PDF = "docs/research_paper/KrishiMitra_Report_v3.pdf"
+MANUSCRIPT_DOCX = "docs/research_paper/KrishiMitra_Manuscript_v3.docx"
+MANUSCRIPT_PDF = "docs/research_paper/KrishiMitra_Manuscript_v3.pdf"
 VIT_LOGO = "assets/images/vit_logo.png"
 
 mapping = {
@@ -798,7 +798,7 @@ Output: Expected base value phi_0, Feature attributions phi_j, Actionable agrono
 
     # VI. IMPLEMENTATION DETAILS
     add_h1(doc, "VI. IMPLEMENTATION ARCHITECTURE & SOFTWARE ENGINEERING")
-    add_p(doc, "KrishiMitra is engineered as an asynchronous, decoupled client-server platform adhering to enterprise agronomic design standards. The backend application service is constructed on FastAPI (Python 3.14) and Uvicorn, exposing RESTful endpoints. Persistent state caching, negative caching with exponential backoff, and data-source status registries are governed by SQLite (data/krishimitra_state.sqlite). The presentation tier is constructed using React 19, TypeScript, Vite, and Tailwind CSS v4, adhering to the Stitch Design System (assets/docs/Samples/DESIGN.md) for calm, corporate agricultural telemetry.")
+    add_p(doc, "KrishiMitra is engineered as an asynchronous, decoupled client-server platform adhering to enterprise agronomic design standards. The backend application service is constructed on FastAPI (Python 3.14) and Uvicorn, exposing RESTful endpoints. Persistent state caching, negative caching with exponential backoff, and data-source status registries are governed by SQLite (data/krishimitra_state.sqlite). The presentation tier is constructed using React 19, TypeScript, Vite, and Tailwind CSS v4, adhering to the Stitch Design System (docs/design/KrishiMitra_Design_System.md) for calm, corporate agricultural telemetry.")
 
 
     add_h2(doc, "A. Authentic Source Code Listings")
@@ -1742,10 +1742,10 @@ class TelemetryStore:
 │   ├── hwsd/hwsd2.sqlite                     (51.2 MB Indexed SQLite Properties)
 │   └── krishimitra_state.sqlite              (Telemetry, Cache, WAL mode)
 ├── docs/research_paper/
-│   ├── KrishiMitra_IEEE_Course_Project_Report.docx (Complete Deliverable with Cover)
-│   ├── KrishiMitra_IEEE_Course_Project_Report.pdf  (Complete Deliverable PDF, >=25 pages)
-│   ├── KrishiMitra_IEEE_Manuscript_Only.docx       (IEEE Manuscript Only)
-│   ├── KrishiMitra_IEEE_Manuscript_Only.pdf        (IEEE Manuscript Only PDF)
+│   ├── KrishiMitra_Report_v3.docx (Complete Deliverable with Cover)
+│   ├── KrishiMitra_Report_v3.pdf  (Complete Deliverable PDF, >=25 pages)
+│   ├── KrishiMitra_Manuscript_v3.docx       (IEEE Manuscript Only)
+│   ├── KrishiMitra_Manuscript_v3.pdf        (IEEE Manuscript Only PDF)
 │   ├── references.bib                              (16 Verified BibTeX Records)
 │   ├── audit/
 │   │   ├── PROJECT_AUDIT_LEDGER.md                 (Full Repo Inventory SHA 21c73e6)
@@ -1755,7 +1755,7 @@ class TelemetryStore:
 │   │   ├── DATASET_PROVENANCE_LEDGER.md            (7 Data Streams Fully Documented)
 │   │   ├── SCREENSHOT_MANIFEST.md                  (11 Authentic Captures Audited)
 │   │   ├── EXPERIMENT_LOG.md                       (Reproducibility Environment Audit)
-│   │   └── FINAL_QUALITY_CHECKLIST.md              (22/22 Compliance Criteria Verified)
+│   │   └── QUALITY_CHECKLIST_v3.md              (22/22 Compliance Criteria Verified)
 │   ├── experiments/run_experiments.py              (Standalone Evaluation Harness)
 │   ├── figures/
 │   │   ├── fig1_system_architecture.png / .svg
@@ -1779,10 +1779,10 @@ class TelemetryStore:
 
     t21_inv_headers = ["Artifact Name", "File Path", "File Type", "File Size", "Verification SHA-256 (Prefix)"]
     t21_inv_data = [
-        ("Course Project Report (DOCX)", "docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.docx", "OpenXML DOCX", "3.8 MB", "Verified Native Build"),
-        ("Course Project Report (PDF)", "docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.pdf", "Adobe PDF", "2.6 MB", "Verified >= 25 Pages"),
-        ("Manuscript Only (DOCX)", "docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.docx", "OpenXML DOCX", "3.6 MB", "Verified IEEE Format"),
-        ("Manuscript Only (PDF)", "docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.pdf", "Adobe PDF", "2.4 MB", "Verified 2-Column Format"),
+        ("Course Project Report (DOCX)", "docs/research_paper/KrishiMitra_Report_v3.docx", "OpenXML DOCX", "3.8 MB", "Verified Native Build"),
+        ("Course Project Report (PDF)", "docs/research_paper/KrishiMitra_Report_v3.pdf", "Adobe PDF", "2.6 MB", "Verified >= 25 Pages"),
+        ("Manuscript Only (DOCX)", "docs/research_paper/KrishiMitra_Manuscript_v3.docx", "OpenXML DOCX", "3.6 MB", "Verified IEEE Format"),
+        ("Manuscript Only (PDF)", "docs/research_paper/KrishiMitra_Manuscript_v3.pdf", "Adobe PDF", "2.4 MB", "Verified 2-Column Format"),
         ("Crop Dataset (Curated)", "data/crop_recommendation.csv", "RFC 4180 CSV", "197.8 KB", "54a5a6e5408668e6..."),
         ("FAOSTAT Sample", "data/faostat_sample.csv", "RFC 4180 CSV", "1.1 KB", "6c8657ec8315f4dc..."),
         ("Full Model (XGBoost)", "models/crop_xgb.pkl", "Scikit/XGBoost", "1.2 MB", "Verified 98.86% Acc"),

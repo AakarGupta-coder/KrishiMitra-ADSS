@@ -8,7 +8,6 @@ krishimitra_cache.sqlite
 data/hwsd/
 .pytest_cache/
 .venv/
-deliverables/
 media/
 *.mp4
 *.webm

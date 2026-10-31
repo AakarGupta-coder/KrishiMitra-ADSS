@@ -22,6 +22,6 @@
 | **Every Figure / Table Cited and Captioned** | **PASS** | Research Paper Manuscript | All 6 tables and 4 figures numbered, captioned, and referenced in text. | Template conventions preserved. |
 | **IEEE Citation Numbering Verified** | **PASS** | Research Paper Manuscript | Numerical bracketed citations `[1]`, `[2]`, ... ordered strictly by appearance. | Conforms to IEEE style. |
 | **All Template Sample Content Removed** | **PASS** | Research Paper Manuscript | Instructional text, sample dummy authors, and example references stripped. | Only authentic research text retained. |
-| **DOCX Rendered & Inspected** | **PASS** | `docs/research_paper/KrishiMitra_IEEE_Research_Paper.docx` | Generated using official IEEE A4 two-column styles and margins. | Page layout verified. |
-| **PDF Matches Final DOCX** | **PASS** | `docs/research_paper/KrishiMitra_IEEE_Research_Paper.pdf` | Converted via docx2pdf / MS Word / PyMuPDF engine. | Matches DOCX structure. |
-| **Remaining Limitations Disclosed** | **PASS** | Section VIII & `FINAL_RESEARCH_STATUS.md` | Discloses benchmark synthetic distribution, 20-row FAOSTAT sample, lack of field trials. | Thorough limitations section included. |
+| **DOCX Rendered & Inspected** | **PASS** | `media/archive/old_files/reports/KrishiMitra_Paper_v1.docx` | Generated using official IEEE A4 two-column styles and margins. | Page layout verified. |
+| **PDF Matches Final DOCX** | **PASS** | `media/archive/old_files/reports/KrishiMitra_Paper_v1.pdf` | Converted via docx2pdf / MS Word / PyMuPDF engine. | Matches DOCX structure. |
+| **Remaining Limitations Disclosed** | **PASS** | Section VIII & `RESEARCH_STATUS_v3.md` | Discloses benchmark synthetic distribution, 20-row FAOSTAT sample, lack of field trials. | Thorough limitations section included. |

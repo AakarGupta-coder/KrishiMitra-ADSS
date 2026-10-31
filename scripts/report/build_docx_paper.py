@@ -9,7 +9,7 @@ import io
 import os
 
 TEMPLATE_PATH = "docs/templates/conference-template-a4.docx"
-OUTPUT_DOCX = "docs/research_paper/KrishiMitra_IEEE_Research_Paper.docx"
+OUTPUT_DOCX = "docs/research_paper/KrishiMitra_Paper_v1.docx"
 
 # 1. Prepare template with standard OpenXML namespaces
 mapping = {

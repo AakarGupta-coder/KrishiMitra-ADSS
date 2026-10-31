@@ -191,7 +191,7 @@ Continuously monitors anomalies and categorizes threats into `low`, `moderate`, 
 
 ## 5. Frontend UI/UX Architecture & Pages Overview
 
-Built according to the **Stitch Design System** (`docs/design/DESIGN.md`):
+Built according to the **Stitch Design System** (`docs/design/KrishiMitra_Design_System.md`):
 - **Visual Identity:** Professional corporate agronomy aesthetic. No folkloric clichés. Calm, high-legibility telemetry.
 - **Color Codes:** Deep Forest Canopy (`#114232`), Chlorophyll Green (`#16A34A`), Azure Water (`#0284C7`), Pale Loam Canvas (`#F9FAF6`).
 - **Typography:** Manrope (narrative editorial headings) + JetBrains Mono (telemetry, coordinates, and SHAP numbers).

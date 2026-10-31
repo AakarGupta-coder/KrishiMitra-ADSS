@@ -11,11 +11,11 @@
 
 | Deliverable Artifact | Required Format | Generated Path | Page Count | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **Comprehensive Course Project Report (DOCX)** | Word Document (.docx) with standalone VIT cover page | [`KrishiMitra_IEEE_Course_Project_Report.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.docx) | 34 Pages | **PASS** |
-| **Comprehensive Course Project Report (PDF)** | Rendered PDF via High-Fidelity Print Engine | [`KrishiMitra_IEEE_Course_Project_Report.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Course_Project_Report.pdf) | **34 Pages** (High-DPI 300 DPI lossless) | **PASS** |
-| **IEEE Manuscript Only (DOCX)** | Word Document (.docx) starting directly on page 1 | [`KrishiMitra_IEEE_Manuscript_Only.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.docx) | 33 Pages | **PASS** |
-| **IEEE Manuscript Only (PDF)** | Rendered PDF via High-Fidelity Print Engine | [`KrishiMitra_IEEE_Manuscript_Only.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_IEEE_Manuscript_Only.pdf) | **33 Pages** (High-DPI 300 DPI lossless) | **PASS** |
-| **Document Archive Folder** | Prior builds preserved | [`docs/archive/`](file:///d:/Aakar/College/AI%20Project/docs/archive/) | 6 files archived | **PASS** |
+| **Comprehensive Course Project Report (DOCX)** | Word Document (.docx) with standalone VIT cover page | [`KrishiMitra_Report_v3.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Report_v3.docx) | 34 Pages | **PASS** |
+| **Comprehensive Course Project Report (PDF)** | Rendered PDF via High-Fidelity Print Engine | [`KrishiMitra_Report_v3.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Report_v3.pdf) | **34 Pages** (High-DPI 300 DPI lossless) | **PASS** |
+| **IEEE Manuscript Only (DOCX)** | Word Document (.docx) starting directly on page 1 | [`KrishiMitra_Manuscript_v3.docx`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Manuscript_v3.docx) | 33 Pages | **PASS** |
+| **IEEE Manuscript Only (PDF)** | Rendered PDF via High-Fidelity Print Engine | [`KrishiMitra_Manuscript_v3.pdf`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/KrishiMitra_Manuscript_v3.pdf) | **33 Pages** (High-DPI 300 DPI lossless) | **PASS** |
+| **Document Archive Folder** | Prior builds preserved | [`docs/archive/`](file:///d:/Aakar/College/AI%20Project/media/archive/old_files/reports/) | 6 files archived | **PASS** |
 | **BibTeX Citations** | Standard BibTeX (.bib) | [`references.bib`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/references.bib) | 16 DOIs Verified | **PASS** |
 | **Standalone Experiment Harness** | Python Script | [`experiments/run_experiments.py`](file:///d:/Aakar/College/AI%20Project/docs/research_paper/experiments/run_experiments.py) | 100% Reproducible | **PASS** |
 

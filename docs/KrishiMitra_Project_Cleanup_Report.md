@@ -2,6 +2,8 @@
 
 Oct 31, 2026
 
+> Written before the rename on Oct 31, 2026, so paths below use the old names. See `KrishiMitra_Rename_Log.md`.
+
 ## Summary
 
 About 870 MB of the 3.2 GB project can go, almost all of it old video work and extracted soil-database files. The app itself is well organised; the clutter is around it. This report changed nothing on disk.

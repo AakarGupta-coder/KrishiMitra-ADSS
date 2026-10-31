@@ -206,4 +206,38 @@ Per-crop precision, recall, F1 and the full 22 × 22 confusion matrix are in `mo
 
 ## License
 
-MIT License
+### Project code
+
+The code in this repository (`api/`, `src/`, `frontend/`, `scripts/`, `tests/`) and the trained models in `models/` are released under the [MIT License](LICENSE). Copyright (c) 2026 Aakar Gupta and Prathamesh Avinash Burange.
+
+In short, you may use, copy, modify, merge, publish, distribute, sublicense and sell copies of the code, for any purpose, as long as you keep the copyright notice and the licence text. The software comes with no warranty: the authors are not liable for any loss, including crop or financial loss, from using it.
+
+### Documents and media
+
+The report, paper, presentation, submission sheet and demo video in `docs/` and `media/` were written for the BCSE306L course at VIT Chennai. They are shared for reading and reference. If you reuse their content, credit the authors.
+
+The VIT logo in `assets/images/vit_logo.png` and on the submission sheet belongs to Vellore Institute of Technology. It is not covered by the MIT License.
+
+### Data sources
+
+Each data source keeps its own licence. Anyone who redistributes or builds on this project must follow them.
+
+| Source | Licence and terms | What it requires |
+|---|---|---|
+| [Open-Meteo](https://open-meteo.com/en/licence) | CC BY 4.0 for API data; the free API is for non-commercial use | Credit "Weather data by Open-Meteo.com" with a link |
+| [NASA POWER](https://power.larc.nasa.gov/) | Free public data from NASA Langley Research Center | Acknowledge the NASA POWER Project as the source |
+| [FAO/IIASA HWSD v2.0](https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/) | CC BY-NC-SA 3.0 IGO | Credit FAO and IIASA; no commercial use; share adaptations under the same licence. The database is not in this repository: download it yourself (see Installation) |
+| [Agmarknet via data.gov.in](https://data.gov.in/) | Government Open Data License – India | Credit the source; use your own data.gov.in API key |
+| [OpenStreetMap Nominatim](https://operations.osmfoundation.org/policies/nominatim/) | Data © OpenStreetMap contributors, ODbL | Credit OpenStreetMap; at most 1 request per second; send a valid User-Agent |
+| [FAOSTAT](https://www.fao.org/faostat/) | CC BY 4.0 | Credit FAO. Most rows in `data/faostat_sample.csv` are placeholders, not FAOSTAT values (see Limitations) |
+| [Kaggle crop recommendation dataset](https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset) | Set by its author on the Kaggle page | Check the licence there before redistributing `data/crop_recommendation.csv` |
+
+Because HWSD v2.0 is non-commercial, any commercial use of the soil features needs a different soil source, even though the code itself is MIT.
+
+### Third-party libraries
+
+Python and JavaScript dependencies (FastAPI, XGBoost, SHAP, scikit-learn, React, Recharts, Leaflet, jsPDF and others) are installed from `requirements.txt` and `frontend/package.json`. They keep their own open-source licences and are not bundled in this repository.
+
+### Disclaimer
+
+KrishiMitra is an academic decision-support prototype. Its advice is not a substitute for a local agronomist, a soil test or official advisories. Check recommendations before acting on them.

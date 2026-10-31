@@ -1,4 +1,4 @@
-# KRISHIMITRA: AI-Powered Agricultural Decision Support System
+# KrishiMitra: An Explainable, Multi-Source Agricultural Decision Support System
 
 <p align="center">
   <img src="assets/images/krishimitra_logo.png" alt="KRISHIMITRA" width="80%" />
@@ -6,9 +6,9 @@
 
 ## Overview
 
-KRISHIMITRA is a full-scale AI-powered Agricultural Decision Support System (ADSS) designed to deliver professional agronomic insights. It synthesizes geospatial, meteorological, and pedological data pipelines into a low-latency ensemble architecture, providing explainable crop advisories, yield predictions, and dynamic irrigation schedules.
+KrishiMitra is an explainable, multi-source Agricultural Decision Support System (ADSS). It combines live weather, climatology, soil and market data into one farm summary, then gives crop, yield, irrigation and risk advice that shows the factors and data sources behind every recommendation.
 
-## V2 Features
+## Features
 
 - **Farm Profile**: Configurable farm details (location, area, crop).
 - **Data Engineering Pipeline**: Robust ingestion from NASA POWER, Open-Meteo, Agmarknet and Nominatim, plus local FAO/IIASA HWSD v2.0 soil data and FAOSTAT, with validation, caching, retry/back-off and per-source health tracking.
@@ -79,8 +79,8 @@ KrishiMitra-ADSS/
 ├── frontend/                # React Vite application
 ├── models/                  # Pickled ML models & metrics
 ├── assets/images/           # Logos and architecture image
-├── docs/                    # Report, presentation, research paper, design, planning
-├── media/                   # Final demo video, narration, subtitles and archive (not in git)
+├── docs/                    # Report, submission sheet, presentation, research paper, design, planning, archive
+├── media/                   # Final video, silent master and its master file (not in git)
 └── requirements.txt         # Python Dependencies
 ```
 
@@ -93,7 +93,7 @@ KrishiMitra-ADSS/
 | **FAO/IIASA HWSD v2.0** | Pedological | Topsoil pH, USDA texture, sand/silt/clay, OC, total N, CEC (~1 km, 0–20 cm) | Local raster + SQLite |
 | **Agmarknet (data.gov.in)**| Market | Current daily mandi modal prices, local district or nearest market | Live REST API |
 | **OSM Nominatim** | Geocoding | District/state resolution for market matching | Live REST API |
-| **FAOSTAT** | Historical | National yields; yield-model training (19-row local sample) | Offline CSV |
+| **FAOSTAT** | Historical | National yields; yield-model training (20-row local sample) | Offline CSV |
 | **Crop recommendation** ([Kaggle](https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset)) | Agronomic | crop_xgb training data (2,200 rows, 22 crops) | Offline CSV |
 
 ## Model Evaluation
@@ -109,7 +109,7 @@ Metrics are computed by `python -m src.models.train`, saved in `models/*_meta.js
 
 Per-crop precision, recall, F1 and the full 22 × 22 confusion matrix are in `models/crop_meta.json` and the Crop classifier model card. Weakest crops: lentil (full, recall 85 %), pomegranate and orange (climate, F1 81–82 %).
 
-**Yield regressor (`yield_xgb`)**: random 80/20 split of the FAOSTAT sample (15 train / 4 test rows). MAE 0.031 t/ha, RMSE 0.047 t/ha, R² −5.33. Precision, recall and F1 do not apply to regression. Three of the four test rows are placeholder values, so these numbers say little about real accuracy.
+**Yield regressor (`yield_xgb`)**: random 80/20 split of the FAOSTAT sample (16 train / 4 test rows). MAE 0.031 t/ha, RMSE 0.047 t/ha, R² −5.33. Precision, recall and F1 do not apply to regression. Three of the four test rows are placeholder values, so these numbers say little about real accuracy.
 
 **Rules engine, irrigation, soil and risk logic**: no labelled ground truth exists, so accuracy, precision, recall and F1 cannot be computed. Their behaviour is covered by unit tests in `tests/test_core.py`.
 
@@ -163,7 +163,7 @@ Per-crop precision, recall, F1 and the full 22 × 22 confusion matrix are in `mo
 
 - **Experimental AI**: Recommendations come from a transparent rules engine and are intended for decision support, not absolute agronomic guarantees.
 - **ML opinion**: The crop classifier is trained on a public benchmark dataset that is not specific to any region, and its classes separate so cleanly that probabilities are often near 100 %. Only 2 of its 22 crops (mung bean, black gram) are among the 12 the rules engine evaluates, so the two are often not directly comparable. It is shown for comparison only.
-- **Yield sample data**: `faostat_sample.csv` has 19 rows and the yield model's hold-out R² is negative, so its estimates are marked low reliability. A full FAOSTAT export and re-running `python -m src.models.train` is required before the yield model carries real weight.
+- **Yield sample data**: `faostat_sample.csv` has 20 rows, 15 of which repeat one placeholder value, and the yield model's hold-out R² is negative, so its estimates are marked low reliability. A full FAOSTAT export and re-running `python -m src.models.train` is required before the yield model carries real weight.
 - **Data Fallbacks**: If external APIs are unavailable, the system gracefully handles missing values and informs the user rather than hallucinating measurements.
 - **Yield Ranges**: Yield predictions represent an estimated statistical trajectory rather than a guaranteed output.
 - **Market data**: The public data.gov.in sample key is heavily rate-limited; without a personal key, prices may fall back to the last observed Agmarknet price.

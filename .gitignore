@@ -6,3 +6,11 @@ __pycache__/
 data/krishimitra_state.sqlite
 krishimitra_cache.sqlite
 data/hwsd/
+.pytest_cache/
+.venv/
+deliverables/
+media/
+*.mp4
+*.webm
+*.wav
+*.m4a

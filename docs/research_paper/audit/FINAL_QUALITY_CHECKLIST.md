@@ -1,0 +1,27 @@
+# KrishiMitra-ADSS: Final Quality & Integrity Checklist
+
+| Criterion | Status | Evidence / Artifact Path | Issue Identified & Reconciled | Action Taken |
+|---|---|---|---|---|
+| **Repository & Version Snapshot** | **PASS** | `docs/research_paper/audit/PROJECT_AUDIT_LEDGER.md` | Commit `21c73e6`, tracking branch `main`, verified with Python 3.14 and Node v23.8. | Baseline recorded in snapshot ledger. |
+| **All Repository Paths Classified** | **PASS** | `docs/research_paper/audit/PROJECT_AUDIT_LEDGER.md` | Nested source files, raster grids, SQLite databases, models, and docs accounted for. | Disposition recorded for every path. |
+| **Current Implementation Mapped to Claims** | **PASS** | `docs/research_paper/audit/CLAIMS_AND_EVIDENCE.md` | Distinguishes verified, partially supported, and unsupported claims. | 12 core claims mapped to line numbers. |
+| **Old Notes Reconciled with Current Code** | **PASS** | `docs/research_paper/audit/IMPLEMENTATION_DISCREPANCIES.md` | Old walkthrough claims 54-input multimodal neural network, k-NN imputation, and SMOTE. | Reconciled with actual dual XGBoost and rules engine architecture. |
+| **Dataset / API Sources Verified** | **PASS** | `docs/research_paper/audit/DATASET_PROVENANCE_LEDGER.md` | Measured scale, geographic coverage, schemas, access methods, and limitations documented. | 7 data streams fully mapped. |
+| **Data Counts & Units Checked** | **PASS** | `docs/research_paper/audit/DATASET_PROVENANCE_LEDGER.md` | Crop dataset (2,200 rows, 22 classes); FAOSTAT sample (20 rows, 15 synthetic repeats). | SHA256 checksums and exact row counts verified. |
+| **Model Training / Inference Paths Traced** | **PASS** | `src/models/train.py`; `src/models/crop_ml.py`; `src/models/yield_service.py` | Inference feature vectors verified to match training schema and ordering. | Traced call graph from UI to model pickle. |
+| **Rule-Based vs Learned Outputs Distinguished** | **PASS** | `docs/research_paper/audit/CLAIMS_AND_EVIDENCE.md` | Rules engine is primary decision authority; ML classifier acts as secondary opinion. | Explicitly diagrammed in Figure 2. |
+| **References Independently Verified** | **PASS** | `docs/research_paper/audit/REFERENCE_VERIFICATION.md`; `references.bib` | All 12 references verified with DOIs, publishers, volume/pages, and verified metadata. | Zero fabricated references or DOIs. |
+| **Research Gap Supported by Sources** | **PASS** | `docs/research_paper/audit/REFERENCE_VERIFICATION.md` | Literature (Zhai et al., van Klompenburg et al.) documents siloed ag-tech and black-box ML. | Supported by published findings. |
+| **Equations Match Implementation** | **PASS** | `src/advisory/crop_rules.py`; `src/advisory/irrigation.py` | Multiplicative suitability score, FAO-56 water balance, and gross irrigation formulas verified. | Mathematical formulation aligned with code. |
+| **Experimental Commands & Outputs Preserved** | **PASS** | `docs/research_paper/experiments/run_experiments.py`; `results/experiment_results.json` | Exact reproduction script executed; raw logs and JSON metrics saved. | Preserved in results directory. |
+| **Metrics Fit the Task** | **PASS** | `docs/research_paper/audit/EXPERIMENT_LOG.md` | Precision, recall, and F1 used for classification; MAE, RMSE, and $R^2$ used for regression. | Appropriate metric separation enforced. |
+| **Prior-Paper Comparisons are Fair** | **PASS** | `docs/research_paper/audit/REFERENCE_VERIFICATION.md` | Distinguishes benchmark accuracy from field trials; acknowledges dataset incompatibility. | Cautionary comparison table constructed. |
+| **Actual Screenshots Documented** | **PASS** | `docs/research_paper/audit/SCREENSHOT_MANIFEST.md` | 11 authentic screenshots captured via Chrome CDP across all 10 application pages. | Preserved in `figures/screenshots/`. |
+| **Code Excerpts Match Exact Source** | **PASS** | `src/advisory/crop_rules.py`; `src/advisory/irrigation.py`; `src/models/yield_service.py` | Excerpts extracted with line ranges, exact syntax, and authentic variable names. | Verified line-by-line. |
+| **Architecture Diagrams Match Call Flow** | **PASS** | `docs/research_paper/figures/fig1_system_architecture.svg`; `fig2_model_decision_architecture.svg` | Diagrams reflect exact multi-tier execution, data flow, and gating logic. | Rendered to high-resolution PNGs. |
+| **Every Figure / Table Cited and Captioned** | **PASS** | Research Paper Manuscript | All 6 tables and 4 figures numbered, captioned, and referenced in text. | Template conventions preserved. |
+| **IEEE Citation Numbering Verified** | **PASS** | Research Paper Manuscript | Numerical bracketed citations `[1]`, `[2]`, ... ordered strictly by appearance. | Conforms to IEEE style. |
+| **All Template Sample Content Removed** | **PASS** | Research Paper Manuscript | Instructional text, sample dummy authors, and example references stripped. | Only authentic research text retained. |
+| **DOCX Rendered & Inspected** | **PASS** | `docs/research_paper/KrishiMitra_IEEE_Research_Paper.docx` | Generated using official IEEE A4 two-column styles and margins. | Page layout verified. |
+| **PDF Matches Final DOCX** | **PASS** | `docs/research_paper/KrishiMitra_IEEE_Research_Paper.pdf` | Converted via docx2pdf / MS Word / PyMuPDF engine. | Matches DOCX structure. |
+| **Remaining Limitations Disclosed** | **PASS** | Section VIII & `FINAL_RESEARCH_STATUS.md` | Discloses benchmark synthetic distribution, 20-row FAOSTAT sample, lack of field trials. | Thorough limitations section included. |

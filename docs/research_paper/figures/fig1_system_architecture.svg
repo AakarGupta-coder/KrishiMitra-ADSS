@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="1000" height="650">
+  <defs>
+    <style>
+      .bg { fill: #F8FAFC; }
+      .box { rx: 8px; ry: 8px; stroke-width: 1.5px; }
+      .client-box { fill: #F0FDF4; stroke: #16A34A; }
+      .api-box { fill: #F8FAFC; stroke: #0F172A; }
+      .engine-box { fill: #FEF3C7; stroke: #D97706; }
+      .ml-box { fill: #EFF6FF; stroke: #2563EB; }
+      .data-box { fill: #F1F5F9; stroke: #475569; }
+      .store-box { fill: #FAF5FF; stroke: #9333EA; }
+      .title { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #0F172A; }
+      .subtitle { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .label { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: #1E293B; }
+      .sublabel { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 10px; fill: #64748B; }
+      .arrow { stroke: #0F172A; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+      .arrow-dash { stroke: #2563EB; stroke-width: 1.5; stroke-dasharray: 4,3; fill: none; marker-end: url(#arrowhead-blue); }
+      .group-label { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    </style>
+    <marker id="arrowhead" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#0F172A" />
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#2563EB" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="650" fill="#FFFFFF"/>
+
+  <!-- TIER 1: Presentation Tier -->
+  <rect x="30" y="20" width="940" height="110" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <text x="45" y="42" class="group-label" fill="#15803D">1. Presentation Tier (React 19 + TypeScript + Vite + Tailwind CSS)</text>
+  
+  <rect x="50" y="55" width="165" height="60" class="box client-box"/>
+  <text x="60" y="75" class="label">UI Layout &amp; Stitch Theme</text>
+  <text x="60" y="90" class="sublabel">10 Pages (Dashboard, Soil,</text>
+  <text x="60" y="103" class="sublabel">Weather, Crop, Yield, etc.)</text>
+
+  <rect x="230" y="55" width="165" height="60" class="box client-box"/>
+  <text x="240" y="75" class="label">Zustand Client Store</text>
+  <text x="240" y="90" class="sublabel">useFarmStore (Coordinates,</text>
+  <text x="240" y="103" class="sublabel">Soil Tests, Active Settings)</text>
+
+  <rect x="410" y="55" width="165" height="60" class="box client-box"/>
+  <text x="420" y="75" class="label">Interactive Telemetry</text>
+  <text x="420" y="90" class="sublabel">Recharts Yield/Weather Curves,</text>
+  <text x="420" y="103" class="sublabel">Leaflet Map Farm Selector</text>
+
+  <rect x="590" y="55" width="175" height="60" class="box client-box"/>
+  <text x="600" y="75" class="label">Explainability Views</text>
+  <text x="600" y="90" class="sublabel">Rule Factor Attribution Bars,</text>
+  <text x="600" y="103" class="sublabel">SHAP Yield Impact Waterfalls</text>
+
+  <rect x="780" y="55" width="175" height="60" class="box client-box"/>
+  <text x="790" y="75" class="label">Client-Side PDF Exporter</text>
+  <text x="790" y="90" class="sublabel">jsPDF Document Engine,</text>
+  <text x="790" y="103" class="sublabel">Full Provenance Audit Trail</text>
+
+  <!-- Connect Tier 1 to Tier 2 -->
+  <line x1="500" y1="130" x2="500" y2="160" class="arrow"/>
+  <text x="510" y="148" class="subtitle" font-weight="600">REST API (HTTP / JSON)</text>
+
+  <!-- TIER 2: Application & Orchestration Tier -->
+  <rect x="30" y="160" width="940" height="90" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="45" y="182" class="group-label" fill="#334155">2. Application &amp; Orchestration Tier (FastAPI + Python 3.14)</text>
+
+  <rect x="50" y="195" width="220" height="45" class="box api-box"/>
+  <text x="60" y="213" class="label">FastAPI Router (/api/*)</text>
+  <text x="60" y="228" class="sublabel">CORS, Route Validation, Health Check</text>
+
+  <rect x="290" y="195" width="410" height="45" class="box api-box" fill="#EFF6FF" stroke="#3B82F6"/>
+  <text x="300" y="213" class="label" fill="#1D4ED8">Canonical Farm Summary Orchestrator (farm_summary.py)</text>
+  <text x="300" y="228" class="sublabel">Request Coalescing, Multi-Source Concurrency, Feature Assembly &amp; Integrity Gating</text>
+
+  <rect x="720" y="195" width="235" height="45" class="box api-box"/>
+  <text x="730" y="213" class="label">Model Card &amp; Health Registry</text>
+  <text x="730" y="228" class="sublabel">Provenance Audit &amp; Metadata Inspection</text>
+
+  <!-- Connect Tier 2 to Tier 3 -->
+  <line x1="260" y1="250" x2="260" y2="280" class="arrow"/>
+  <line x1="740" y1="250" x2="740" y2="280" class="arrow"/>
+
+  <!-- TIER 3: Analytical & Decision Tier -->
+  <rect x="30" y="280" width="940" height="150" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.5"/>
+  <text x="45" y="302" class="group-label" fill="#B45309">3. Analytical, Agronomic &amp; Machine Learning Engines</text>
+
+  <!-- Deterministic Engines -->
+  <rect x="50" y="315" width="210" height="100" class="box engine-box"/>
+  <text x="60" y="335" class="label" fill="#92400E">KM-Rules 2.1 (Primary Engine)</text>
+  <text x="60" y="352" class="sublabel">• Multiplicative Agronomic Scoring</text>
+  <text x="60" y="367" class="sublabel">• 12 Crops (NPK, Temp, Rain, pH)</text>
+  <text x="60" y="382" class="sublabel">• Kharif / Rabi / Zaid Season Gating</text>
+  <text x="60" y="397" class="sublabel">• Economic Margins &amp; Mandi Prices</text>
+
+  <rect x="275" y="315" width="210" height="100" class="box engine-box"/>
+  <text x="285" y="335" class="label" fill="#92400E">FAO-56 Water Balance Engine</text>
+  <text x="285" y="352" class="sublabel">• Daily Root Depletion Dr Calculation</text>
+  <text x="285" y="367" class="sublabel">• TAW &amp; RAW from USDA Soil Texture</text>
+  <text x="285" y="382" class="sublabel">• ETc = Kc × ET0 (Open-Meteo Penman)</text>
+  <text x="285" y="397" class="sublabel">• Irrigation Trigger &amp; System Eff.</text>
+
+  <!-- Risk and Soil Engines -->
+  <rect x="500" y="315" width="210" height="100" class="box engine-box"/>
+  <text x="510" y="335" class="label" fill="#92400E">Hazard Risk &amp; Soil Amendment</text>
+  <text x="510" y="352" class="sublabel">• IMD Extreme Rainfall &amp; Heat Stress</text>
+  <text x="510" y="367" class="sublabel">• Frost &amp; High Wind Gale Alerts</text>
+  <text x="510" y="382" class="sublabel">• Soil Liming &amp; Gypsum Calculations</text>
+  <text x="510" y="397" class="sublabel">• Mandi Modal Price Volatility Check</text>
+
+  <!-- ML Models -->
+  <rect x="725" y="315" width="230" height="100" class="box ml-box"/>
+  <text x="735" y="335" class="label" fill="#1E40AF">ML Second Opinion &amp; XAI</text>
+  <text x="735" y="352" class="sublabel">• crop_xgb.pkl (7 feats, NPK+Clim)</text>
+  <text x="735" y="367" class="sublabel">• crop_xgb_climate.pkl (4 feats)</text>
+  <text x="735" y="382" class="sublabel">• yield_xgb.pkl (XGBoost Regressor)</text>
+  <text x="735" y="397" class="sublabel">• SHAP TreeExplainer Attributions</text>
+
+  <!-- Connect Tier 3 to Tier 4 -->
+  <line x1="300" y1="430" x2="300" y2="460" class="arrow"/>
+  <line x1="700" y1="430" x2="700" y2="460" class="arrow"/>
+
+  <!-- TIER 4: Data Ingestion & Storage Tier -->
+  <rect x="30" y="460" width="940" height="170" rx="10" fill="#F1F5F9" stroke="#94A3B8" stroke-width="1.5"/>
+  <text x="45" y="482" class="group-label" fill="#1E293B">4. Data Ingestion, Local Rasters &amp; Caching Provenance Tier</text>
+
+  <rect x="50" y="495" width="165" height="120" class="box data-box"/>
+  <text x="60" y="515" class="label">Open-Meteo API</text>
+  <text x="60" y="530" class="sublabel">Type: Live REST API</text>
+  <text x="60" y="545" class="sublabel">Res: 1-11 km NWP grid</text>
+  <text x="60" y="560" class="sublabel">Vars: Temp, Rain, ET0,</text>
+  <text x="60" y="575" class="sublabel">Soil moisture (9-27cm)</text>
+  <text x="60" y="595" class="sublabel" fill="#2563EB">Cache TTL: 15 mins</text>
+
+  <rect x="230" y="495" width="165" height="120" class="box data-box"/>
+  <text x="240" y="515" class="label">NASA POWER API</text>
+  <text x="240" y="530" class="sublabel">Type: Live REST API</text>
+  <text x="240" y="545" class="sublabel">Res: 0.5° × 0.625° grid</text>
+  <text x="240" y="560" class="sublabel">Vars: 5-Yr Climatology</text>
+  <text x="240" y="575" class="sublabel">T2M, Rain, RH2M, Solar</text>
+  <text x="240" y="595" class="sublabel" fill="#2563EB">Cache TTL: 7 days</text>
+
+  <rect x="410" y="495" width="180" height="120" class="box data-box" fill="#FEFCE8" stroke="#CA8A04"/>
+  <text x="420" y="515" class="label">FAO/IIASA HWSD v2.0</text>
+  <text x="420" y="530" class="sublabel">Type: Local Memory Raster</text>
+  <text x="420" y="545" class="sublabel">Size: 1.86 GB (HWSD2.bil)</text>
+  <text x="420" y="560" class="sublabel">Res: 30 arc-sec (~1 km)</text>
+  <text x="420" y="575" class="sublabel">Vars: Topsoil pH, Sand,</text>
+  <text x="420" y="590" class="sublabel">Silt, Clay, SOC, CEC, AWC</text>
+  <text x="420" y="605" class="sublabel" fill="#B45309">Radial Search: up to 5 km</text>
+
+  <rect x="605" y="495" width="170" height="120" class="box data-box"/>
+  <text x="615" y="515" class="label">Agmarknet &amp; OSM</text>
+  <text x="615" y="530" class="sublabel">Type: Live REST APIs</text>
+  <text x="615" y="545" class="sublabel">Agmarknet: Mandi Modal</text>
+  <text x="615" y="560" class="sublabel">Prices (data.gov.in)</text>
+  <text x="615" y="575" class="sublabel">Nominatim: Geocoding</text>
+  <text x="615" y="595" class="sublabel" fill="#2563EB">Cache: 3 hrs / 30 days</text>
+
+  <rect x="790" y="495" width="165" height="120" class="box store-box"/>
+  <text x="800" y="515" class="label" fill="#7E22CE">SQLite State Store</text>
+  <text x="800" y="530" class="sublabel">krishimitra_state.sqlite</text>
+  <text x="800" y="545" class="sublabel">• source_status (5 apis)</text>
+  <text x="800" y="560" class="sublabel">• market_observations</text>
+  <text x="800" y="575" class="sublabel">• geocode_cache</text>
+  <text x="800" y="595" class="sublabel">• Exponential Backoff</text>
+</svg>

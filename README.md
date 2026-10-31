@@ -70,12 +70,18 @@ KrishiMitra-ADSS/
 │   ├── models/              # ML training, inference, yield service (incl. SHAP)
 │   ├── advisory/            # Decision engines (crop rules, irrigation, risk, soil)
 │   └── services/            # farm_summary: builds the canonical summary
-├── scripts/hwsd/            # One-time build of the local HWSD v2.0 soil database
+├── scripts/
+│   ├── hwsd/                # One-time build of the local HWSD v2.0 soil database
+│   ├── report/              # Report builders
+│   └── video/               # Demo video recording and final build
 ├── tests/                   # pytest suite
 ├── data/                    # Local CSV datasets & DBs
 ├── frontend/                # React Vite application
 ├── models/                  # Pickled ML models & metrics
-├── v1/                      # Original V1 preserved code
+├── assets/images/           # Logos and architecture image
+├── docs/                    # Report, presentation, research paper, design, planning
+├── deliverables/            # Final demo video and narration (not in git)
+├── media/archive/           # Raw audio and video (not in git)
 └── requirements.txt         # Python Dependencies
 ```
 

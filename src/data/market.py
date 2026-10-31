@@ -8,7 +8,7 @@ from typing import Optional
 from . import store
 from .api_utils import data_fetcher, logger, fetched_at
 from .geocode import locate_district, to_agmarknet_state
-from .soilgrids import haversine_distance
+from .hwsd import haversine_distance
 
 SOURCE_ID = "agmarknet"
 RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070"

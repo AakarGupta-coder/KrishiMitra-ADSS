@@ -1,0 +1,315 @@
+{
+  "dataset_checksums": {
+    "crop_recommendation_csv": "54a5a6e5408668e668667efc50de2fc867c1b875e0431b4f54dd331b0a109a4e",
+    "faostat_sample_csv": "6c8657ec8315f4dcebd04aead47946f42e3431e567398d93c79dddc6bfc659ed"
+  },
+  "crop_classifier_full": {
+    "variant": "Full (with NPK)",
+    "features": [
+      "N",
+      "P",
+      "K",
+      "temperature",
+      "humidity",
+      "ph",
+      "rainfall"
+    ],
+    "test_samples": 440,
+    "accuracy": 0.9886363636363636,
+    "precision_macro": 0.9893742621015349,
+    "recall_macro": 0.9886363636363636,
+    "f1_macro": 0.9884930494686592,
+    "precision_weighted": 0.9893742621015349,
+    "recall_weighted": 0.9886363636363636,
+    "f1_weighted": 0.9884930494686593,
+    "cv_accuracy_mean": 0.9927272727272728,
+    "cv_accuracy_std": 0.0033402132856134026
+  },
+  "crop_classifier_climate": {
+    "variant": "Climate + pH (No NPK)",
+    "features": [
+      "temperature",
+      "humidity",
+      "ph",
+      "rainfall"
+    ],
+    "test_samples": 440,
+    "accuracy": 0.9409090909090909,
+    "precision_macro": 0.9420319794363774,
+    "recall_macro": 0.9409090909090909,
+    "f1_macro": 0.9401430485617129,
+    "precision_weighted": 0.9420319794363775,
+    "recall_weighted": 0.9409090909090909,
+    "f1_weighted": 0.9401430485617129,
+    "cv_accuracy_mean": 0.9581818181818182,
+    "cv_accuracy_std": 0.0053008653589502915
+  },
+  "per_class_metrics": [
+    {
+      "crop": "apple",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.8695652173913043,
+      "climate_recall": 1.0,
+      "climate_f1": 0.9302325581395349
+    },
+    {
+      "crop": "banana",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 1.0,
+      "climate_recall": 0.95,
+      "climate_f1": 0.9743589743589743
+    },
+    {
+      "crop": "blackgram",
+      "support": 20,
+      "full_precision": 0.9523809523809523,
+      "full_recall": 1.0,
+      "full_f1": 0.975609756097561,
+      "climate_precision": 1.0,
+      "climate_recall": 1.0,
+      "climate_f1": 1.0
+    },
+    {
+      "crop": "chickpea",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 1.0,
+      "climate_recall": 1.0,
+      "climate_f1": 1.0
+    },
+    {
+      "crop": "coconut",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 1.0,
+      "climate_recall": 1.0,
+      "climate_f1": 1.0
+    },
+    {
+      "crop": "coffee",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.9523809523809523,
+      "climate_recall": 1.0,
+      "climate_f1": 0.975609756097561
+    },
+    {
+      "crop": "cotton",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.9523809523809523,
+      "climate_recall": 1.0,
+      "climate_f1": 0.975609756097561
+    },
+    {
+      "crop": "grapes",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 1.0,
+      "climate_recall": 1.0,
+      "climate_f1": 1.0
+    },
+    {
+      "crop": "jute",
+      "support": 20,
+      "full_precision": 0.9523809523809523,
+      "full_recall": 1.0,
+      "full_f1": 0.975609756097561,
+      "climate_precision": 0.95,
+      "climate_recall": 0.95,
+      "climate_f1": 0.95
+    },
+    {
+      "crop": "kidneybeans",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 1.0,
+      "climate_recall": 1.0,
+      "climate_f1": 1.0
+    },
+    {
+      "crop": "lentil",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 0.85,
+      "full_f1": 0.918918918918919,
+      "climate_precision": 0.9444444444444444,
+      "climate_recall": 0.85,
+      "climate_f1": 0.8947368421052632
+    },
+    {
+      "crop": "maize",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.8695652173913043,
+      "climate_recall": 1.0,
+      "climate_f1": 0.9302325581395349
+    },
+    {
+      "crop": "mango",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 1.0,
+      "climate_recall": 0.9,
+      "climate_f1": 0.9473684210526315
+    },
+    {
+      "crop": "mothbeans",
+      "support": 20,
+      "full_precision": 0.9523809523809523,
+      "full_recall": 1.0,
+      "full_f1": 0.975609756097561,
+      "climate_precision": 0.9444444444444444,
+      "climate_recall": 0.85,
+      "climate_f1": 0.8947368421052632
+    },
+    {
+      "crop": "mungbean",
+      "support": 20,
+      "full_precision": 0.9090909090909091,
+      "full_recall": 1.0,
+      "full_f1": 0.9523809523809523,
+      "climate_precision": 0.9090909090909091,
+      "climate_recall": 1.0,
+      "climate_f1": 0.9523809523809523
+    },
+    {
+      "crop": "muskmelon",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 1.0,
+      "climate_recall": 1.0,
+      "climate_f1": 1.0
+    },
+    {
+      "crop": "orange",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.8421052631578947,
+      "climate_recall": 0.8,
+      "climate_f1": 0.8205128205128205
+    },
+    {
+      "crop": "papaya",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.8947368421052632,
+      "climate_recall": 0.85,
+      "climate_f1": 0.8717948717948718
+    },
+    {
+      "crop": "pigeonpeas",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 0.95,
+      "full_f1": 0.9743589743589743,
+      "climate_precision": 0.9,
+      "climate_recall": 0.9,
+      "climate_f1": 0.9
+    },
+    {
+      "crop": "pomegranate",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.8823529411764706,
+      "climate_recall": 0.75,
+      "climate_f1": 0.8108108108108109
+    },
+    {
+      "crop": "rice",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 0.95,
+      "full_f1": 0.9743589743589743,
+      "climate_precision": 0.95,
+      "climate_recall": 0.95,
+      "climate_f1": 0.95
+    },
+    {
+      "crop": "watermelon",
+      "support": 20,
+      "full_precision": 1.0,
+      "full_recall": 1.0,
+      "full_f1": 1.0,
+      "climate_precision": 0.8636363636363636,
+      "climate_recall": 0.95,
+      "climate_f1": 0.9047619047619048
+    }
+  ],
+  "yield_regressor": {
+    "total_rows": 20,
+    "train_rows": 16,
+    "test_rows": 4,
+    "features": [
+      "Year",
+      "Crop_Rice",
+      "Crop_Wheat"
+    ],
+    "mae_hg_ha": 309.9990234375,
+    "mae_t_ha": 0.03099990234375,
+    "rmse_hg_ha": 467.59638043936997,
+    "rmse_t_ha": 0.046759638043937,
+    "r2_score": -5.328404426574707,
+    "test_records": [
+      {
+        "year": 2018,
+        "crop": "Rice",
+        "actual_hg_ha": 26590.0,
+        "predicted_hg_ha": 27439.994140625,
+        "error_hg_ha": 849.994140625
+      },
+      {
+        "year": 2013,
+        "crop": "Rice",
+        "actual_hg_ha": 27000.0,
+        "predicted_hg_ha": 27000.00390625,
+        "error_hg_ha": 0.00390625
+      },
+      {
+        "year": 2011,
+        "crop": "Rice",
+        "actual_hg_ha": 27000.0,
+        "predicted_hg_ha": 27000.00390625,
+        "error_hg_ha": 0.00390625
+      },
+      {
+        "year": 2019,
+        "crop": "Rice",
+        "actual_hg_ha": 27050.0,
+        "predicted_hg_ha": 27439.994140625,
+        "error_hg_ha": 389.994140625
+      }
+    ],
+    "critical_finding": "R2 is -5.33 due to severe sample deficiency (20 rows total with flat placeholder repeats) and zero environmental features (weather/soil). This empirically proves the model cannot be used as a predictive field tool and confirms why KrishiMitra falls back to deterministic agronomic reference yields."
+  }
+}

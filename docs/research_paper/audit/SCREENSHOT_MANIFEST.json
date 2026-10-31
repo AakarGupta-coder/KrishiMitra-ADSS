@@ -1,0 +1,112 @@
+[
+  {
+    "evidence_id": "SCREEN_FIRST_RUN_SETUP",
+    "name": "first_run_setup",
+    "url": "http://localhost:5173/",
+    "filepath": "docs/research_paper/figures/screenshots\\first_run_setup.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 164631,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_DASHBOARD",
+    "name": "dashboard",
+    "url": "http://localhost:5173/dashboard",
+    "filepath": "docs/research_paper/figures/screenshots\\dashboard.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 147258,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_CROP_ADVISOR",
+    "name": "crop_advisor",
+    "url": "http://localhost:5173/crop-advisor",
+    "filepath": "docs/research_paper/figures/screenshots\\crop_advisor.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 148314,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_YIELD_PREDICTION",
+    "name": "yield_prediction",
+    "url": "http://localhost:5173/yield-prediction",
+    "filepath": "docs/research_paper/figures/screenshots\\yield_prediction.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 206724,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_IRRIGATION_ADVISOR",
+    "name": "irrigation_advisor",
+    "url": "http://localhost:5173/irrigation-advisor",
+    "filepath": "docs/research_paper/figures/screenshots\\irrigation_advisor.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 436199,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_WEATHER_INTELLIGENCE",
+    "name": "weather_intelligence",
+    "url": "http://localhost:5173/weather-intelligence",
+    "filepath": "docs/research_paper/figures/screenshots\\weather_intelligence.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 334834,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_SOIL_INTELLIGENCE",
+    "name": "soil_intelligence",
+    "url": "http://localhost:5173/soil-intelligence",
+    "filepath": "docs/research_paper/figures/screenshots\\soil_intelligence.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 426154,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_AI_INSIGHTS",
+    "name": "ai_insights",
+    "url": "http://localhost:5173/ai-insights",
+    "filepath": "docs/research_paper/figures/screenshots\\ai_insights.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 443749,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_FARM_PROFILE",
+    "name": "farm_profile",
+    "url": "http://localhost:5173/farm-profile",
+    "filepath": "docs/research_paper/figures/screenshots\\farm_profile.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 901666,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_REPORTS",
+    "name": "reports",
+    "url": "http://localhost:5173/reports",
+    "filepath": "docs/research_paper/figures/screenshots\\reports.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 401165,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  },
+  {
+    "evidence_id": "SCREEN_SETTINGS_PROVENANCE",
+    "name": "settings_provenance",
+    "url": "http://localhost:5173/settings",
+    "filepath": "docs/research_paper/figures/screenshots\\settings_provenance.png",
+    "resolution": "3200x2100",
+    "dpi": 300,
+    "bytes": 432801,
+    "captured_at": "2026-10-28T19:55:00+05:30"
+  }
+]

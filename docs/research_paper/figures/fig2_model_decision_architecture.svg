@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="1000" height="680">
+  <defs>
+    <style>
+      .title { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #0F172A; }
+      .label { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; fill: #1E293B; }
+      .sublabel { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 10px; fill: #475569; }
+      .box { rx: 6px; ry: 6px; stroke-width: 1.5px; }
+      .arrow { stroke: #0F172A; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead2); }
+      .arrow-blue { stroke: #2563EB; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-blue2); }
+      .arrow-green { stroke: #16A34A; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-green2); }
+      .arrow-orange { stroke: #EA580C; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-orange2); }
+      .arrow-purple { stroke: #9333EA; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-purple2); }
+      .group-label { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    </style>
+    <marker id="arrowhead2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#0F172A" />
+    </marker>
+    <marker id="arrowhead-blue2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#2563EB" />
+    </marker>
+    <marker id="arrowhead-green2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#16A34A" />
+    </marker>
+    <marker id="arrowhead-orange2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#EA580C" />
+    </marker>
+    <marker id="arrowhead-purple2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#9333EA" />
+    </marker>
+  </defs>
+
+  <rect width="1000" height="680" fill="#FFFFFF"/>
+
+  <!-- Top Input Block -->
+  <rect x="250" y="15" width="500" height="50" rx="8" fill="#F8FAFC" stroke="#0F172A" stroke-width="1.5"/>
+  <text x="500" y="35" class="title" text-anchor="middle">Canonical Farm Context &amp; Multi-Source Input Features</text>
+  <text x="500" y="52" class="sublabel" text-anchor="middle">Coordinates (lat, lon) · Soil Test (N, P, K, pH) · Farm Area · Irrigation System · Current Crop</text>
+
+  <!-- Distribution Lines from Input -->
+  <line x1="330" y1="65" x2="160" y2="105" class="arrow"/>
+  <line x1="420" y1="65" x2="380" y2="105" class="arrow"/>
+  <line x1="500" y1="65" x2="590" y2="105" class="arrow"/>
+  <line x1="650" y1="65" x2="820" y2="105" class="arrow"/>
+
+  <!-- PATHWAY 1: Crop Recommendation (Rules vs ML Dual Path) -->
+  <rect x="25" y="105" width="280" height="425" rx="8" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/>
+  <text x="35" y="125" class="group-label" fill="#15803D">1. Crop Recommendation (Dual Track)</text>
+
+  <!-- Primary Rules Engine -->
+  <rect x="40" y="140" width="250" height="120" class="box" fill="#FFFFFF" stroke="#16A34A"/>
+  <text x="50" y="160" class="label" fill="#15803D">PRIMARY: KM-Rules 2.1 (Deterministic)</text>
+  <text x="50" y="177" class="sublabel">Input: NASA POWER seasonal T, Rain, RH,</text>
+  <text x="50" y="190" class="sublabel">HWSD v2.0 pH, Farmer soil NPK (if given)</text>
+  <text x="50" y="206" class="sublabel" font-weight="bold">Score: S = 100 × ∏ m_k × Season_Gate</text>
+  <text x="50" y="220" class="sublabel">• Evaluates 12 Indian crops</text>
+  <text x="50" y="234" class="sublabel">• Mandatory &gt;40% agronomic cutoff</text>
+  <text x="50" y="248" class="sublabel" fill="#15803D">Output: Canonical Recommended Crop</text>
+
+  <!-- Secondary ML Classifier -->
+  <rect x="40" y="280" width="250" height="135" class="box" fill="#FFFFFF" stroke="#2563EB"/>
+  <text x="50" y="300" class="label" fill="#1D4ED8">SECONDARY: XGBoost ML Opinion</text>
+  <text x="50" y="317" class="sublabel">Gated Branch based on Soil Test:</text>
+  
+  <rect x="50" y="325" width="110" height="45" rx="4" fill="#EFF6FF" stroke="#3B82F6"/>
+  <text x="55" y="340" class="sublabel" font-weight="bold">If N, P, K present:</text>
+  <text x="55" y="353" class="sublabel">crop_xgb.pkl (7 fts)</text>
+  <text x="55" y="364" class="sublabel">98.9% Holdout Acc</text>
+
+  <rect x="170" y="325" width="110" height="45" rx="4" fill="#F1F5F9" stroke="#64748B"/>
+  <text x="175" y="340" class="sublabel" font-weight="bold">If no NPK test:</text>
+  <text x="175" y="353" class="sublabel">crop_climate.pkl (4 fts)</text>
+  <text x="175" y="364" class="sublabel">94.1% Holdout Acc</text>
+
+  <text x="50" y="388" class="sublabel">• Outputs Top-5 crops with soft probabilities</text>
+  <text x="50" y="402" class="sublabel" fill="#2563EB">Architectural Role: Independent Second Opinion</text>
+
+  <!-- Synthesis & Concordance Check -->
+  <rect x="40" y="430" width="250" height="85" class="box" fill="#FEF3C7" stroke="#D97706"/>
+  <text x="50" y="450" class="label" fill="#B45309">Synthesis &amp; Concordance Gating</text>
+  <text x="50" y="468" class="sublabel">Compares Rules Winner vs ML Top-1:</text>
+  <text x="50" y="482" class="sublabel">• ml_opinion_matches_rules: boolean flag</text>
+  <text x="50" y="496" class="sublabel">• Factor attribution rationale for farmer</text>
+  <text x="50" y="508" class="sublabel" font-weight="bold">Rule engine is authoritative; ML never overrides</text>
+
+
+  <!-- PATHWAY 2: Crop Yield Prediction & SHAP -->
+  <rect x="325" y="105" width="245" height="425" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="335" y="125" class="group-label" fill="#1D4ED8">2. Yield Prediction &amp; SHAP</text>
+
+  <!-- Crop Branch Check -->
+  <rect x="335" y="140" width="225" height="50" class="box" fill="#FFFFFF" stroke="#0F172A"/>
+  <text x="345" y="158" class="label">Crop Support Check</text>
+  <text x="345" y="174" class="sublabel">Is crop in FAOSTAT model? (Rice, Wheat)</text>
+
+  <!-- ML Branch for Rice/Wheat -->
+  <rect x="335" y="210" width="225" height="155" class="box" fill="#FFFFFF" stroke="#2563EB"/>
+  <text x="345" y="230" class="label" fill="#1D4ED8">Branch A: ML Regressor (Rice/Wheat)</text>
+  <text x="345" y="247" class="sublabel">Model: yield_xgb.pkl (XGBRegressor)</text>
+  <text x="345" y="260" class="sublabel">Features: Year, Crop_Rice, Crop_Wheat</text>
+  <text x="345" y="275" class="sublabel" fill="#DC2626" font-weight="bold">Audit Note: R² = -5.33 (20-row sample)</text>
+  <text x="345" y="290" class="sublabel">Explicitly flagged: "Low Reliability"</text>
+  
+  <rect x="345" y="300" width="205" height="55" rx="4" fill="#FAF5FF" stroke="#9333EA"/>
+  <text x="355" y="318" class="label" fill="#7E22CE">SHAP TreeExplainer Hook</text>
+  <text x="355" y="333" class="sublabel">Computes base yield value +</text>
+  <text x="355" y="346" class="sublabel">Shapley feature impacts (t/ha)</text>
+
+  <!-- Reference Yield Branch for Other 10 Crops -->
+  <rect x="335" y="380" width="225" height="135" class="box" fill="#FFFFFF" stroke="#059669"/>
+  <text x="345" y="400" class="label" fill="#047857">Branch B: Deterministic Reference</text>
+  <text x="345" y="417" class="sublabel">Applies to: Sugarcane, Tomato, Potato,</text>
+  <text x="345" y="430" class="sublabel">Onion, Pulses, Millets, Turmeric, Ginger</text>
+  <text x="345" y="448" class="sublabel" font-weight="bold">Formula: Yield = Ref_Yield × S_agronomic</text>
+  <text x="345" y="465" class="sublabel">Sensitivity Analysis: Evaluates 40% to 100%</text>
+  <text x="345" y="480" class="sublabel">suitability response matrix</text>
+  <text x="345" y="495" class="sublabel" fill="#047857">Reliability: Labeled "Indicative"</text>
+
+
+  <!-- PATHWAY 3: Irrigation & Water Balance -->
+  <rect x="585" y="105" width="200" height="425" rx="8" fill="#F0F9FF" stroke="#0284C7" stroke-width="1.5"/>
+  <text x="595" y="125" class="group-label" fill="#0369A1">3. FAO-56 Water Balance</text>
+
+  <rect x="595" y="140" width="180" height="375" class="box" fill="#FFFFFF" stroke="#0284C7"/>
+  <text x="605" y="160" class="label" fill="#0369A1">Daily Water Budget</text>
+  <text x="605" y="177" class="sublabel">• Open-Meteo 7-day ET0</text>
+  <text x="605" y="190" class="sublabel">• Crop ETc = Kc × ET0</text>
+  <text x="605" y="207" class="sublabel" font-weight="bold">Soil Reservoir:</text>
+  <text x="605" y="222" class="sublabel">TAW = 1000(θ_fc - θ_wp)Zr</text>
+  <text x="605" y="237" class="sublabel">RAW = 0.5 × TAW</text>
+  <text x="605" y="254" class="sublabel" font-weight="bold">Daily Iteration:</text>
+  <text x="605" y="269" class="sublabel">Dr_t = Dr_t-1 + ETc - Peff</text>
+  <text x="605" y="284" class="sublabel">Peff = 0.8×Rain (if ≥5mm)</text>
+  <text x="605" y="304" class="sublabel" font-weight="bold">Trigger Rule:</text>
+  <text x="605" y="320" class="sublabel">If Dr &gt; RAW:</text>
+  <text x="605" y="335" class="sublabel">→ "Irrigate Now / Soon"</text>
+  <text x="605" y="352" class="sublabel">Gross = Dr / Efficiency</text>
+  <text x="605" y="367" class="sublabel">(Drip 90%, Sprinkler 75%,</text>
+  <text x="605" y="380" class="sublabel">Flood 60%)</text>
+  <text x="605" y="400" class="sublabel" font-weight="bold">Water Volume Output:</text>
+  <text x="605" y="416" class="sublabel">Volume = Gross × 10 × Area</text>
+  <text x="605" y="431" class="sublabel">(Calculated in m³)</text>
+  <text x="605" y="455" class="sublabel" fill="#0369A1">Status: High / Mod / Low</text>
+
+
+  <!-- PATHWAY 4: Environmental & Market Risk -->
+  <rect x="795" y="105" width="185" height="425" rx="8" fill="#FFF1F2" stroke="#E11D48" stroke-width="1.5"/>
+  <text x="805" y="125" class="group-label" fill="#BE123C">4. Multi-Factor Risk</text>
+
+  <rect x="805" y="140" width="165" height="375" class="box" fill="#FFFFFF" stroke="#E11D48"/>
+  <text x="815" y="160" class="label" fill="#BE123C">Continuous Monitoring</text>
+  
+  <text x="815" y="180" class="sublabel" font-weight="bold">1. Climate Hazards:</text>
+  <text x="815" y="195" class="sublabel">• Heat: Tmax ≥ 40°C</text>
+  <text x="815" y="208" class="sublabel">• Frost: Tmin ≤ 4°C</text>
+  <text x="815" y="221" class="sublabel">• Heavy Rain: ≥ 64.5mm</text>
+  <text x="815" y="234" class="sublabel">• High Gale: Wind ≥ 40km/h</text>
+
+  <text x="815" y="258" class="sublabel" font-weight="bold">2. Water Deficit Stress:</text>
+  <text x="815" y="273" class="sublabel">• Cumulative 7-day deficit</text>
+  <text x="815" y="286" class="sublabel">• Depletion crossing RAW</text>
+
+  <text x="815" y="310" class="sublabel" font-weight="bold">3. Soil Chemical Stress:</text>
+  <text x="815" y="325" class="sublabel">• Acidity (pH &lt; 5.5)</text>
+  <text x="815" y="338" class="sublabel">• Alkalinity (pH &gt; 8.4)</text>
+  <text x="815" y="351" class="sublabel">• Nutrient exhaustion</text>
+
+  <text x="815" y="375" class="sublabel" font-weight="bold">4. Economic Volatility:</text>
+  <text x="815" y="390" class="sublabel">• Mandi modal price crash</text>
+  <text x="815" y="403" class="sublabel">• Data outage fallbacks</text>
+
+  <text x="815" y="435" class="sublabel" fill="#BE123C" font-weight="bold">Risk Tiers:</text>
+  <text x="815" y="450" class="sublabel">• Low (Green)</text>
+  <text x="815" y="465" class="sublabel">• Moderate (Amber)</text>
+  <text x="815" y="480" class="sublabel">• High (Red)</text>
+
+
+  <!-- BOTTOM: Consolidated Canonical Response -->
+  <rect x="25" y="550" width="955" height="110" rx="8" fill="#F8FAFC" stroke="#0F172A" stroke-width="2"/>
+  <text x="40" y="575" class="title" fill="#0F172A">Consolidated Output: Canonical Farm Summary Contract (/api/farm/summary)</text>
+  
+  <text x="40" y="600" class="sublabel" font-weight="bold">• Farm Profile &amp; Location Telemetry: Reverse Geocoded Admin Boundaries, Coordinates, Farm Area, Irrigation Mode</text>
+  <text x="40" y="617" class="sublabel">• Transparent Agronomic Advisory: Ranked Eligible Crops, Factor Attribution Multipliers, Seasonal Windows, Mandi Margins</text>
+  <text x="40" y="634" class="sublabel">• Calibrated Telemetry: FAO-56 7-Day Water Balance Schedule (m³ demand), Multi-Tier Hazard Warnings, Soil Pedological Profile</text>
+  <text x="40" y="651" class="sublabel">• Trust &amp; Provenance Ledger: Provider Health Status (Open-Meteo, NASA POWER, HWSD v2.0, Agmarknet, OSM), Cache TTLs, ML vs Rules Concordance</text>
+
+  <!-- Connect Path blocks to bottom -->
+  <line x1="165" y1="530" x2="165" y2="550" class="arrow"/>
+  <line x1="445" y1="530" x2="445" y2="550" class="arrow"/>
+  <line x1="685" y1="530" x2="685" y2="550" class="arrow"/>
+  <line x1="885" y1="530" x2="885" y2="550" class="arrow"/>
+
+</svg>

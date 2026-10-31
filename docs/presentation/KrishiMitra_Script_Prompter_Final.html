@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KrishiMitra Script Prompter</title>
+<style>
+/* Layout: a stage prompter. Clock and slide on top, script rolling past a fixed reading line, cue and transport below.
+   Deliberately one dark look, in the deck's forest, parchment and gold, because it is read in a dim room. */
+:root {
+  color-scheme: dark;
+  --ground: #0E2419;
+  --panel: #153325;
+  --rule: #2C4E3C;
+  --ink: #F6F0E4;
+  --muted: #A9C0B1;
+  --gold: #E9BB5C;
+  --rust: #F2A07C;
+  --read: Verdana, 'Segoe UI', system-ui, sans-serif;
+  --mono: Consolas, ui-monospace, monospace;
+  --scale: 1;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--ground); color: var(--ink); font-family: var(--read); font-size: 16px; overflow: hidden; }
+[hidden] { display: none !important; }
+button, input { font: inherit; color: inherit; }
+
+.app {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  gap: 8px;
+}
+
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.where { min-width: 0; }
+.where .slide { font-weight: 700; font-size: 1.25rem; }
+.where .meta { color: var(--muted); font-size: .95rem; }
+.time { text-align: right; flex: none; font-family: var(--mono); }
+.clock { font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.left { color: var(--muted); font-size: .85rem; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+.stage { position: relative; overflow: hidden; min-height: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 84%, transparent 100%); }
+.tick { position: absolute; left: 0; top: var(--line); width: 10px; height: 4px; margin-top: -2px; background: var(--gold); z-index: 2; }
+.track { position: absolute; inset: 0 0 auto 0; padding-left: 22px; will-change: transform; }
+.para { max-width: 1120px; margin: 0 auto 1.1em; font-size: calc(clamp(1.7rem, 3.7vw, 3.1rem) * var(--scale)); line-height: 1.42; }
+.mark { display: block; font-family: var(--mono); font-size: max(.8rem, .4em); font-weight: 700; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .35em; }
+.w { cursor: pointer; border-radius: 4px; transition: color .12s linear; }
+.w.past { color: #6F8B7B; }
+.w.stress { font-weight: 700; color: var(--rust); }
+.w.stress.past { color: #6F8B7B; font-weight: 400; }
+.w.now { color: var(--ground); background: var(--gold); box-shadow: 0 0 0 .08em var(--gold); }
+.gap { color: var(--gold); padding-inline: .1em; font-weight: 700; }
+
+.notice { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; background: var(--ground); z-index: 3; padding: 16px; }
+.notice b { display: block; font-family: var(--mono); font-size: clamp(5rem, 22vh, 11rem); line-height: 1; color: var(--gold); }
+.notice h2 { font-size: clamp(1.7rem, 4vw, 2.8rem); margin: 0 0 .3em; text-wrap: balance; }
+.notice p { margin: .5em 0 0; color: var(--muted); font-size: 1.1rem; }
+
+.cue { display: flex; gap: 10px; align-items: baseline; min-height: 1.6em; font-size: 1.1rem; color: var(--gold); }
+.cue span:first-child { font-family: var(--mono); font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); flex: none; }
+
+.bar { display: flex; gap: 3px; height: 26px; margin-top: 6px; }
+.seg { position: relative; flex-basis: 0; min-width: 0; border: 0; padding: 0; border-radius: 3px; background: var(--panel); overflow: hidden; cursor: pointer; }
+.seg i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--rule); }
+.seg span { position: relative; font-family: var(--mono); font-size: .75rem; font-weight: 700; color: var(--muted); }
+.seg.on { box-shadow: inset 0 0 0 2px var(--gold); }
+.seg.on span { color: var(--ink); }
+
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+.btn { min-height: 44px; padding: 0 13px; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.btn:hover { border-color: var(--muted); }
+.btn.go { background: var(--gold); border-color: var(--gold); color: var(--ground); font-weight: 700; min-width: 112px; justify-content: center; }
+kbd { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+.btn.go kbd { color: var(--ground); }
+.spacer { flex: 1 1 0; }
+.lead { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding-inline: 4px; color: var(--muted); cursor: pointer; }
+.lead input { width: 18px; height: 18px; accent-color: var(--gold); }
+:focus-visible { outline: 3px solid var(--rust); outline-offset: 2px; }
+
+@media (max-width: 720px) {
+  kbd, .spacer, #full { display: none; }
+  .controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .btn { padding: 0 4px; justify-content: center; min-width: 0; }
+  .btn.go { min-width: 0; }
+  .lead { grid-column: 1 / -1; min-height: 30px; order: 1; }
+  .where .meta { font-size: .85rem; }
+  .cue { font-size: 1rem; }
+}
+@media (max-height: 520px) {
+  .cue { display: none; }
+  .clock { font-size: 1.6rem; }
+  .btn { min-height: 38px; }
+}
+@media (prefers-reduced-motion: reduce) { .w { transition: none; } }
+</style>
+</head>
+<body>
+
+<main class="app" id="app">
+  <header class="top">
+    <div class="where">
+      <div class="slide" id="slideName">Dashboard · 1 of 11</div>
+      <div class="meta" id="slideMeta"></div>
+    </div>
+    <div class="time">
+      <div class="clock" id="clock">00:00.0</div>
+      <div class="left" id="left"></div>
+    </div>
+  </header>
+
+  <section class="stage" id="stage" aria-label="Script">
+    <div class="tick"></div>
+    <div class="track" id="track"></div>
+    <div class="notice" id="notice" hidden></div>
+  </section>
+
+  <footer>
+    <div class="cue"><span>Cue</span><span id="cue"></span></div>
+    <div class="bar" id="bar" role="group" aria-label="Jump to a section"></div>
+    <div class="controls">
+      <button class="btn go" id="go" type="button">Start <kbd>Space</kbd></button>
+      <button class="btn" id="restart" type="button">Restart <kbd>R</kbd></button>
+      <button class="btn" id="prev" type="button" aria-label="Previous section">Prev <kbd>←</kbd></button>
+      <button class="btn" id="next" type="button" aria-label="Next section">Next <kbd>→</kbd></button>
+      <button class="btn" id="back" type="button" aria-label="Move clock back a quarter second">−0.25 s <kbd>↓</kbd></button>
+      <button class="btn" id="fwd" type="button" aria-label="Move clock forward a quarter second">+0.25 s <kbd>↑</kbd></button>
+      <span class="spacer"></span>
+      <label class="lead"><input type="checkbox" id="leadIn" checked> 3 s lead-in</label>
+      <button class="btn" id="smaller" type="button" aria-label="Smaller text">A− <kbd>-</kbd></button>
+      <button class="btn" id="bigger" type="button" aria-label="Larger text">A+ <kbd>=</kbd></button>
+      <button class="btn" id="full" type="button">Full screen <kbd>F</kbd></button>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  const START = 0;
+  const END = 330;
+  const LEAD = 3;
+  const NUDGE = 0.25;
+  // Segments: [start s, end s, words]. *word* marks stress. Times follow the video's slide changes and highlight rings.
+  const SLIDES = [{"n": 1, "topic": "Introduction", "name": "Slide 1", "from": 0, "to": 12, "segs": [[0.2, 1.2, "Good morning."], [1.5, 11.8, "I'm Aakar Gupta, and with Prathamesh Burange, I built KrishiMitra, an agricultural decision-support system that turns scattered data into explainable advice."]], "cues": [[0, "Start as slide 1 appears."]]}, {"n": 2, "topic": "Problem", "name": "Slide 2", "from": 12, "to": 27, "segs": [[12.2, 19.6, "Weather, soil, crop choice, irrigation and prices live apart, and many ML tools give no reasons."], [19.9, 26.8, "So we built one farm summary, with every value labelled measured, modelled, fallback or unavailable."]], "cues": [[12, "Slide 2 appears."]]}, {"n": 3, "topic": "Architecture", "name": "Slide 3", "from": 27, "to": 45, "segs": [[27.2, 34.8, "Our React 19 frontend calls FastAPI, which fetches every source concurrently into one canonical JSON summary."], [35.1, 39.8, "The deterministic KM-Rules 2.1 engine is authoritative for crop ranking."], [40.1, 44.8, "XGBoost is an independent second opinion that never overrides it."]], "cues": [[27, "Slide 3 appears."]]}, {"n": 4, "topic": "Data sources", "name": "Slide 4", "from": 45, "to": 62, "segs": [[45.2, 53.9, "Those are Open-Meteo, NASA POWER, Agmarknet, Nominatim and local HWSD soil estimates: modelled, not lab-measured."], [54.2, 61.8, "Responses are cached, SQLite logs status, and failures degrade gracefully with visible provenance."]], "cues": [[45, "Slide 4 appears."]]}, {"n": 5, "topic": "Crop recommendation", "name": "Slide 5", "from": 62, "to": 82, "segs": [[62.2, 70.3, "KM-Rules scores twelve crops on agronomic suitability, checks seasonal eligibility, and shows every penalty."], [70.6, 77.5, "XGBoost reaches 98.86 percent hold-out accuracy, or 94.09 without a soil test."], [77.8, 81.8, "Those are benchmark results, not field accuracy."]], "cues": [[62, "Slide 5 appears."]]}, {"n": 6, "topic": "Yield and irrigation", "name": "Slide 6", "from": 82, "to": 99, "segs": [[82.2, 85.5, "Every yield estimate carries a reliability label."], [85.8, 93.3, "Trained on twenty hand-made rows, our model's R-squared is minus 5.33, so we mark it low."], [93.6, 98.8, "A simplified FAO-56 daily water balance schedules irrigation, with stated assumptions."]], "cues": [[82, "Slide 6 appears."]]}, {"n": 7, "topic": "Evidence", "name": "Slide 7", "from": 99, "to": 111, "segs": [[99.2, 102.2, "This is a working web application."], [102.5, 108.5, "The chart is benchmark evidence; software tests show 23 passed, one skipped."], [108.8, 110.8, "Neither is field validation."]], "cues": [[99, "Slide 7 appears."]]}, {"n": 8, "topic": "Next steps", "name": "Slide 8", "from": 111, "to": 120, "segs": [[111.2, 114.9, "Field trials, regional data and yield modelling come next."], [115.2, 119.8, "Here's how it makes farm intelligence more accessible, explainable and actionable."]], "cues": [[111, "Slide 8 appears."]]}, {"n": 9, "topic": "Farm overview", "name": "Dashboard", "from": 120, "to": 148, "segs": [[120.4, 124.0, "Here is the running application, using a demo farm in Nagpur."], [125.0, 129.4, "The top cards show the recommended crop, yield, irrigation need and farm risk."], [129.6, 132.5, "Data status shows every source and any fallback."], [132.7, 136.5, "Alerts come from live data, split into farm alerts and data events."], [136.8, 140.3, "Below, the seven-day forecast shows rainfall, ET-zero and soil moisture."], [140.6, 144.0, "The advisory profile shows the exact rule penalties."], [144.2, 147.5, "Every risk and alert comes from this farm's current data."]], "cues": [[120, "Start as the title card appears."], [129.4, "Status popup opens."], [132.6, "Notifications open."]]}, {"n": 10, "topic": "Crop Advisor", "name": "Crop Advisor", "from": 148, "to": 180, "segs": [[148.8, 152.4, "KM-Rules ranks the crops by suitability and season."], [152.7, 156.5, "Each score is explained factor by factor, with a confidence label."], [156.7, 160.2, "Sowing windows are labelled open, upcoming or off-season."], [160.5, 167.3, "The economic view uses observed mandi prices, and shows how yield, price and reference costs build up the net return."], [167.7, 171.8, "Suitability and net return are *never* *merged* into one score."], [172.1, 175.3, "XGBoost appears beside the rules, *only* as an opinion."], [175.6, 179.7, "The what-if tool tests rainfall and temperature, without changing the baseline."]], "cues": [[148, "Factor breakdown opens at about 02:33."], [160.4, "Economic tab opens."], [167.6, "Trade-off chart opens."], [175.5, "Rainfall slider moves."]]}, {"n": 11, "topic": "Yield Prediction", "name": "Yield Prediction", "from": 180, "to": 198, "segs": [[180.8, 184.0, "Onion uses a reference yield, labelled indicative."], [184.2, 187.4, "Every input is listed with its source and resolution."], [187.7, 193.0, "Wheat uses the XGBoost model, but its R-squared is negative, so it's marked *low* *reliability.*"], [193.3, 197.7, "SHAP shows only year and crop effects, so it explains the model, not local farming."]], "cues": [[180, "Onion estimate on screen."], [187.6, "Crop changes to Wheat. Stress \"low reliability.\""]]}, {"n": 12, "topic": "Irrigation Advisor", "name": "Irrigation Advisor", "from": 198, "to": 218, "segs": [[198.9, 201.7, "Irrigation runs a seven-day root-zone water balance."], [201.9, 205.3, "Here we see status, next date, gross depth and water volume."], [205.6, 209.0, "The chart shows rainfall, irrigation and crop water use."], [209.3, 212.9, "Irrigation triggers once depletion exceeds the threshold."], [213.2, 217.7, "The assumptions are stated, and the parameters are *not* *calibrated* with sensors."]], "cues": [[198, "Status panel on screen."], [205.4, "Pointer moves over the chart."]]}, {"n": 13, "topic": "Weather Intelligence", "name": "Weather Intelligence", "from": 218, "to": 234, "segs": [[218.9, 222.3, "Weather shows current conditions and the Open-Meteo forecast."], [222.5, 225.4, "This chart tracks daily high and low temperatures."], [225.7, 229.7, "Rainfall and temperature are compared with NASA POWER climatology."], [229.9, 233.6, "The daily table and monthly climate sit at the bottom."]], "cues": [[218, "Keep an even pace."]]}, {"n": 14, "topic": "Soil Intelligence", "name": "Soil Intelligence", "from": 234, "to": 250, "segs": [[234.9, 237.9, "Soil comes from the local HWSD dataset."], [238.1, 241.1, "The farm's cell is urban, so a nearby cell is flagged."], [241.4, 245.6, "pH, texture and organic carbon are *modelled* estimates, not lab measurements."], [245.8, 249.6, "A soil test from the farm can override pH and add N, P and K."]], "cues": [[234, "Nearby-cell warning on screen."], [241.2, "Stress \"modelled.\""]]}, {"n": 15, "topic": "AI Insights & Risk", "name": "AI Insights & Risk", "from": 250, "to": 270, "segs": [[250.9, 253.5, "Seven risk categories use explicit thresholds."], [253.7, 256.4, "The timeline flags each forecast day."], [256.7, 259.4, "Each insight names the data behind it."], [259.7, 262.5, "Each risk gives a reason and a recommended action."], [262.7, 264.9, "The rules stay in charge of crop ranking."], [265.2, 269.3, "This card shows hold-out metrics: benchmark results, *not* *field* *accuracy.*"]], "cues": [[250, "Page scrolls quickly here. Keep sentences short."], [265, "Model card opens."]]}, {"n": 16, "topic": "Farm Profile", "name": "Farm Profile", "from": 270, "to": 291, "segs": [[270.9, 274.2, "Farm Profile sets the area, irrigation system and crop."], [274.4, 279.2, "These soil-test values are *examples,* and they unlock N, P and K scoring."], [279.5, 281.6, "Saving recomputes every module."], [281.9, 284.6, "The map moves the pin, but only saving applies it."], [284.9, 288.0, "You can also pick a preset or search for a place."]], "cues": [[270, "Fields are edited on screen."], [274.2, "Stress \"examples.\""], [284.7, "Location picker opens."]]}, {"n": 17, "topic": "Reports", "name": "Reports", "from": 291, "to": 305, "segs": [[291.3, 293.5, "Reports combine everything for this farm."], [293.7, 296.4, "Each section shows if its data is ready."], [296.7, 300.0, "The PDF is built in the browser, with a JSON export too."], [300.3, 304.0, "It carries the same figures, with sources and a timestamp."]], "cues": [[291, "Sections toggle on screen."], [300.2, "PDF pages appear."]]}, {"n": 18, "topic": "Settings", "name": "Settings", "from": 305, "to": 324, "segs": [[305.1, 309.0, "Settings control units, notifications, refresh and data sources."], [309.4, 312.2, "Every source shows its status, last update and cache time."], [312.5, 314.8, "We can inspect the raw source details."], [315.1, 318.0, "Model details and API status are here too."], [318.4, 322.6, "Clearing the farm returns to first-run setup, where we pick the saved farm again."]], "cues": [[305, "Units switch on screen."], [312.4, "Raw source window opens."], [318.2, "First-run screen appears."]]}, {"n": 19, "topic": "Closing screen", "name": "Closing", "from": 324, "to": 330, "segs": [[324.5, 327.3, "That is KrishiMitra: decision support that shows its evidence."], [327.8, 328.9, "Thank you."]], "cues": [[324, "Slow down and finish calmly."]]}];
+
+  const SYLLABLES = {
+    krishimitra: 4, xgboost: 3, 'km-rules': 3, '2.1': 3, '98.86': 6, '94.09': 6, '5.33': 4, '19': 2, '23': 3, 'fao-56': 6, hwsd: 6, 'et-zero': 3,
+    fastapi: 4, sqlite: 3, json: 2, ml: 2, 'r-squared': 2, 'open-meteo': 5, nominatim: 4, agmarknet: 3, 'decision-support': 5,
+    'hand-made': 2, 'hold-out': 2, 'lab-measured': 3, aakar: 2, prathamesh: 3, burange: 3,
+  };
+  const syllables = (word) => {
+    const w = word.toLowerCase().replace(/[^a-z0-9.'-]/g, '').replace(/\.$/, '');
+    if (SYLLABLES[w]) return SYLLABLES[w];
+    const groups = w.replace(/e$/, '').match(/[aeiouy]+/g);
+    return Math.max(1, groups ? groups.length : 1);
+  };
+  const weight = (word) => syllables(word) + (/[,:;]$/.test(word) ? 0.8 : 0);
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const stamp = (t, tenths) => {
+    const s = Math.max(0, t);
+    const m = Math.floor(s / 60);
+    const r = s - m * 60;
+    return `${pad(m)}:${tenths ? r.toFixed(1).padStart(4, '0') : pad(Math.floor(r))}`;
+  };
+  const $ = (id) => document.getElementById(id);
+  const save = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } };
+  const load = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+
+  const track = $('track');
+  const stage = $('stage');
+  const words = [];
+
+  SLIDES.forEach((slide) => {
+    const para = document.createElement('p');
+    para.className = 'para';
+    const mark = document.createElement('span');
+    mark.className = 'mark';
+    mark.textContent = `${slide.name} · ${stamp(slide.from)}`;
+    para.appendChild(mark);
+    slide.segs.forEach(([a, b, text], si) => {
+      const prev = slide.segs[si - 1];
+      if (prev && a - prev[1] >= 0.35) {
+        const g = document.createElement('span');
+        g.className = 'gap';
+        g.textContent = '‖ ';
+        g.setAttribute('aria-hidden', 'true');
+        para.appendChild(g);
+      }
+      const parts = text.split(/\s+/).map((raw) => ({ stress: raw.startsWith('*'), text: raw.replace(/\*/g, '') }));
+      const total = parts.reduce((s, p) => s + weight(p.text), 0);
+      let run = 0;
+      parts.forEach((p, i) => {
+        const el = document.createElement('span');
+        el.className = `w${p.stress ? ' stress' : ''}`;
+        el.textContent = p.text;
+        const t = a + (b - a) * (run / total);
+        run += weight(p.text);
+        const end = a + (b - a) * (run / total);
+        const idx = words.length;
+        el.addEventListener('click', () => seek(words[idx].t));
+        para.appendChild(el);
+        para.appendChild(document.createTextNode(' '));
+        words.push({ el, t, end, slide: slide.n, text: p.text, top: 0 });
+        void i;
+      });
+    });
+    track.appendChild(para);
+  });
+
+  const bar = $('bar');
+  const segs = SLIDES.map((s) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'seg';
+    b.style.flexGrow = String(s.to - s.from);
+    b.setAttribute('aria-label', `Jump to ${s.name}, ${stamp(s.from)}`);
+    b.innerHTML = `<i></i><span>${s.n}</span>`;
+    b.addEventListener('click', (e) => { seek(s.from); blurAfterMouse(e); });
+    bar.appendChild(b);
+    return b;
+  });
+
+  let base = START;
+  let anchor = 0;
+  let running = false;
+  let finished = false;
+  let leadTimer = null;
+  let leadEnds = 0;
+  let scale = Number(load('km-script-prompter-scale')) || 1;
+  let y = 0;
+  let current = -2;
+  let wake = null;
+  let shownSlide = 0;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const clockNow = () => (running ? base + (performance.now() - anchor) / 1000 : base);
+  const inLead = () => leadTimer !== null;
+
+  function measure() {
+    const line = stage.clientHeight * 0.3;
+    stage.style.setProperty('--line', `${line}px`);
+    const origin = track.getBoundingClientRect().top;
+    words.forEach((w) => { w.top = w.el.getBoundingClientRect().top - origin; });
+  }
+
+  function setScale(v) {
+    scale = Math.min(1.6, Math.max(0.6, Math.round(v * 10) / 10));
+    document.documentElement.style.setProperty('--scale', String(scale));
+    save('km-script-prompter-scale', String(scale));
+    measure();
+  }
+
+  function paintWords(t) {
+    let i = -1;
+    for (let lo = 0, hi = words.length - 1; lo <= hi;) {
+      const mid = (lo + hi) >> 1;
+      if (words[mid].t <= t) { i = mid; lo = mid + 1; } else hi = mid - 1;
+    }
+    const active = i >= 0 && t < words[i].end ? i : -1;
+    const key = i * 2 + (active >= 0 ? 1 : 0);
+    if (key !== current) {
+      current = key;
+      words.forEach((w, n) => {
+        w.el.classList.toggle('past', n < i || (n === i && active < 0));
+        w.el.classList.toggle('now', n === active);
+      });
+    }
+    return Math.min(words.length - 1, active >= 0 ? active : i + 1);
+  }
+
+  function paintSlide(t) {
+    const slide = SLIDES.find((s) => t < s.to) || SLIDES[SLIDES.length - 1];
+    if (slide.n !== shownSlide) {
+      shownSlide = slide.n;
+      $('slideName').textContent = `${slide.name} · ${slide.n} of ${SLIDES.length}`;
+      $('slideMeta').textContent = `${slide.topic} · ${stamp(slide.from)}–${stamp(slide.to)}`;
+      segs.forEach((b, n) => b.classList.toggle('on', n === slide.n - 1));
+    }
+    $('left').textContent = `${Math.max(0, slide.to - t).toFixed(1)} s left in section`;
+    const cue = slide.cues.filter((c) => c[0] <= t).pop();
+    const text = cue ? cue[1] : slide.cues[0][1];
+    const el = $('cue');
+    if (el.textContent !== text) el.textContent = text;
+    SLIDES.forEach((s, n) => {
+      const part = Math.min(1, Math.max(0, (t - s.from) / (s.to - s.from)));
+      segs[n].firstChild.style.width = `${part * 100}%`;
+    });
+  }
+
+  function paintTransport() {
+    const go = $('go');
+    const label = inLead() ? 'Cancel' : running ? 'Pause' : finished ? 'Run again' : base > START ? 'Resume' : 'Start';
+    go.firstChild.textContent = `${label} `;
+  }
+
+  function showNotice(html) {
+    const n = $('notice');
+    n.innerHTML = html;
+    n.hidden = !html;
+  }
+
+  function finish() {
+    running = false;
+    finished = true;
+    base = END;
+    releaseWake();
+    showNotice('<div><h2>Finished.</h2><p>The video has reached 05:30.</p></div>');
+    paintTransport();
+  }
+
+  function frame() {
+    let t = clockNow();
+    if (running && t >= END) { finish(); t = END; }
+    if (inLead()) {
+      const left = Math.ceil((leadEnds - performance.now()) / 1000);
+      const b = $('notice').querySelector('b');
+      if (b && b.textContent !== String(left)) b.textContent = String(Math.max(1, left));
+      if (performance.now() >= leadEnds) { leadTimer = null; showNotice(''); begin(); t = clockNow(); }
+    }
+    $('clock').textContent = stamp(t, true);
+    paintSlide(Math.min(t, END - 0.001));
+    const focus = paintWords(t);
+    const target = stage.clientHeight * 0.3 - words[focus].top - parseFloat(getComputedStyle(words[focus].el).fontSize) * 0.71;
+    y = reduced ? target : y + (target - y) * 0.14;
+    if (Math.abs(target - y) < 0.3) y = target;
+    track.style.transform = `translateY(${y}px)`;
+    requestAnimationFrame(frame);
+  }
+
+  async function holdWake() {
+    try { if (navigator.wakeLock) wake = await navigator.wakeLock.request('screen'); } catch (e) { wake = null; }
+  }
+  function releaseWake() {
+    if (wake) { wake.release().catch(() => {}); wake = null; }
+  }
+
+  function begin() {
+    base = clockNow();
+    anchor = performance.now();
+    running = true;
+    finished = false;
+    holdWake();
+    paintTransport();
+  }
+
+  function pause() {
+    base = clockNow();
+    running = false;
+    releaseWake();
+    paintTransport();
+  }
+
+  function cancelLead() {
+    leadTimer = null;
+    showNotice('');
+    paintTransport();
+  }
+
+  function toggle() {
+    if (inLead()) { cancelLead(); return; }
+    if (running) { pause(); return; }
+    if (finished) reset();
+    if ($('leadIn').checked && base === START) {
+      leadEnds = performance.now() + LEAD * 1000;
+      leadTimer = 1;
+      showNotice(`<div><b>${LEAD}</b><p>Start the video as this reaches zero.</p></div>`);
+      paintTransport();
+      return;
+    }
+    begin();
+  }
+
+  function reset() {
+    if (inLead()) cancelLead();
+    running = false;
+    finished = false;
+    base = START;
+    current = -2;
+    releaseWake();
+    showNotice('');
+    paintTransport();
+  }
+
+  function seek(t) {
+    if (inLead()) cancelLead();
+    finished = false;
+    showNotice('');
+    base = Math.min(END - 0.05, Math.max(START, t));
+    anchor = performance.now();
+    current = -2;
+    paintTransport();
+  }
+
+  const nudge = (d) => seek(clockNow() + d);
+  function stepSlide(d) {
+    const t = clockNow();
+    const i = SLIDES.findIndex((s) => t < s.to);
+    const at = i < 0 ? SLIDES.length - 1 : i;
+    const now = SLIDES[at];
+    if (d < 0 && t - now.from > 1.5) { seek(now.from); return; }
+    seek(SLIDES[Math.min(SLIDES.length - 1, Math.max(0, at + d))].from);
+  }
+
+  function fullscreen() {
+    const el = document.documentElement;
+    const done = document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen && el.requestFullscreen();
+    if (done && done.catch) done.catch(() => { $('full').hidden = true; });
+  }
+
+  // A mouse click should leave Space free for the transport; keyboard focus stays where it is.
+  function blurAfterMouse(e) { if (e && e.detail > 0 && e.currentTarget.blur) e.currentTarget.blur(); }
+  const on = (id, fn) => $(id).addEventListener('click', (e) => { fn(); blurAfterMouse(e); });
+  on('go', toggle);
+  on('restart', reset);
+  on('prev', () => stepSlide(-1));
+  on('next', () => stepSlide(1));
+  on('back', () => nudge(-NUDGE));
+  on('fwd', () => nudge(NUDGE));
+  on('smaller', () => setScale(scale - 0.1));
+  on('bigger', () => setScale(scale + 0.1));
+  on('full', fullscreen);
+  if (!document.documentElement.requestFullscreen) $('full').hidden = true;
+
+  const leadBox = $('leadIn');
+  leadBox.checked = load('km-script-prompter-lead') !== 'off';
+  leadBox.addEventListener('change', () => { save('km-script-prompter-lead', leadBox.checked ? 'on' : 'off'); leadBox.blur(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const onControl = e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement;
+    if (e.code === 'Space' && onControl) return;
+    const act = { Space: toggle, KeyR: reset, ArrowLeft: () => stepSlide(-1), ArrowRight: () => stepSlide(1),
+      ArrowDown: () => nudge(-NUDGE), ArrowUp: () => nudge(NUDGE), Minus: () => setScale(scale - 0.1), Equal: () => setScale(scale + 0.1), KeyF: fullscreen }[e.code];
+    if (act) { e.preventDefault(); act(); }
+  });
+
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && running) holdWake(); });
+  new ResizeObserver(measure).observe(stage);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
+  setScale(scale);
+  paintTransport();
+  y = stage.clientHeight * 0.3;
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

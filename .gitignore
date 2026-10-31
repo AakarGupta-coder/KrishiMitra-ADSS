@@ -13,3 +13,4 @@ media/
 *.webm
 *.wav
 *.m4a
+_deletable/
